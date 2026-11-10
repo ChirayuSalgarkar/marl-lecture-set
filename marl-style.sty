@@ -1,0 +1,62 @@
+% =====================================================================
+%  Shared style for the MARL lecture set
+%  Book: Albrecht, Christianos & Schaefer, Multi-Agent Reinforcement
+%        Learning: Foundations and Modern Approaches (MIT Press, 2024)
+%  Notation follows the book: agents I, actions A_i, rewards R_i,
+%  transitions T, observations O_i, histories h, expected return U_i.
+% =====================================================================
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{marl-style}
+
+\RequirePackage{amsmath,amssymb,mathtools}
+\RequirePackage{booktabs,array,colortbl}
+\RequirePackage{tikz}
+\usetikzlibrary{positioning,arrows.meta,calc,fit,backgrounds,
+  decorations.pathreplacing,shapes.geometric,automata}
+
+% ---------------------------------------------------------------- plain slides
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{footline}[frame number]
+\setbeamercolor{structure}{fg=black}
+\setbeamercolor{frametitle}{fg=black}
+\setbeamercolor{title}{fg=black}
+\setbeamercolor{block title}{fg=black,bg=black!8}
+\setbeamercolor{block body}{fg=black,bg=black!3}
+\setbeamertemplate{blocks}[rounded][shadow=false]
+\setbeamertemplate{itemize items}{\textbullet}
+\setbeamertemplate{enumerate items}[default]
+\setbeamertemplate{section page}{\centering\Large\insertsection\par}
+\AtBeginSection{\begin{frame}\sectionpage\end{frame}}
+
+% ---------------------------------------------------------------- diagram colours
+\definecolor{cblue}{HTML}{2F6CA8}
+\definecolor{corange}{HTML}{D9822B}
+\definecolor{cgreen}{HTML}{3A8F5C}
+\definecolor{cpurple}{HTML}{7B4FA0}
+\definecolor{cred}{HTML}{C0392B}
+\definecolor{cgray}{HTML}{6B7280}
+
+\tikzset{
+  >={Stealth[length=2mm]},
+  b/.style={draw,rounded corners=2pt,minimum height=8mm,inner sep=4pt,align=center},
+  bb/.style={b,draw=cblue,fill=cblue!10},
+  bo/.style={b,draw=corange,fill=corange!12},
+  bg/.style={b,draw=cgreen,fill=cgreen!10},
+  bp/.style={b,draw=cpurple,fill=cpurple!10},
+  br/.style={b,draw=cred,fill=cred!8},
+  note/.style={font=\scriptsize,text=cgray,align=center},
+}
+
+% ---------------------------------------------------------------- notation
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Real}{\mathbb{R}}
+\newcommand{\Ag}{I}                 % set of agents
+\newcommand{\ja}{a}                 % joint action (book uses plain a)
+\newcommand{\hh}{\hat{h}}           % full history
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator{\supp}{supp}
+\DeclareMathOperator{\BR}{BR}
+\newcommand{\reading}[1]{\par\vfill{\small\textbf{Reading:} #1}}
+
+\endinput

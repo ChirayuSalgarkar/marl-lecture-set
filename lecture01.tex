@@ -1,0 +1,849 @@
+% =====================================================================
+%  MARL Lecture 1: Introduction and Models of Multi-Agent Interaction
+%  Book: Albrecht, Christianos & Schaefer (2024), Chapters 1 and 3
+%  Compile with:  latexmk -pdf lecture01.tex
+% =====================================================================
+\documentclass[aspectratio=169,11pt]{beamer}
+\usepackage{marl-style}
+
+\title{Multi-Agent Reinforcement Learning}
+\subtitle{Lecture 1: Introduction and Models of Multi-Agent Interaction}
+\author{[Instructor name]}
+\institute{[Course number]}
+\date{[Date]}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+  \centering\small Book: Chapters 1 and 3
+\end{frame}
+
+% ---------------------------------------------------------------------
+\begin{frame}{The course follows the book}
+  \centering
+  \begin{tikzpicture}[x=0.85cm,y=1cm]
+    \tikzset{lec/.style={draw,rounded corners=1.5pt,minimum width=0.66cm,minimum height=0.62cm,inner sep=0,font=\scriptsize\bfseries}}
+    % Part I
+    \foreach \k/\c in {1/cblue,2/cblue,3/cblue,4/cblue,5/cpurple,6/cpurple,7/cpurple,8/cpurple}
+      \node[lec,draw=\c,fill=\c!15] (L\k) at (\k,0) {\k};
+    \node[lec,draw=cgray,fill=cgray!15] (L9) at (9,0) {9};
+    \foreach \k in {10,...,16} \node[lec,draw=cgreen,fill=cgreen!15] (L\k) at (\k,0) {\k};
+    \node[lec,draw=corange,fill=corange!15] (L17) at (17,0) {17};
+    \draw[decorate,decoration={brace,amplitude=5pt},thick,cblue] ($(L1.north west)+(0,0.1)$) -- ($(L4.north east)+(0,0.1)$)
+      node[midway,above=6pt,font=\scriptsize,align=center,text=cblue] {Ch.\ 1, 3--5\\ models and solutions};
+    \draw[decorate,decoration={brace,amplitude=5pt},thick,cpurple] ($(L5.north west)+(0,0.1)$) -- ($(L8.north east)+(0,0.1)$)
+      node[midway,above=6pt,font=\scriptsize,align=center,text=cpurple] {Ch.\ 6\\ foundational algorithms};
+    \draw[decorate,decoration={brace,amplitude=5pt},thick,cgray] ($(L9.north west)+(0,0.1)$) -- ($(L9.north east)+(0,0.1)$)
+      node[midway,above=24pt,font=\scriptsize,align=center,text=cgray] {Ch.\ 2, 7, 8\\ deep RL};
+    \draw[decorate,decoration={brace,amplitude=5pt},thick,cgreen] ($(L10.north west)+(0,0.1)$) -- ($(L16.north east)+(0,0.1)$)
+      node[midway,above=6pt,font=\scriptsize,align=center,text=cgreen] {Ch.\ 9\\ multi-agent deep RL};
+    \draw[decorate,decoration={brace,amplitude=5pt},thick,corange] ($(L17.north west)+(0,0.1)$) -- ($(L17.north east)+(0,0.1)$)
+      node[midway,above=24pt,font=\scriptsize,align=center,text=corange] {Ch.\ 10--11\\ practice};
+    \draw[decorate,decoration={brace,amplitude=6pt,mirror},thick] ($(L1.south west)+(0,-0.15)$) -- ($(L8.south east)+(0,-0.15)$)
+      node[midway,below=8pt,font=\small] {Part I: Foundations};
+    \draw[decorate,decoration={brace,amplitude=6pt,mirror},thick] ($(L10.south west)+(0,-0.15)$) -- ($(L17.south east)+(0,-0.15)$)
+      node[midway,below=8pt,font=\small] {Part II: Deep MARL};
+    \draw[red!70!black,very thick] (L1) circle (0.42);
+  \end{tikzpicture}
+  \vfill
+  \small S.\ V.\ Albrecht, F.\ Christianos, L.\ Sch\"afer, \emph{Multi-Agent Reinforcement Learning: Foundations and Modern Approaches}, MIT Press, 2024. Free at \texttt{marl-book.com}.
+\end{frame}
+
+\begin{frame}{Today}
+  \begin{enumerate}
+    \item What multi-agent systems and MARL are \hfill \S1.1--1.3
+    \item Challenges and agendas of MARL \hfill \S1.4--1.5
+    \item Normal-form and repeated normal-form games \hfill \S3.1--3.2
+    \item Stochastic games \hfill \S3.3
+    \item Partially observable stochastic games and belief states \hfill \S3.4
+    \item Modeling communication \hfill \S3.5
+    \item Knowledge assumptions; RL $\leftrightarrow$ game theory dictionary \hfill \S3.6--3.7
+  \end{enumerate}
+  \bigskip
+  Goal: given a multi-agent problem, write down the right game model. What it means to \emph{solve} the game is Lecture 2.
+  \reading{Chapter 1 and Chapter 3. Skim Chapter 2 if MDPs are rusty.}
+\end{frame}
+
+% =====================================================================
+\section{Multi-agent systems and MARL}
+
+\begin{frame}{Multi-agent systems}
+  A \textbf{multi-agent system} consists of an environment and multiple decision-making agents that interact in it to achieve goals (\S1.1).
+  \begin{itemize}
+    \item \textbf{Environment:} a physical or virtual world whose state changes over time, in response to the agents' actions.
+    \item \textbf{Agents:} entities that receive information about the state (observations) and choose actions.
+    \item \textbf{Goals:} specified, in RL, through reward functions. Agents may share goals or have different ones.
+  \end{itemize}
+  \bigskip
+  \textbf{MARL} learns optimal policies for a set of agents in a multi-agent system, from experience gathered through repeated interaction (\S1.2).
+  \begin{itemize}
+    \item Each agent's experience depends on the others' actions.
+    \item Agents may learn simultaneously, so each one is learning in a changing world.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{The MARL training loop}
+  \centering
+  \begin{tikzpicture}
+    \node[b,fill=cgray!8,minimum width=10cm,minimum height=1.2cm] (env) at (0,0) {\textbf{Environment}\quad state $s^t \to s^{t+1}$};
+    \foreach \k/\x/\c in {1/-3.8/cblue,2/-1.3/corange,3/1.3/cgreen,n/3.8/cpurple}{
+      \node[b,draw=\c,fill=\c!10,minimum width=2cm] (a\k) at (\x,2.8) {Agent $\k$\\[-1pt]{\scriptsize policy $\pi_\k$}};
+      \draw[->,thick,\c] ([xshift=-5mm]a\k.south) -- node[left,font=\scriptsize] {$a^t_\k$} ([xshift=-5mm]a\k.south |- env.north);
+      \draw[->,thick] ([xshift=5mm]a\k.south |- env.north) -- node[right,font=\scriptsize,align=left] {$o^{t+1}_\k$\\$r^t_\k$} ([xshift=5mm]a\k.south);
+    }
+    \node at (2.55,2.8) {$\cdots$};
+    \draw[decorate,decoration={brace,amplitude=6pt},thick,cgray]
+      ([yshift=3mm]a1.north west) -- ([yshift=3mm]an.north east)
+      node[midway,above=8pt,font=\small] {each agent learns from its own experience $(o_i, a_i, r_i)$};
+    \node[note,below=3mm of env] {joint action $a^t = (a^t_1, \dots, a^t_n)$ \quad joint observation $o^{t+1}$ \quad joint reward $r^t$};
+  \end{tikzpicture}
+\end{frame}
+
+\begin{frame}{Running example: level-based foraging}
+  \begin{columns}[c]
+    \begin{column}{0.5\textwidth}
+      \centering
+      \begin{tikzpicture}[scale=0.62]
+        \fill[cgray!5] (0,0) rectangle (8,8);
+        \draw[cgray!40] (0,0) grid (8,8);
+        \draw[thick] (0,0) rectangle (8,8);
+        % items: (x,y,level)
+        \foreach \x/\y/\l in {1/6/1,5/6/2,2/2/3,6/1/1}{
+          \node[draw=cred,fill=cred!20,regular polygon,regular polygon sides=6,minimum size=0.55cm,inner sep=0,font=\scriptsize\bfseries] at (\x+0.5,\y+0.5) {\l};}
+        % agents
+        \foreach \x/\y/\l/\c in {3/6/1/cblue,5/4/1/corange,1/3/2/cgreen}{
+          \node[circle,draw=\c,fill=\c!25,minimum size=0.6cm,inner sep=0,font=\scriptsize\bfseries] at (\x+0.5,\y+0.5) {\l};}
+      \end{tikzpicture}\\[2pt]
+      {\scriptsize circles: agents \quad hexagons: items \quad numbers: levels}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \small
+      \begin{itemize}
+        \item Agents move in a grid and try to collect items.
+        \item An item is collected if the agents next to it choose \emph{collect} and the sum of their levels is at least the item's level.
+        \item The level-3 item needs the level-2 agent plus a level-1 agent: \textbf{coordination} is required.
+        \item Actions: up, down, left, right, collect, noop.
+        \item Reward: common (+1 to everyone per item) or individual (to the agents that collected it).
+      \end{itemize}
+      \medskip
+      We will model this as a stochastic game, then as a POSG.
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Why MARL?}
+  \textbf{Decomposition.} One central agent controlling $n$ robots must choose among $\prod_i |A_i|$ joint actions and see all observations. Splitting the problem into $n$ agents gives each a small action space and local inputs.
+  \bigskip
+
+  \textbf{Applications} (\S1.3):
+  \medskip
+
+  \small
+  \begin{tabular}{@{}llll@{}}
+    \toprule
+    Application & Agents & Observations & Rewards \\
+    \midrule
+    Warehouse robots & one per robot & local aisle view, order info & orders completed (shared) \\
+    Board and video games & one per player & board, game screen & win / loss (zero-sum) \\
+    Autonomous driving & one per vehicle & sensors, nearby cars & progress minus collisions \\
+    Electronic trading & one per trader & prices, order book & profit (general-sum) \\
+    \bottomrule
+  \end{tabular}
+\end{frame}
+
+\begin{frame}{Dimensions of a MARL problem}
+  \centering
+  \begin{tikzpicture}
+    \node[draw,circle,fill=cgray!10,minimum size=1.7cm,align=center,font=\small\bfseries] (c) {MARL\\ problem};
+    \foreach \ang/\t/\d/\col in {
+      90/Size/{number of agents, states, actions}/cblue,
+      30/Rewards/{common, zero-sum, general-sum}/corange,
+      -30/Observability/{full, partial}/cgreen,
+      -90/Knowledge/{what agents know about the game}/cpurple,
+      -150/Objective/{solution concept (Ch.\ 4)}/cred,
+      150/Centralization/{training vs.\ execution (Ch.\ 9)}/cgray}{
+      \node[b,draw=\col,fill=\col!10,text width=3.0cm,font=\scriptsize,inner sep=3pt] (n\ang) at (\ang:4.6cm and 2.2cm) {\textbf{\t}\\ \d};
+      \draw[thick,\col] (c) -- (n\ang);
+    }
+  \end{tikzpicture}
+  \medskip
+
+  \small Book Figure 1.4. The game model (today) fixes the first four; the solution concept (Lecture 2) fixes the objective.
+\end{frame}
+
+\begin{frame}{Challenges of MARL (preview, \S1.4)}
+  \begin{enumerate}
+    \item \textbf{Non-stationarity.} Agents adapt to each other, and each adaptation changes the others' problem: a moving target, with possibly cyclic dynamics.
+    \item \textbf{Optimality and equilibrium selection.} A policy's return depends on everyone else's policies. ``Optimal'' needs new definitions, and there can be many equilibria with different returns.
+    \item \textbf{Multi-agent credit assignment.} Which past actions, and \emph{whose} actions, produced the reward?
+    \item \textbf{Scaling in the number of agents.} The number of joint actions can grow exponentially with $n$.
+  \end{enumerate}
+  \bigskip
+  Lecture 4 (Chapter 5) treats each challenge in depth.
+\end{frame}
+
+\begin{frame}{Agendas of MARL (\S1.5)}
+  Shoham, Powers \& Grenager (2007): ``If multi-agent learning is the answer, what is the question?''
+  \bigskip
+
+  \begin{tikzpicture}[node distance=5mm]
+    \node[bb,text width=4.2cm,minimum height=2.6cm,align=left,font=\small] (c)
+      {\textbf{Computational}\\[2pt] Use MARL to compute solutions of games (e.g.\ Nash equilibria). Competes with direct methods such as LPs, but needs no model of the game.};
+    \node[bo,text width=4.2cm,minimum height=2.6cm,align=left,font=\small,right=of c] (p)
+      {\textbf{Prescriptive}\\[2pt] How should an agent learn? Criteria on behaviour \emph{during} learning, e.g.\ never fall below a reward threshold.};
+    \node[b,draw=cgray,fill=cgray!8,text width=4.2cm,minimum height=2.6cm,align=left,font=\small,right=of p] (d)
+      {\textbf{Descriptive}\\[2pt] Use MARL to model how humans and animals learn in populations. Outside the book's scope.};
+  \end{tikzpicture}
+  \bigskip
+
+  This course, like the book, takes the computational and prescriptive view: \textbf{game model + solution concept} defines a learning problem.
+\end{frame}
+
+% =====================================================================
+\section{Normal-form games}
+
+\begin{frame}{Recap: Markov decision processes}
+  An MDP has states $S$, actions $A$, reward $R : S \times A \times S \to \Real$, transitions $T(s' \mid s, a)$, initial distribution $\mu$, discount $\gamma \in [0,1]$.
+  \[
+    Q^\pi(s,a) = \sum_{s'} T(s' \mid s,a) \Big[ R(s,a,s') + \gamma \sum_{a'} \pi(a' \mid s')\, Q^\pi(s',a') \Big].
+  \]
+  \begin{itemize}
+    \item The MDP is the single-agent model at the corner of the game hierarchy.
+    \item Its basic kernel is the multi-armed bandit: one state, one decision. The multi-agent analogue is the \textbf{normal-form game}.
+  \end{itemize}
+  \bigskip
+  \centering
+  \begin{tikzpicture}
+    \node[bb] (bandit) at (0,0) {bandit};
+    \node[bb] (mdp) at (5.5,0) {MDP};
+    \node[bo] (nfg) at (0,-1.6) {normal-form game};
+    \node[bo] (sg) at (5.5,-1.6) {stochastic game};
+    \draw[->,thick,cblue] (bandit) -- node[above,font=\scriptsize] {add states} (mdp);
+    \draw[->,thick,corange] (nfg) -- node[above,font=\scriptsize] {add states} (sg);
+    \draw[->,thick,cgray] (bandit) -- node[left,font=\scriptsize] {add agents} (nfg);
+    \draw[->,thick,cgray] (mdp) -- node[right,font=\scriptsize] {add agents} (sg);
+  \end{tikzpicture}
+\end{frame}
+
+\begin{frame}{Normal-form games}
+  \begin{block}{Definition 2 (Normal-form game)}
+    \begin{itemize}
+      \item A finite set of agents $I = \{1, \dots, n\}$.
+      \item For each agent $i \in I$: a finite action set $A_i$ and a reward function $R_i : A \to \Real$, where $A = A_1 \times \cdots \times A_n$.
+    \end{itemize}
+  \end{block}
+  The game proceeds in one step:
+  \begin{enumerate}
+    \item each agent selects a policy $\pi_i : A_i \to [0,1]$ with $\sum_{a_i} \pi_i(a_i) = 1$,
+    \item each agent samples $a_i \sim \pi_i$, giving the joint action $a = (a_1, \dots, a_n)$,
+    \item each agent receives $r_i = R_i(a)$.
+  \end{enumerate}
+  With two agents the rewards fit in a matrix: a \textbf{matrix game}. Agent 1 picks the row, agent 2 the column, and cells hold $(r_1, r_2)$.
+\end{frame}
+
+\begin{frame}{Classifying games by rewards}
+  \begin{itemize}
+    \item \textbf{Zero-sum:} $\sum_{i \in I} R_i(a) = 0$ for all $a$. With two agents, $R_i = -R_j$. (A special case of constant-sum.)
+    \item \textbf{Common-reward:} $R_i = R_j$ for all $i, j$. Fully cooperative.
+    \item \textbf{General-sum:} no restriction.
+  \end{itemize}
+  \bigskip
+  \centering
+  \begin{columns}[T]
+    \begin{column}{0.33\textwidth}
+      \centering \textbf{Rock-Paper-Scissors}\\[3pt]
+      \footnotesize
+      \begin{tabular}{c|ccc}
+          & R & P & S \\ \hline
+        R & $0,0$ & $-1,1$ & $1,-1$ \\
+        P & $1,-1$ & $0,0$ & $-1,1$ \\
+        S & $-1,1$ & $1,-1$ & $0,0$
+      \end{tabular}\\[4pt]
+      \small zero-sum
+    \end{column}
+    \begin{column}{0.28\textwidth}
+      \centering \textbf{Coordination}\\[3pt]
+      \footnotesize
+      \begin{tabular}{c|cc}
+          & A & B \\ \hline
+        A & $10$ & $0$ \\
+        B & $0$ & $10$
+      \end{tabular}\\[4pt]
+      \small common-reward\\ (one number per cell)
+    \end{column}
+    \begin{column}{0.33\textwidth}
+      \centering \textbf{Prisoner's Dilemma}\\[3pt]
+      \footnotesize
+      \begin{tabular}{c|cc}
+          & C & D \\ \hline
+        C & $-1,-1$ & $-5,0$ \\
+        D & $0,-5$ & $-3,-3$
+      \end{tabular}\\[4pt]
+      \small general-sum
+    \end{column}
+  \end{columns}
+  \bigskip
+
+  \small Book Figure 3.2. In the Prisoner's Dilemma, D gives a higher reward than C whatever the other agent does, yet $(C,C)$ is better for both than $(D,D)$.
+\end{frame}
+
+\begin{frame}{How many different $2 \times 2$ games are there?}
+  \begin{columns}[c]
+    \begin{column}{0.5\textwidth}
+      \begin{itemize}
+        \item Restrict to \textbf{strictly ordinal} games: each agent ranks the four outcomes $1 < 2 < 3 < 4$.
+        \item Up to relabeling of actions and agents, there are exactly \textbf{78} structurally distinct $2 \times 2$ games (Rapoport \& Guyer, 1966).
+        \item They split into \textbf{no-conflict} games (one outcome is best for both) and \textbf{conflict} games.
+        \item Book \S11.2 lists all 78; they are cheap test beds for learning algorithms.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.46\textwidth}
+      \centering
+      \begin{tikzpicture}[scale=1.1]
+        \foreach \i/\j/\r/\c/\col in {0/0/3/3/cgreen,1/0/1/4/cgray,0/1/4/1/cgray,1/1/2/2/cred}{
+          \fill[\col!18] (\i*1.8,-\j*1.3) rectangle ++(1.8,-1.3);
+          \node[font=\small] at (\i*1.8+0.9,-\j*1.3-0.65) {$(\r, \c)$};}
+        \draw (0,0) grid[xstep=1.8,ystep=1.3] (3.6,-2.6);
+        \node[font=\scriptsize] at (0.9,0.25) {C}; \node[font=\scriptsize] at (2.7,0.25) {D};
+        \node[font=\scriptsize] at (-0.25,-0.65) {C}; \node[font=\scriptsize] at (-0.25,-1.95) {D};
+        \node[note,text width=4cm] at (1.8,-3.15) {Prisoner's Dilemma as ranks:\\ $(D,C) \succ (C,C) \succ (D,D) \succ (C,D)$ for agent 1};
+      \end{tikzpicture}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% =====================================================================
+\section{Repeated normal-form games}
+
+\begin{frame}{Repeated normal-form games}
+  Repeat a normal-form game $\Gamma = (I, \{A_i\}, \{R_i\})$ for $t = 0, 1, \dots, T-1$, with $T$ finite or infinite.
+  \begin{itemize}
+    \item At each step agent $i$ samples $a_i^t \sim \pi_i(\cdot \mid h^t)$ and receives $r_i^t = R_i(a^t)$.
+    \item The policy is conditioned on the \textbf{joint-action history}
+      \[
+        h^t = (a^0, a^1, \dots, a^{t-1}), \qquad h^0 = \emptyset .
+      \]
+    \item The space of policies is now huge. In practice policies condition on a summary $f(h^t)$, for example the last joint action $a^{t-1}$ or the other agents' action counts.
+  \end{itemize}
+  \bigskip
+  Terminology: \emph{non-repeated} means $T = 1$; \emph{repeated} means $T > 1$.
+\end{frame}
+
+\begin{frame}{Example: Tit-for-Tat in the repeated Prisoner's Dilemma}
+  \begin{columns}[c]
+    \begin{column}{0.5\textwidth}
+      Tit-for-Tat (Axelrod \& Hamilton, 1981) conditions only on the other agent's last action:
+      \[
+        \pi_i(a_i^t \mid h^t) =
+        \begin{cases}
+          \mathbb{1}[a_i^t = C] & t = 0, \\
+          \mathbb{1}[a_i^t = a_j^{t-1}] & t > 0.
+        \end{cases}
+      \]
+      \begin{itemize}
+        \item A policy with internal state $f(h^t) = a_j^{t-1}$: a two-state machine.
+        \item Never the first to defect; punishes defection once; forgives immediately.
+        \item Won Axelrod's 1980 tournaments of repeated-PD strategies.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.46\textwidth}
+      \centering
+      \begin{tikzpicture}[shorten >=1pt,node distance=3.2cm,on grid,auto,
+          every state/.style={minimum size=1.3cm,font=\small}]
+        \node[state,initial,draw=cgreen,fill=cgreen!15,initial text={}] (C) {play C};
+        \node[state,draw=cred,fill=cred!15] (D) [right=of C] {play D};
+        \path[->,thick]
+          (C) edge [loop above,cgreen] node {\scriptsize $a_j = C$} ()
+              edge [bend left,cred] node {\scriptsize $a_j = D$} (D)
+          (D) edge [loop above,cred] node {\scriptsize $a_j = D$} ()
+              edge [bend left,cgreen] node {\scriptsize $a_j = C$} (C);
+      \end{tikzpicture}\\[6pt]
+      {\scriptsize transitions on the other agent's previous action $a_j^{t-1}$}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Infinite repetition and the discount factor}
+  Suppose that after each step the game continues with probability $\gamma$ and stops with probability $1 - \gamma$, independently of play. Let $T$ be the (random) number of steps played.
+  \bigskip
+
+  \textbf{Claim.} The expected total reward equals the discounted return:
+  \[
+    \E\Big[ \sum_{t=0}^{T-1} r_i^t \Big] = \sum_{t=0}^{\infty} \gamma^t\, \E[r_i^t].
+  \]
+  \textbf{Derivation.} Write the sum with indicators and use independence of $T$ from play:
+  \[
+    \E\Big[ \sum_{t=0}^{\infty} \mathbb{1}[T > t]\, r_i^t \Big]
+    = \sum_{t=0}^{\infty} \Pr(T > t)\, \E[r_i^t]
+    = \sum_{t=0}^{\infty} \gamma^t\, \E[r_i^t],
+  \]
+  since reaching step $t$ requires $t$ independent continuations. \hfill $\square$
+  \bigskip
+
+  With $\gamma < 1$ the game is still ``infinite'': every finite length has positive probability.
+\end{frame}
+
+\begin{frame}{Finite repetition: end-game effects}
+  Finitely and infinitely repeated games are \textbf{not} equivalent. Consider the Prisoner's Dilemma repeated a known number of times $T$.
+  \bigskip
+
+  \textbf{Backward induction.}
+  \begin{enumerate}
+    \item At $t = T-1$ nothing follows, so the last step is a one-shot game and D dominates C.
+    \item So the last step is $(D,D)$ regardless of history. At $t = T-2$, the current choice cannot affect what happens next, so this step is also one-shot: D.
+    \item Induct backwards: in the unique subgame-perfect equilibrium both agents defect at every step.
+  \end{enumerate}
+  \bigskip
+  With infinite repetition (or an unknown end, $\gamma$ close to 1), the threat of future punishment can sustain cooperation, e.g.\ Tit-for-Tat. Folk theorems make this precise (Lecture 2).
+  \reading{\S3.2; end-game example in \S6.3.3.}
+\end{frame}
+
+% =====================================================================
+\section{Stochastic games}
+
+\begin{frame}{Stochastic games}
+  \begin{block}{Definition 3 (Stochastic game; Shapley, 1953)}
+    \begin{itemize}
+      \item Agents $I = \{1, \dots, n\}$; finite states $S$ with terminal states $\bar S \subset S$.
+      \item For each $i$: actions $A_i$ and reward $R_i : S \times A \times S \to \Real$.
+      \item Transition function $T : S \times A \times S \to [0,1]$ with $\sum_{s'} T(s, a, s') = 1$.
+      \item Initial distribution $\mu$ with $\sum_s \mu(s) = 1$ and $\mu(s) = 0$ for $s \in \bar S$.
+    \end{itemize}
+  \end{block}
+  Play: $s^0 \sim \mu$. At each $t$, every agent observes $s^t$, samples $a_i^t \sim \pi_i(\cdot \mid h^t)$, the state moves to $s^{t+1} \sim T(\cdot \mid s^t, a^t)$, and agent $i$ receives $r_i^t = R_i(s^t, a^t, s^{t+1})$. It stops at a terminal state or after $T$ steps, or runs forever.
+  \medskip
+
+  Policies may condition on the full \textbf{state-action history} $h^t = (s^0, a^0, s^1, a^1, \dots, s^t)$, which every agent sees: \textbf{full observability}.
+\end{frame}
+
+\begin{frame}{The Markov property}
+  Like MDPs, stochastic games satisfy
+  \[
+    \Pr(s^{t+1}, r^t \mid s^t, a^t, s^{t-1}, a^{t-1}, \dots, s^0, a^0) = \Pr(s^{t+1}, r^t \mid s^t, a^t),
+  \]
+  where $r^t = (r_1^t, \dots, r_n^t)$ is the joint reward. Hence the alternative name \textbf{Markov game} (Littman, 1994).
+  \bigskip
+
+  \begin{itemize}
+    \item The Markov property holds for the \emph{joint} action. It does \textbf{not} hold for one agent's own action $a_i^t$ once the others' policies change over time.
+    \item Classification by rewards carries over: zero-sum, common-reward, and general-sum stochastic games.
+    \item Finite $S$ and $A_i$ as in Shapley's definition; continuous versions are defined analogously.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Level-based foraging as a stochastic game}
+  \begin{itemize}
+    \item \textbf{State:} $x$--$y$ positions of all agents and items, plus a binary ``collected'' flag per item.
+    \item \textbf{Actions:} $A_i = \{\text{up}, \text{down}, \text{left}, \text{right}, \text{collect}, \text{noop}\}$, so $|A| = 6^n$.
+    \item \textbf{Transitions $T$:} moves update positions (collisions resolved); a successful joint \emph{collect} flips an item's flag.
+    \item \textbf{Rewards}, two versions:
+      \begin{itemize}
+        \item common-reward: $R_i = +1$ for every agent whenever any item is collected;
+        \item general-sum: $+1$ only to agents that took part in collecting it.
+      \end{itemize}
+    \item \textbf{Termination:} all items collected (terminal state in $\bar S$), or a step limit.
+  \end{itemize}
+  \bigskip
+  Same dynamics, different reward functions, different games: the reward structure is a modeling choice.
+\end{frame}
+
+\begin{frame}{Every state is a normal-form game}
+  \centering
+  \begin{tikzpicture}[x=1cm,y=1cm]
+    \tikzset{st/.style={draw,rounded corners=3pt,thick,inner sep=3pt,font=\scriptsize}}
+    \node[st,draw=cblue,fill=cblue!8] (s1) at (0,1.5) {\begin{tabular}{c|cc} $s_1$ & 1 & 2 \\ \hline 1 & $1,1$ & $0,1$ \\ 2 & $2,2$ & $1,1$ \end{tabular}};
+    \node[st,draw=corange,fill=corange!8] (s2) at (-4,-1.6) {\begin{tabular}{c|cc} $s_2$ & 1 & 2 \\ \hline 1 & $1,3$ & $0,4$ \\ 2 & $4,0$ & $3,1$ \end{tabular}};
+    \node[st,draw=cgreen,fill=cgreen!8] (s3) at (4,-1.6) {\begin{tabular}{c|cc} $s_3$ & 1 & 2 \\ \hline 1 & $1,1$ & $0,0$ \\ 2 & $4,1$ & $3,2$ \end{tabular}};
+    \draw[->,thick,cblue] (s1) to[bend right=15] node[above left,font=\scriptsize,align=right] {$a = (2,2)$, $r = (1,1)$\\ $p = 0.5$} (s2);
+    \draw[->,thick,cblue] (s1.east) to[out=20,in=-20,looseness=5] node[right,font=\scriptsize] {$p = 0.5$} ($(s1.east)+(0,-0.3)$);
+    \draw[->,thick,corange] (s2) -- node[below,font=\scriptsize,align=center] {$a = (1,2)$, $r = (0,4)$, $p = 0.8$} (s3);
+    \draw[->,thick,corange] (s2.west) to[out=200,in=160,looseness=5] node[left,font=\scriptsize] {$p = 0.2$} ($(s2.west)+(0,0.3)$);
+    \draw[->,thick,cgreen] (s3) to[bend right=15] node[above right,font=\scriptsize,align=left] {$a = (2,1)$, $r = (4,1)$\\ $p = 1.0$} (s1);
+  \end{tikzpicture}
+  \medskip
+
+  \small After book Figure 3.3(b). With $R_i(s,a)$, state $s$ is the normal-form game with rewards $R_i(s, \cdot)$. One joint action and its outcome is shown per state.
+\end{frame}
+
+\begin{frame}{Special cases of stochastic games}
+  \begin{columns}[c]
+    \begin{column}{0.42\textwidth}
+      \begin{itemize}
+        \item \textbf{Repeated normal-form game:} one state, $|S| = 1$, no terminal states.
+        \item \textbf{MDP:} one agent, $|I| = 1$.
+        \item \textbf{Non-repeated normal-form game:} one state, one step.
+      \end{itemize}
+      \bigskip
+      Normal-form games are the building block of all the models in this course.
+    \end{column}
+    \begin{column}{0.55\textwidth}
+      \centering
+      \begin{tikzpicture}[font=\footnotesize]
+        \node[bp,text width=5.2cm] (posg) at (0,4.2) {\textbf{POSG}: $n$ agents, $m$ states, partially observed};
+        \node[bo,text width=5.2cm] (sg) at (0,2.6) {\textbf{Stochastic game}: $n$ agents, $m$ states, fully observed};
+        \node[bg,text width=2.6cm] (rep) at (-1.55,0.9) {\textbf{Repeated NFG}: $n$ agents, 1 state};
+        \node[bb,text width=2.6cm] (mdp) at (1.55,0.9) {\textbf{MDP}: 1 agent, $m$ states};
+        \draw[->,thick] (sg) -- (posg);
+        \draw[->,thick] (rep) -- (sg);
+        \draw[->,thick] (mdp) -- (sg);
+        \node[note] at (0,0) {book Figure 3.1; arrows point to the more general model};
+      \end{tikzpicture}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{One agent's view of a stochastic game}
+  \centering
+  \begin{tikzpicture}
+    \node[bb,minimum width=2.2cm] (ag) at (0,0) {Agent};
+    \node[b,minimum width=2.4cm,minimum height=1.6cm] (env) at (0,2.4) {Environment\\ $T, R$ fixed};
+    \draw[->,thick,cblue] ($(ag.north west)+(0.3,0)$) -- node[left,font=\scriptsize] {$a^t$} ($(env.south west)+(0.3,0)$);
+    \draw[->,thick] ($(env.south east)+(-0.3,0)$) -- node[right,font=\scriptsize] {$s^{t+1}, r^t$} ($(ag.north east)+(-0.3,0)$);
+    \node[note] at (0,-0.9) {MDP: stationary};
+    \begin{scope}[xshift=7.5cm]
+      \node[bb,minimum width=2.2cm] (a1) at (0,0) {Agent 1};
+      \node[b,minimum width=2.6cm,minimum height=1.0cm] (e) at (0,2.2) {Environment};
+      \node[bo,minimum width=1.6cm] (a2) at (-1.6,3.6) {Agent 2};
+      \node[bg,minimum width=1.6cm] (a3) at (1.6,3.6) {Agent 3};
+      \draw[->,corange,thick] (a2) -- (e);
+      \draw[->,cgreen,thick] (a3) -- (e);
+      \draw[->,thick,cblue] ($(a1.north west)+(0.3,0)$) -- node[left,font=\scriptsize] {$a^t_1$} ($(e.south west)+(0.5,0)$);
+      \draw[->,thick] ($(e.south east)+(-0.5,0)$) -- node[right,font=\scriptsize] {$s^{t+1}, r^t_1$} ($(a1.north east)+(-0.3,0)$);
+      \begin{scope}[on background layer]
+        \node[fit=(e)(a2)(a3),draw=cred,dashed,rounded corners=4pt,inner sep=6pt,fill=cred!4,
+              label={[font=\scriptsize,text=cred]above:what agent 1 experiences as ``the environment''}] {};
+      \end{scope}
+      \node[note] at (0,-0.9) {stochastic game: agents 2 and 3 are learning too};
+    \end{scope}
+  \end{tikzpicture}
+  \bigskip
+
+  From agent 1's view, the effective transition and reward functions depend on $\pi_2, \pi_3$, which keep changing. This is the root of non-stationarity.
+\end{frame}
+
+% =====================================================================
+\section{Partially observable stochastic games}
+
+\begin{frame}{Partially observable stochastic games}
+  \begin{block}{Definition 4 (POSG; Hansen, Bernstein \& Zilberstein, 2004)}
+    A stochastic game plus, for each agent $i \in I$:
+    \begin{itemize}
+      \item a finite observation set $O_i$,
+      \item an observation function $\mathcal{O}_i : A \times S \times O_i \to [0,1]$ with $\sum_{o_i} \mathcal{O}_i(a, s, o_i) = 1$.
+    \end{itemize}
+  \end{block}
+  Play: $s^0 \sim \mu$; at each $t$,
+  \begin{enumerate}
+    \item each agent receives $o_i^t \sim \mathcal{O}_i(\cdot \mid a^{t-1}, s^t)$ (with $a^{-1} = \emptyset$),
+    \item each agent samples $a_i^t \sim \pi_i(\cdot \mid h_i^t)$, conditioned on its \textbf{observation history} $h_i^t = (o_i^0, \dots, o_i^t)$,
+    \item $s^{t+1} \sim T(\cdot \mid s^t, a^t)$ and $r_i^t = R_i(s^t, a^t, s^{t+1})$.
+  \end{enumerate}
+  \medskip
+  \small The book writes $O_i$ for the observation function too; we use $\mathcal{O}_i$ on the slides to keep it apart from the set.
+\end{frame}
+
+\begin{frame}{What POSGs can express}
+  \begin{columns}[T]
+    \begin{column}{0.56\textwidth}
+      \small
+      \begin{itemize}
+        \item \textbf{Stochastic game:} $o_i^t = (s^t, a^{t-1})$.
+        \item \textbf{POMDP:} a single agent.
+        \item \textbf{Dec-POMDP:} common reward, $R_1 = \cdots = R_n$.
+        \item \textbf{Unobserved actions:} $o_i^t = (s^t, a_i^{t-1})$. Robot soccer; markets with private orders.
+        \item \textbf{Limited view:} $o_i^t = (\bar s^t, \bar a^{t-1})$ with $\bar s^t \subset s^t$, $\bar a^{t-1} \subset a^{t-1}$. Local vision, fog of war.
+        \item \textbf{Noise:} $\mathcal{O}_i$ puts mass on several observations (imperfect sensors).
+        \item \textbf{Communication:} messages in observations, with range, loss and noise (next section).
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.4\textwidth}
+      \centering
+      \begin{tikzpicture}[scale=0.5]
+        \fill[cgray!5] (0,0) rectangle (8,8);
+        \draw[cgray!40] (0,0) grid (8,8);
+        \draw[thick] (0,0) rectangle (8,8);
+        % vision fields (radius 1 around agents)
+        \fill[cblue,opacity=0.15] (2,5) rectangle (5,8);
+        \fill[corange,opacity=0.15] (4,3) rectangle (7,6);
+        \fill[cgreen,opacity=0.15] (0,2) rectangle (3,5);
+        \foreach \x/\y/\l in {1/6/1,5/6/2,2/2/3,6/1/1}{
+          \node[draw=cred,fill=cred!20,regular polygon,regular polygon sides=6,minimum size=0.42cm,inner sep=0,font=\tiny\bfseries] at (\x+0.5,\y+0.5) {\l};}
+        \foreach \x/\y/\l/\c in {3/6/1/cblue,5/4/1/corange,1/3/2/cgreen}{
+          \node[circle,draw=\c,fill=\c!35,minimum size=0.45cm,inner sep=0,font=\tiny\bfseries] at (\x+0.5,\y+0.5) {\l};}
+      \end{tikzpicture}\\[3pt]
+      {\scriptsize partially observable foraging: each agent sees a $3 \times 3$ window (shaded). The blue agent cannot see the level-1 item two cells to its left.}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Dec-POMDPs and complexity}
+  A POSG with common reward is a \textbf{decentralized POMDP} (Dec-POMDP), the standard model in multi-agent planning (Oliehoek \& Amato, 2016) and in cooperative deep MARL benchmarks.
+  \bigskip
+
+  \begin{center}
+    \begin{tabular}{lll}
+      \toprule
+      Finite-horizon planning problem & Agents, observability & Complexity \\
+      \midrule
+      MDP & one, full & P-complete \\
+      POMDP & one, partial & PSPACE-complete \\
+      Dec-POMDP & $n \ge 2$, partial & NEXP-complete \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \begin{itemize}
+    \item Bernstein et al.\ (2002). Even with full knowledge of the model, optimal decentralized planning is far harder than single-agent planning.
+    \item One reason: agent $i$ must reason about what the others have observed, and what they believe about $i$.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Belief states}
+  In a POMDP (one agent), the current observation is not enough to act optimally. The agent keeps a \textbf{belief state} $b^t \in \Delta(S)$, a distribution over the current state.
+  \bigskip
+
+  \textbf{Derivation of the filter.} Start from $b^0 = \mu$. After action $a^t$ and observation $o^{t+1}$:
+  \begin{align*}
+    b^{t+1}(s') &= \Pr(s^{t+1} = s' \mid b^t, a^t, o^{t+1}) \\
+    &= \frac{\Pr(o^{t+1} \mid a^t, s')\, \Pr(s' \mid b^t, a^t)}{\Pr(o^{t+1} \mid b^t, a^t)} && \text{(Bayes)} \\
+    &\propto \mathcal{O}(o^{t+1} \mid a^t, s') \sum_{s \in S} b^t(s)\, T(s' \mid s, a^t) && \text{(total probability)}
+  \end{align*}
+  This is book Eq.\ 3.5: predict with $T$, correct with $\mathcal{O}$, normalize.
+  \begin{itemize}
+    \item $b^t$ is a \textbf{sufficient statistic}: it keeps everything in the history that matters for optimal action.
+    \item Storing and updating exact beliefs is exponential in the number of state variables.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{A belief update by hand}
+  \begin{columns}[c]
+    \begin{column}{0.54\textwidth}
+      Two states $\{L, R\}$ (where a prize is). The state never changes, so $T(s' \mid s, a) = \mathbb{1}[s' = s]$. Listening returns the true side with probability $0.85$.
+      \medskip
+
+      Start $b^0 = (0.5, 0.5)$. Hear ``$L$'':
+      \[
+        b^1(L) = \frac{0.85 \cdot 0.5}{0.85 \cdot 0.5 + 0.15 \cdot 0.5} = 0.85 .
+      \]
+      Hear ``$L$'' again:
+      \[
+        b^2(L) = \frac{0.85 \cdot 0.85}{0.85 \cdot 0.85 + 0.15 \cdot 0.15} = \frac{0.7225}{0.745} \approx 0.970 .
+      \]
+      Hear ``$R$'' instead: $b^2(L) = \frac{0.15 \cdot 0.85}{0.15 \cdot 0.85 + 0.85 \cdot 0.15} = 0.5$.
+    \end{column}
+    \begin{column}{0.42\textwidth}
+      \centering
+      \begin{tikzpicture}[x=1.15cm,y=3cm]
+        \draw[->] (-0.3,0) -- (3.4,0);
+        \draw[->] (-0.3,0) -- (-0.3,1.1) node[above,font=\scriptsize] {$b(L)$};
+        \foreach \y in {0,0.5,1} \draw (-0.35,\y) -- (-0.25,\y) node[left=2pt,font=\tiny] {\y};
+        \draw[dashed,cgray] (-0.3,0.5) -- (3.3,0.5);
+        \foreach \x/\v/\l in {0/0.5/{$b^0$},1.5/0.85/{$b^1$}}{
+          \fill[cblue!60] (\x-0.25,0) rectangle (\x+0.25,\v);
+          \node[font=\scriptsize,below] at (\x,0) {\l};}
+        \fill[cblue!60] (2.75,0) rectangle (3.05,0.97);
+        \fill[corange!70] (3.1,0) rectangle (3.4,0.5);
+        \node[font=\scriptsize,below] at (3.07,0) {$b^2$};
+        \node[font=\tiny,cblue,above] at (2.75,0.97) {L};
+        \node[font=\tiny,corange,above] at (3.4,0.5) {R};
+      \end{tikzpicture}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Beliefs with more than one agent}
+  \begin{columns}[c]
+    \begin{column}{0.5\textwidth}
+      In a POSG agent $i$ does not see $a_j$, $o_j$ or $h_j$. To filter exactly it would need:
+      \begin{itemize}
+        \item a belief over the state \emph{and} the other agents' histories,
+        \item their observation functions $\mathcal{O}_j$ and policies $\pi_j$,
+        \item and, since $\pi_j$ depends on $j$'s beliefs about $i$, beliefs about beliefs (Gmytrasiewicz \& Doshi, 2005).
+      \end{itemize}
+      \medskip
+      In MARL agents usually do not know $S$, $T$ or $\mathcal{O}_i$, so exact filtering is impossible.
+      \medskip
+
+      \textbf{Practice:} a recurrent network reads $o_i^0, o_i^1, \dots$; its hidden state learns a filter (Lecture 9 onward; book \S7.5.2, \S8.3).
+    \end{column}
+    \begin{column}{0.46\textwidth}
+      \centering
+      \begin{tikzpicture}[node distance=6mm]
+        \node[bb,text width=3.6cm] (b0) {$b_i \in \Delta(S \times H_j)$\\ \scriptsize state and $j$'s history};
+        \node[bo,text width=3.6cm,below=of b0] (b1) {needs $\pi_j(\cdot \mid h_j)$\\ \scriptsize $j$'s policy};
+        \node[bp,text width=3.6cm,below=of b1] (b2) {$\pi_j$ depends on $b_j \in \Delta(S \times H_i)$\\ \scriptsize $j$'s belief about $i$};
+        \node[note,below=3mm of b2] {$\cdots$ nested beliefs};
+        \draw[->,thick] (b0) -- (b1);
+        \draw[->,thick] (b1) -- (b2);
+        \draw[->,thick,cred,dashed] (b2.east) to[bend right=50] node[right,font=\scriptsize,text=cred] {recursion} (b0.east);
+      \end{tikzpicture}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% =====================================================================
+\section{Modeling communication}
+
+\begin{frame}{Communication actions}
+  \begin{columns}[c]
+    \begin{column}{0.52\textwidth}
+      Split each agent's actions into environment actions and messages:
+      \[
+        A_i = X_i \times M_i .
+      \]
+      Messages are observed by others but do not change the state. With $M = \times_i M_i$:
+      \[
+        T(s' \mid s, a) = T\big(s' \mid s, \langle (a^x_1, m_1), \dots, (a^x_n, m_n) \rangle\big)
+      \]
+      for all $s, s', a$ and all $m \in M$ (book Eq.\ 3.7).
+      \begin{itemize}
+        \item Messages can be discrete symbols, continuous values, vectors, or empty ($\emptyset$).
+        \item Messages last one step, but agents can remember them through their history.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.44\textwidth}
+      \centering
+      \begin{tikzpicture}
+        \node[b,fill=cgray!8,minimum width=4.6cm,minimum height=1cm] (env) at (0,0) {Environment state $s$};
+        \node[bb,minimum width=1.7cm] (ai) at (-1.5,2.4) {Agent $i$};
+        \node[bo,minimum width=1.7cm] (aj) at (1.5,2.4) {Agent $j$};
+        \draw[->,thick,cblue] (ai) -- node[left,font=\scriptsize] {$x_i \in X_i$} (ai |- env.north);
+        \draw[->,thick,cpurple,dashed] (ai.east) to[bend left=20] node[above,font=\scriptsize] {$m_i \in M_i$} (aj.west);
+        \draw[->,thick] ([xshift=6mm]env.north) -- node[right,font=\scriptsize] {$o_j$} ([xshift=6mm]env.north |- aj.south);
+        \node[note,text width=4.4cm] at (0,-1) {$x_i$ changes the state; $m_i$ only reaches $j$'s observation};
+      \end{tikzpicture}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Unreliable communication through observations}
+  In a POSG let agent $i$'s observation be
+  \[
+    o_i^t = \big[\, \bar s^t,\ w_1^{t-1}, \dots, w_n^{t-1} \,\big],
+  \]
+  where $\bar s^t$ is partial state information and $w_j^{t-1}$ is what $i$ receives of $j$'s message $m_j^{t-1}$. The observation function can model:
+  \begin{itemize}
+    \item \textbf{Noise:} $w_j^{t-1} = m_j^{t-1} + \eta$, $\eta \sim \mathcal{N}(0, \sigma^2)$.
+    \item \textbf{Loss:} $w_j^{t-1} = \emptyset$ with some probability.
+    \item \textbf{Range:} $w_j^{t-1} = \emptyset$ when $i$ and $j$ are too far apart.
+  \end{itemize}
+  \bigskip
+  \textbf{Learning to communicate.} In RL, agents do not know what any action \emph{means}, messages included. They must learn both what to send and how to interpret what they receive, possibly evolving a shared protocol (Foerster et al., 2016; Sukhbaatar et al., 2016).
+  \medskip
+
+  The algorithms in this course treat $A_i$ generically, with or without message components.
+\end{frame}
+
+% =====================================================================
+\section{Knowledge assumptions}
+
+\begin{frame}{What do agents know about the game?}
+  \centering
+  \begin{tikzpicture}
+    \shade[left color=cblue!35,right color=corange!35] (0,0) rectangle (12,0.5);
+    \draw (0,0) rectangle (12,0.5);
+    \node[font=\small\bfseries,cblue,anchor=south west] at (0,0.6) {more knowledge};
+    \node[font=\small\bfseries,corange,anchor=south east] at (12,0.6) {less knowledge};
+    \node[bb,text width=3.4cm,font=\scriptsize,anchor=north] at (1.8,-0.3) {\textbf{Complete knowledge}\\ (game theory default)\\ all $A_i$, $R_i$, $S$, $T$, $\mathcal{O}_i$ known to all};
+    \node[bg,text width=3.4cm,font=\scriptsize,anchor=north] at (6,-0.3) {\textbf{Simulator}\\ sample $(r, s') \sim \hat T(s, a)$\\ without explicit $T$, $R_i$};
+    \node[bo,text width=3.4cm,font=\scriptsize,anchor=north] at (10.2,-0.3) {\textbf{MARL default}\\ agent $i$ sees only its own $r_i$, $o_i$ (or $s$, $a$);\\ knows no $T$, $\mathcal{O}$, or $R$};
+  \end{tikzpicture}
+  \bigskip
+
+  \begin{itemize}
+    \item A simulator satisfies $\Pr\{\hat T(s,a) = (r, s')\} \approx T(s' \mid s, a) \prod_i \mathbb{1}[R_i(s,a,s') = r_i]$.
+    \item With complete knowledge, agent $i$ could compute $j$'s best response from $R_j$, or plan with $T$.
+    \item MARL agents learn from experience. They may still build models of $T$ or of other agents' policies (agent modeling, Lecture 6).
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Higher-order knowledge and open systems}
+  \begin{itemize}
+    \item \textbf{Symmetric vs.\ asymmetric:} does every agent know the same things?
+    \item \textbf{Common knowledge:} everyone knows $X$, everyone knows that everyone knows $X$, and so on without end.
+    \item In MARL these questions matter less, because agents usually know almost nothing about the game.
+    \item Exceptions: algorithms that exploit a \emph{known} reward structure, e.g.\ zero-sum (minimax-Q, Lecture 5) or common reward (value decomposition, Lectures 12--13).
+  \end{itemize}
+  \bigskip
+  \begin{itemize}
+    \item Standard assumption: the number of agents is fixed and known.
+    \item \textbf{Open} multi-agent systems, where agents join and leave, are an active research area (outside this course).
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Dictionary: reinforcement learning $\leftrightarrow$ game theory}
+  \begin{center}
+    \small
+    \begin{tabular}{@{}lll@{}}
+      \toprule
+      RL (this course) & Game theory & Meaning \\
+      \midrule
+      environment & game & actions, observations, rewards, dynamics \\
+      agent & player & decision maker (also a role: ``row player'') \\
+      reward & payoff, utility & scalar received after acting \\
+      policy & strategy & assigns probabilities to actions \\
+      deterministic $X$ & pure $X$ & probability 1 on one option \\
+      probabilistic $X$ & mixed $X$ & probabilities spread over options \\
+      joint $X$ & $X$ profile & one element per agent (joint policy, payoff profile) \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \medskip
+  \small Book Figure 3.5. Expect both vocabularies in papers: ``mixed Nash equilibrium'' = ``probabilistic Nash equilibrium''.
+\end{frame}
+
+% =====================================================================
+\section{Summary}
+
+\begin{frame}{Summary}
+  \begin{itemize}
+    \item \textbf{Normal-form game:} one interaction; $R_i : A \to \Real$. Two agents: matrix game.
+    \item \textbf{Repeated game:} policies condition on joint-action histories. Finite and infinite repetition differ; the discount is a continuation probability.
+    \item \textbf{Stochastic game:} states evolve with $T(s' \mid s, a)$; full observability; each state is a normal-form game.
+    \item \textbf{POSG:} private observations $o_i \sim \mathcal{O}_i(\cdot \mid a, s)$; policies on histories $h_i$; exact multi-agent beliefs are intractable.
+    \item Rewards: zero-sum, common-reward (Dec-POMDP in the POSG case), general-sum.
+    \item Communication = actions that reach others' observations but not the state.
+    \item MARL default: agents do \emph{not} know $T$, $R$, or $\mathcal{O}$.
+  \end{itemize}
+  \bigskip
+  \centering
+  \begin{tikzpicture}[node distance=5mm]
+    \node[bb] (gm) {Game model\\ \scriptsize NFG, SG, POSG};
+    \node[right=of gm] (plus) {$+$};
+    \node[bo,right=of plus] (sc) {Solution concept\\ \scriptsize Nash, minimax, \dots};
+    \node[right=of sc] (eq) {$=$};
+    \node[bg,right=of eq] (p) {MARL problem};
+    \node[note,below=1mm of sc] {Lecture 2};
+  \end{tikzpicture}
+\end{frame}
+
+\begin{frame}{Exercises}
+  \begin{enumerate}
+    \item Model partially observable level-based foraging with $n$ agents on a $k \times k$ grid with $m$ items as a POSG. Give $S$, $A_i$, $O_i$, $\mathcal{O}_i$, $T$ and a common-reward $R$. How large are $S$ and $A$?
+    \item Show that a stochastic game is a POSG with $o_i^t = (s^t, a^{t-1})$: write down $\mathcal{O}_i$.
+    \item In the repeated Prisoner's Dilemma with continuation probability $\gamma$, compute both agents' returns when Tit-for-Tat plays (a) Tit-for-Tat, (b) always-D. For which $\gamma$ is deviating from mutual Tit-for-Tat to always-D unprofitable?
+    \item Extend the belief example: the prize moves to the other side with probability $0.1$ each step. Recompute $b^1$ and $b^2$ after hearing ``$L$'' twice.
+    \item Add a one-bit message to two-agent foraging. Write $A_i = X_i \times M_i$, the observation $o_i$, and a lossy channel that drops messages with probability $0.2$.
+    \item Classify each example from \S1.3 by reward structure, observability, and knowledge assumption.
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{References}
+  \footnotesize
+  \begin{itemize}
+    \item Albrecht, Christianos, Sch\"afer. \emph{Multi-Agent Reinforcement Learning: Foundations and Modern Approaches}. MIT Press, 2024. Chapters 1, 3.
+    \item Axelrod, Hamilton. The evolution of cooperation. \emph{Science}, 1981.
+    \item Bernstein, Givan, Immerman, Zilberstein. The complexity of decentralized control of Markov decision processes. \emph{Math.\ Oper.\ Res.}, 2002.
+    \item Foerster, Assael, de Freitas, Whiteson. Learning to communicate with deep multi-agent reinforcement learning. NeurIPS, 2016.
+    \item Gmytrasiewicz, Doshi. A framework for sequential planning in multi-agent settings. \emph{JAIR}, 2005.
+    \item Hansen, Bernstein, Zilberstein. Dynamic programming for partially observable stochastic games. AAAI, 2004.
+    \item Littman. Markov games as a framework for multi-agent reinforcement learning. ICML, 1994.
+    \item Oliehoek, Amato. \emph{A Concise Introduction to Decentralized POMDPs}. Springer, 2016.
+    \item Rapoport, Guyer. A taxonomy of $2 \times 2$ games. \emph{General Systems}, 1966.
+    \item Shapley. Stochastic games. \emph{PNAS}, 1953.
+    \item Shoham, Powers, Grenager. If multi-agent learning is the answer, what is the question? \emph{Artificial Intelligence}, 2007.
+    \item Sukhbaatar, Szlam, Fergus. Learning multiagent communication with backpropagation. NeurIPS, 2016.
+  \end{itemize}
+\end{frame}
+
+\end{document}

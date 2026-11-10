@@ -1,0 +1,748 @@
+% =====================================================================
+%  MARL Lecture 2: Solution Concepts I
+%  Book: Albrecht, Christianos & Schaefer (2024), Sections 4.1-4.5
+%  Compile with:  latexmk -pdf lecture02.tex
+% =====================================================================
+\documentclass[aspectratio=169,11pt]{beamer}
+\usepackage{marl-style}
+
+\title{Multi-Agent Reinforcement Learning}
+\subtitle{Lecture 2: Solution Concepts I --- Best Response, Minimax, Nash}
+\author{[Instructor name]}
+\institute{[Course number]}
+\date{[Date]}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+  \centering\small Book: Sections 4.1--4.5
+\end{frame}
+
+\begin{frame}{Today}
+  \begin{enumerate}
+    \item Joint policies and expected returns in any game model \hfill \S4.1
+    \item Best responses \hfill \S4.2
+    \item Minimax solutions of two-agent zero-sum games \hfill \S4.3
+    \item Nash equilibrium \hfill \S4.4
+    \item $\epsilon$-Nash equilibrium \hfill \S4.5
+  \end{enumerate}
+  \bigskip
+  \centering
+  \begin{tikzpicture}[node distance=5mm]
+    \node[bb] (gm) {Game model\\ \scriptsize Lecture 1};
+    \node[right=of gm] (plus) {$+$};
+    \node[bo,right=of plus] (sc) {Solution concept\\ \scriptsize today and Lecture 3};
+    \node[right=of sc] (eq) {$=$};
+    \node[bg,right=of eq] (p) {MARL problem};
+  \end{tikzpicture}
+  \reading{Sections 4.1--4.5. Next lecture: 4.6--4.11.}
+\end{frame}
+
+\begin{frame}{What is a solution?}
+  \begin{itemize}
+    \item In an MDP, a policy is optimal if it maximizes expected return in every state. All optimal policies give the same return.
+    \item In a game, agent $i$'s return depends on everyone's policies. ``Optimal'' must be defined relative to the others.
+    \item A \textbf{solution} is a \textbf{joint policy} $\pi = (\pi_1, \dots, \pi_n)$ whose expected returns $U_i(\pi)$ satisfy some conditions.
+    \item Common-reward games have an obvious candidate: maximize the shared return. With different rewards there is no single obvious answer.
+  \end{itemize}
+  \bigskip
+  Questions game theory asks about every solution concept:
+  \begin{enumerate}
+    \item \textbf{Existence:} does a solution always exist?
+    \item \textbf{Uniqueness:} is there one, several, or infinitely many?
+    \item \textbf{Computation and learning:} can we find one efficiently, and do learning rules converge to one?
+  \end{enumerate}
+\end{frame}
+
+% =====================================================================
+\section{Joint policy and expected return}
+
+\begin{frame}{Full histories}
+  We define $U_i(\pi)$ once, for POSGs, so it covers stochastic and normal-form games too.
+  \bigskip
+
+  \begin{itemize}
+    \item \textbf{Full history} up to time $t$: states, joint observations and joint actions,
+      \[
+        \hh^t = \big( (s^\tau, o^\tau, a^\tau)_{\tau=0}^{t-1},\ s^t,\ o^t \big).
+      \]
+    \item \textbf{Observation history} extracted from it: $\sigma(\hh^t) = (o^0, \dots, o^t)$, abbreviated $h^t$.
+    \item Joint observation probability: $\mathcal{O}(o^t \mid a^{t-1}, s^t) = \prod_{i \in I} \mathcal{O}_i(o_i^t \mid a^{t-1}, s^t)$.
+    \item Discounted returns with absorbing states: after termination, the game stays in one state with reward 0 forever. This covers finite and infinite episodes, including one-shot normal-form games.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{History-based expected return}
+  Enumerate every full history and weight its return by its probability:
+  \[
+    U_i(\pi) = \lim_{t \to \infty} \E_{\hh^t \sim (\mu, T, \mathcal{O}, \pi)} \big[ u_i(\hh^t) \big]
+    = \sum_{\hh^t \in \hat H} \Pr(\hh^t \mid \pi)\, u_i(\hh^t),
+  \]
+  with
+  \begin{align*}
+    \Pr(\hh^t \mid \pi) &= \mu(s^0)\, \mathcal{O}(o^0 \mid \emptyset, s^0) \prod_{\tau=0}^{t-1} \pi(a^\tau \mid h^\tau)\, T(s^{\tau+1} \mid s^\tau, a^\tau)\, \mathcal{O}(o^{\tau+1} \mid a^\tau, s^{\tau+1}), \\
+    u_i(\hh^t) &= \sum_{\tau=0}^{t-1} \gamma^\tau R_i(s^\tau, a^\tau, s^{\tau+1}).
+  \end{align*}
+  If agents act \textbf{independently} (book Eq.\ 4.5):
+  \[
+    \pi(a^\tau \mid h^\tau) = \prod_{j \in I} \pi_j(a_j^\tau \mid h_j^\tau).
+  \]
+  Correlated equilibrium (Lecture 3) and central learning (Lecture 4) drop this product form.
+\end{frame}
+
+\begin{frame}{Recursive expected return}
+  Bellman-style recursion over full histories ($s(\hh)$ = last state, $\langle \cdot \rangle$ = concatenation):
+  \begin{align*}
+    V_i^\pi(\hh) &= \sum_{a \in A} \pi(a \mid \sigma(\hh))\, Q_i^\pi(\hh, a), \\
+    Q_i^\pi(\hh, a) &= \sum_{s' \in S} T(s' \mid s(\hh), a) \Big[ R_i(s(\hh), a, s') + \gamma \sum_{o' \in O} \mathcal{O}(o' \mid a, s')\, V_i^\pi(\langle \hh, a, s', o' \rangle) \Big],
+  \end{align*}
+  and the expected return from the start of the game is
+  \[
+    U_i(\pi) = \E_{s^0 \sim \mu,\ o^0 \sim \mathcal{O}(\cdot \mid \emptyset, s^0)} \big[ V_i^\pi(\langle s^0, o^0 \rangle) \big].
+  \]
+  \begin{itemize}
+    \item $V_i^\pi(\hh)$: agent $i$'s value when all follow $\pi$ after $\hh$.
+    \item $Q_i^\pi(\hh, a)$: value of joint action $a$ after $\hh$, then following $\pi$.
+    \item This form is what value iteration for games uses (Lecture 5).
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{The two definitions are the same tree}
+  \centering
+  \begin{tikzpicture}[x=1cm,y=1cm,
+      dec/.style={circle,draw=cblue,fill=cblue!15,minimum size=6mm,inner sep=0,font=\scriptsize},
+      chn/.style={diamond,draw=corange,fill=corange!15,minimum size=5mm,inner sep=0},
+      leaf/.style={font=\scriptsize}]
+    \node[dec] (r) at (0,0) {$\hh^0$};
+    \node[chn] (c1) at (-3.2,-1.4) {};
+    \node[chn] (c2) at (3.2,-1.4) {};
+    \draw[->,thick,cblue] (r) -- node[above left,font=\scriptsize] {$a$, prob.\ $\pi(a \mid h^0)$} (c1);
+    \draw[->,thick,cblue] (r) -- node[above right,font=\scriptsize] {$a'$} (c2);
+    \foreach \p/\x [count=\k] in {c1/-4.6,c1/-1.8,c2/1.8,c2/4.6}{
+      \node[dec] (n\k) at (\x,-2.9) {$\hh^1$};
+      \draw[->,thick,corange] (\p) -- (n\k);
+      \draw[->,cgray] (n\k) -- ++(-0.5,-0.9);
+      \draw[->,cgray] (n\k) -- ++(0.5,-0.9);
+      \node[leaf,cgray] at (\x,-4.1) {$\cdots$};
+    }
+    \node[font=\scriptsize,corange,anchor=east] at (-3.9,-2.0) {$s', o'$ w.p.\ $T \cdot \mathcal{O}$};
+    \node[note,text width=3.4cm,anchor=west] at (5.4,0) {\textcolor{cblue}{circles}: agents choose (policy)\\ \textcolor{corange}{diamonds}: nature chooses (dynamics)};
+    \node[note,text width=3.4cm,anchor=west] at (5.4,-3.3) {each root-to-leaf path is one full history $\hh^t$};
+  \end{tikzpicture}
+  \medskip
+
+  \small History-based: sum over all paths, weighting each path's return $u_i$ by its probability. Recursive: compute $V_i^\pi$ bottom-up through the same tree. Both give $U_i(\pi)$.
+\end{frame}
+
+\begin{frame}{Special case 1: normal-form games}
+  One step, no states. A joint policy is $\pi = (\pi_1, \dots, \pi_n)$ with $\pi_i \in \Delta(A_i)$, and
+  \[
+    U_i(\pi) = \sum_{a \in A} \Big( \prod_{j \in I} \pi_j(a_j) \Big) R_i(a).
+  \]
+  \textbf{Two agents, matrix form.} Let $x = \pi_1$, $y = \pi_2$ and $[R_1]_{kl} = R_1(k, l)$. Then
+  \[
+    U_1(x, y) = \sum_{k, l} x_k\, y_l\, [R_1]_{kl} = x^\top R_1\, y .
+  \]
+  \textbf{Key property: linearity in one's own policy.} For fixed $\pi_{-i}$,
+  \[
+    U_i(\pi_i, \pi_{-i}) = \sum_{a_i \in A_i} \pi_i(a_i)\, U_i(a_i, \pi_{-i}),
+    \qquad
+    U_i(a_i, \pi_{-i}) = \sum_{a_{-i}} \Big( \prod_{j \neq i} \pi_j(a_j) \Big) R_i(a_i, a_{-i}).
+  \]
+  Most results in this lecture follow from this one line.
+\end{frame}
+
+\begin{frame}{Special case 2: stochastic games with Markov policies}
+  With full observability, take stationary policies $\pi_i(a_i \mid s)$. The recursion over histories collapses to states:
+  \begin{align*}
+    Q_i^\pi(s, a) &= \sum_{s'} T(s' \mid s, a) \big[ R_i(s, a, s') + \gamma V_i^\pi(s') \big], \\
+    V_i^\pi(s) &= \sum_{a} \Big( \prod_{j} \pi_j(a_j \mid s) \Big) Q_i^\pi(s, a),
+    \qquad U_i(\pi) = \sum_s \mu(s)\, V_i^\pi(s).
+  \end{align*}
+  \begin{itemize}
+    \item $Q_i^\pi$ is defined over \textbf{joint} actions: $\prod_j |A_j|$ entries per state.
+    \item For a fixed $\pi$, each $V_i^\pi$ solves a linear system, exactly as in MDP policy evaluation.
+    \item $V_i^\pi$ depends on $\pi_{-i}$. There is no optimal policy for agent $i$ in isolation.
+  \end{itemize}
+\end{frame}
+
+% =====================================================================
+\section{Best response}
+
+\begin{frame}{Best response}
+  \begin{block}{Book Eq.\ 4.9}
+    Given the other agents' policies $\pi_{-i} = (\pi_1, \dots, \pi_{i-1}, \pi_{i+1}, \dots, \pi_n)$,
+    \[
+      \BR_i(\pi_{-i}) = \argmax_{\pi_i} U_i(\langle \pi_i, \pi_{-i} \rangle).
+    \]
+  \end{block}
+  \begin{itemize}
+    \item A \emph{set}: the best response need not be unique.
+    \item Most solution concepts today are defined through best responses.
+    \item Best-response operators also drive algorithms: fictitious play (\S6.3.1) and joint-action learning with agent models (\S6.3.2), Lecture 6; PSRO (\S9.9), Lecture 16.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Best responses in normal-form games}
+  \textbf{Claim.} A deterministic best response always exists, and
+  \[
+    \pi_i \in \BR_i(\pi_{-i}) \iff \supp(\pi_i) \subseteq \argmax_{a_i \in A_i} U_i(a_i, \pi_{-i}).
+  \]
+  \textbf{Proof.} Let $M = \max_{a_i} U_i(a_i, \pi_{-i})$. By linearity,
+  \[
+    U_i(\pi_i, \pi_{-i}) = \sum_{a_i} \pi_i(a_i)\, U_i(a_i, \pi_{-i}) \le \sum_{a_i} \pi_i(a_i)\, M = M,
+  \]
+  with equality iff $\pi_i(a_i) > 0$ only for actions with $U_i(a_i, \pi_{-i}) = M$. Any maximizing action, played deterministically, attains $M$. \hfill $\square$
+  \bigskip
+
+  \begin{itemize}
+    \item Computing a best response is a maximization over $|A_i|$ numbers.
+    \item Every mixture of best-response actions is also a best response: the BR set is a face of the simplex.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Picture: maximizing a linear function on the simplex}
+  \begin{columns}[c]
+    \begin{column}{0.45\textwidth}
+      Rock-Paper-Scissors. Agent 2 plays $\pi_2 = (0.5, 0.3, 0.2)$ over (R, P, S). Agent 1's action values:
+      \begin{align*}
+        U_1(R, \pi_2) &= 0(0.5) - 1(0.3) + 1(0.2) = -0.1 \\
+        U_1(P, \pi_2) &= 1(0.5) + 0(0.3) - 1(0.2) = \phantom{-}0.3 \\
+        U_1(S, \pi_2) &= -1(0.5) + 1(0.3) + 0(0.2) = -0.2
+      \end{align*}
+      $U_1(\cdot, \pi_2)$ is linear on the simplex $\Delta(A_1)$, so its level sets are parallel lines and the maximum sits at a vertex.
+      \medskip
+
+      $\BR_1(\pi_2) = \{P\}$, unique here.
+    \end{column}
+    \begin{column}{0.52\textwidth}
+      \centering
+      \begin{tikzpicture}[scale=1.25]
+        \coordinate (R) at (0,0);
+        \coordinate (P) at (4,0);
+        \coordinate (S) at (2,3.464);
+        \begin{scope}
+          \clip (R) -- (P) -- (S) -- cycle;
+          % f(x,y) = 0.1 x - 0.0866 y - 0.1 ; level lines f = k
+          \foreach \k in {-0.18,-0.12,...,0.3}{
+            \pgfmathsetmacro{\mix}{max(0,min(100,(\k+0.2)*200))}
+            \pgfmathsetmacro{\xa}{(\k+0.1+0.0866*(-0.5))/0.1}
+            \pgfmathsetmacro{\xb}{(\k+0.1+0.0866*4)/0.1}
+            \draw[line width=1.1pt,color=corange!\mix!cblue] (\xa,-0.5) -- (\xb,4);
+          }
+        \end{scope}
+        \draw[thick] (R) -- (P) -- (S) -- cycle;
+        \node[below left,font=\small] at (R) {R \scriptsize($-0.1$)};
+        \node[below right,font=\small] at (P) {P \scriptsize($0.3$)};
+        \node[above,font=\small] at (S) {S \scriptsize($-0.2$)};
+        \fill[cred] (P) circle (2.5pt);
+        \node[font=\scriptsize,cred,anchor=west] at (4.1,0.35) {maximum};
+        \node[note,text width=5cm] at (2,-0.75) {level lines of $U_1(\pi_1, \pi_2)$ over $\pi_1 \in \Delta(\{R,P,S\})$; blue low, orange high};
+      \end{tikzpicture}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Best responses need not be unique}
+  Let agent 1 play uniformly in Rock-Paper-Scissors, $\pi_1 = (\tfrac13, \tfrac13, \tfrac13)$. For any $\pi_2$ (book footnote 6):
+  \begin{align*}
+    U_2(\pi_1, \pi_2)
+    &= \pi_2(R) \tfrac13 \big[ R_2(R,R) + R_2(P,R) + R_2(S,R) \big] \\
+    &\quad + \pi_2(P) \tfrac13 \big[ R_2(R,P) + R_2(P,P) + R_2(S,P) \big] \\
+    &\quad + \pi_2(S) \tfrac13 \big[ R_2(R,S) + R_2(P,S) + R_2(S,S) \big] \\
+    &= \pi_2(R) \tfrac13 (0 - 1 + 1) + \pi_2(P) \tfrac13 (1 + 0 - 1) + \pi_2(S) \tfrac13 (-1 + 1 + 0) = 0.
+  \end{align*}
+  \begin{itemize}
+    \item \emph{Every} $\pi_2$ is a best response to uniform play: $\BR_2(\pi_1) = \Delta(A_2)$, infinitely many.
+    \item In picture terms: the linear function is constant, so the whole simplex is optimal.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Best responses in stochastic games}
+  Fix $\pi_{-i}$ (stationary). Marginalizing the others' actions gives an MDP for agent $i$:
+  \begin{align*}
+    \bar T_i(s' \mid s, a_i) &= \sum_{a_{-i}} \pi_{-i}(a_{-i} \mid s)\, T(s' \mid s, a_i, a_{-i}), \\
+    \bar R_i(s, a_i, s') &= \frac{\sum_{a_{-i}} \pi_{-i}(a_{-i} \mid s)\, T(s' \mid s, a_i, a_{-i})\, R_i(s, a_i, a_{-i}, s')}{\bar T_i(s' \mid s, a_i)} .
+  \end{align*}
+  \begin{itemize}
+    \item $\BR_i(\pi_{-i})$ = the optimal policies of the MDP $(S, A_i, \bar T_i, \bar R_i, \gamma)$; a deterministic stationary one exists.
+    \item Computing a best response is \textbf{single-agent RL} against fixed opponents.
+    \item The catch: $\bar T_i$ and $\bar R_i$ depend on $\pi_{-i}$. If the others change, so does agent $i$'s MDP.
+  \end{itemize}
+\end{frame}
+
+% =====================================================================
+\section{Minimax}
+
+\begin{frame}{Minimax solutions}
+  \begin{block}{Definition 5 (Minimax solution)}
+    In a zero-sum game with two agents, $\pi = (\pi_i, \pi_j)$ is a minimax solution if
+    \[
+      U_i(\pi) = \max_{\pi_i'} \min_{\pi_j'} U_i(\pi_i', \pi_j') = \min_{\pi_j'} \max_{\pi_i'} U_i(\pi_i', \pi_j') = -U_j(\pi).
+    \]
+  \end{block}
+  \begin{itemize}
+    \item $\max_{\pi_i'} \min_{\pi_j'} U_i$: the most agent $i$ can \textbf{guarantee} against any opponent. $\pi_i$ is $i$'s \emph{maxmin} policy.
+    \item $\min_{\pi_j'} \max_{\pi_i'} U_i$: the least agent $j$ can \textbf{force} on $i$. $\pi_j$ is $j$'s \emph{minmax} policy against $i$.
+    \item At a minimax solution the two coincide: it does not matter who announces their policy first.
+    \item Equivalently: $\pi_i \in \BR_i(\pi_j)$ and $\pi_j \in \BR_j(\pi_i)$.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Weak duality: maxmin $\le$ minmax always}
+  \textbf{Claim.} For any function $U$ of two arguments,
+  \[
+    \max_{x} \min_{y} U(x, y) \le \min_{y} \max_{x} U(x, y).
+  \]
+  \textbf{Proof.} For any fixed $\bar x$ and $\bar y$:
+  \[
+    \min_{y} U(\bar x, y) \le U(\bar x, \bar y) \le \max_{x} U(x, \bar y).
+  \]
+  The left side does not depend on $\bar y$ and the right side does not depend on $\bar x$. Maximize the left over $\bar x$ and minimize the right over $\bar y$. \hfill $\square$
+  \bigskip
+
+  \textbf{Theorem (von Neumann, 1928).} For finite two-agent zero-sum normal-form games with mixed policies, equality holds. The common value is the \textbf{value of the game}.
+  \begin{itemize}
+    \item Several minimax solutions may exist, but all give the same value.
+    \item It extends to zero-sum stochastic games with finite episodes or discounting (Shapley, 1953).
+    \item It can fail with continuous actions (Sion \& Wolfe, 1957).
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Minimax via linear programming}
+  Agent $i$ chooses $x_{a_i} = \pi_i(a_i)$ to minimize the best expected return agent $j$ can get (book Eqs.\ 4.12--4.15):
+  \begin{align*}
+    \text{minimize} \quad & U_j^* \\
+    \text{subject to} \quad & \sum_{a_i \in A_i} R_j(a_i, a_j)\, x_{a_i} \le U_j^* && \forall a_j \in A_j \\
+    & x_{a_i} \ge 0 \quad \forall a_i \in A_i, \qquad \sum_{a_i \in A_i} x_{a_i} = 1 .
+  \end{align*}
+  \textbf{Why only pure $a_j$ in the constraints?} By linearity, $U_j(x, \pi_j) = \sum_{a_j} \pi_j(a_j) U_j(x, a_j)$, a weighted average of the left-hand sides. If every pure $a_j$ gives at most $U_j^*$, so does every mixture.
+  \begin{itemize}
+    \item Agent $j$'s policy comes from the same LP with $i$ and $j$ swapped. At the solution, $U_i^* = -U_j^*$.
+    \item The two LPs are duals of each other; LP strong duality gives von Neumann's theorem.
+    \item Solvable in polynomial time (interior point), and fast in practice (simplex).
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Worked example: a $2 \times 2$ zero-sum game}
+  \begin{columns}[c]
+    \begin{column}{0.5\textwidth}
+      \small
+      Agent 1's rewards ($R_2 = -R_1$):
+      \begin{center}
+        \begin{tabular}{c|cc}
+          & L & R \\ \hline
+          T & $3$ & $-1$ \\
+          B & $-2$ & $1$
+        \end{tabular}
+      \end{center}
+      Let $x = \pi_1(T)$. Agent 1's return against each pure column:
+      \begin{align*}
+        U_1(x, L) &= 3x - 2(1-x) = 5x - 2, \\
+        U_1(x, R) &= -x + (1-x) = 1 - 2x .
+      \end{align*}
+      Agent 1 maximizes the lower envelope $\min\{5x - 2,\ 1 - 2x\}$:
+      \[
+        5x - 2 = 1 - 2x \ \Rightarrow\ x^* = \tfrac37, \quad v^* = \tfrac17 .
+      \]
+      Agent 2, with $y = \pi_2(L)$: $3y - (1-y) = -2y + (1-y) \Rightarrow y^* = \tfrac27$, which gives the same value $\tfrac17$.
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \centering
+      \begin{tikzpicture}[x=4.6cm,y=0.85cm]
+        \draw[->] (0,0) -- (1.08,0) node[right,font=\small] {$x$};
+        \draw[->] (0,-2.3) -- (0,3.4) node[above,font=\small] {$U_1$};
+        \foreach \y in {-2,-1,1,2,3} \draw (-0.01,\y) -- (0.01,\y) node[left=2pt,font=\tiny] {$\y$};
+        \draw (1,-0.08) -- (1,0.08) node[below=4pt,font=\tiny] {1};
+        \draw[thick,cblue] (0,-2) -- (1,3) node[below right,font=\scriptsize] {vs.\ L};
+        \draw[thick,corange] (0,1) -- (1,-1) node[right,font=\scriptsize] {vs.\ R};
+        \draw[line width=2.6pt,cred,opacity=0.55] (0,-2) -- (3/7,1/7) -- (1,-1);
+        \draw[dashed,cgray] (3/7,0.143) -- (3/7,-2.3) node[below,font=\scriptsize,text=black] {$x^* = \tfrac37$};
+        \fill[cred] (3/7,1/7) circle (2.5pt);
+        \node[font=\scriptsize,cred,anchor=south east] at (0.41,0.3) {$v^* = \tfrac17$};
+        \node[note] at (0.5,-3.2) {red: lower envelope $\min_y U_1(x, y)$};
+      \end{tikzpicture}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Rock-Paper-Scissors has a unique minimax solution}
+  \textbf{Claim.} Uniform play by both agents is the only minimax solution; the value is 0.
+  \bigskip
+
+  \textbf{Proof.} Each agent can guarantee 0 by playing uniformly (previous slide), so the value is $v^* = 0$. Take any $\pi_2$. Agent 1's action values are
+  \[
+    U_1(R, \pi_2) = \pi_2(S) - \pi_2(P), \quad
+    U_1(P, \pi_2) = \pi_2(R) - \pi_2(S), \quad
+    U_1(S, \pi_2) = \pi_2(P) - \pi_2(R).
+  \]
+  They sum to 0. If they are not all 0, the largest is positive, so agent 1 earns more than $v^* = 0$ against $\pi_2$ and $\pi_2$ is not a minmax policy. If they are all 0, then $\pi_2(R) = \pi_2(P) = \pi_2(S)$. Same argument for agent 1. \hfill $\square$
+  \bigskip
+
+  \textbf{Interchangeability.} In zero-sum games, if $(\pi_i, \pi_j)$ and $(\pi_i', \pi_j')$ are minimax solutions, so are $(\pi_i, \pi_j')$ and $(\pi_i', \pi_j)$. Each agent can compute its part alone, with no coordination. Self-play for zero-sum games (AlphaZero, Lecture 15) relies on this.
+\end{frame}
+
+% =====================================================================
+\section{Nash equilibrium}
+
+\begin{frame}{Nash equilibrium}
+  \begin{block}{Definition 6 (Nash equilibrium; Nash, 1950)}
+    In a general-sum game with $n$ agents, $\pi = (\pi_1, \dots, \pi_n)$ is a Nash equilibrium if
+    \[
+      \forall i,\ \forall \pi_i' : \quad U_i(\pi_i', \pi_{-i}) \le U_i(\pi).
+    \]
+  \end{block}
+  \begin{itemize}
+    \item No agent gains by \textbf{unilaterally} changing its policy.
+    \item Equivalently: $\pi_i \in \BR_i(\pi_{-i})$ for all $i$, a \emph{mutual} best response.
+    \item In two-agent zero-sum games, Nash equilibria and minimax solutions coincide.
+    \item In normal-form games it suffices to check deterministic deviations (best-response claim): a finite set of inequalities
+      \[
+        U_i(a_i, \pi_{-i}) \le U_i(\pi) \qquad \forall i,\ \forall a_i \in A_i .
+      \]
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Equilibria in the three book games}
+  \begin{columns}[T]
+    \begin{column}{0.32\textwidth}
+      \centering \textbf{Prisoner's Dilemma}\\[3pt]
+      \footnotesize
+      \begin{tabular}{c|cc}
+          & C & D \\ \hline
+        C & $-1,-1$ & $-5,0$ \\
+        D & $0,-5$ & \cellcolor{cred!20}$-3,-3$
+      \end{tabular}\\[5pt]
+      \small one NE, deterministic: $(D,D)$
+    \end{column}
+    \begin{column}{0.32\textwidth}
+      \centering \textbf{Coordination}\\[3pt]
+      \footnotesize
+      \begin{tabular}{c|cc}
+          & A & B \\ \hline
+        A & \cellcolor{cgreen!20}$10$ & $0$ \\
+        B & $0$ & \cellcolor{cgreen!20}$10$
+      \end{tabular}\\[5pt]
+      \small three NE: $(A,A)$, $(B,B)$, and $(\tfrac12, \tfrac12)$
+    \end{column}
+    \begin{column}{0.32\textwidth}
+      \centering \textbf{Rock-Paper-Scissors}\\[3pt]
+      \footnotesize
+      \begin{tabular}{c|ccc}
+          & R & P & S \\ \hline
+        R & $0,0$ & $-1,1$ & $1,-1$ \\
+        P & $1,-1$ & $0,0$ & $-1,1$ \\
+        S & $-1,1$ & $1,-1$ & $0,0$
+      \end{tabular}\\[5pt]
+      \small one NE, probabilistic: uniform
+    \end{column}
+  \end{columns}
+  \bigskip
+  \begin{itemize}
+    \item Shaded cells are deterministic equilibria.
+    \item Two lessons: equilibria can be \textbf{deterministic or probabilistic}, and a game can have \textbf{several equilibria with different returns}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Dominance: why $(D,D)$ in the Prisoner's Dilemma}
+  Action $a_i$ \textbf{strictly dominates} $a_i'$ if $R_i(a_i, a_{-i}) > R_i(a_i', a_{-i})$ for every $a_{-i}$.
+  \bigskip
+
+  For agent 1:
+  \[
+    R_1(D, C) = 0 > -1 = R_1(C, C), \qquad R_1(D, D) = -3 > -5 = R_1(C, D).
+  \]
+  So D strictly dominates C; by symmetry the same for agent 2.
+  \begin{itemize}
+    \item A strictly dominated action is never in the support of a best response, hence never played in any Nash equilibrium.
+    \item The only equilibrium is $(D,D)$ with $(-3,-3)$, although $(C,C)$ gives $(-1,-1)$ to both.
+    \item Equilibrium is about \emph{stability}, not \emph{efficiency}. Pareto optimality and welfare (Lecture 3) address efficiency.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{The indifference principle}
+  \textbf{Corollary of the best-response claim.} At a Nash equilibrium $\pi$, for every agent $i$:
+  \[
+    U_i(a_i, \pi_{-i}) = U_i(\pi) \quad \forall a_i \in \supp(\pi_i), \qquad
+    U_i(a_i, \pi_{-i}) \le U_i(\pi) \quad \forall a_i \in A_i .
+  \]
+  Every action an agent mixes over earns the same, and nothing earns more.
+  \bigskip
+
+  \textbf{Recipe ($2 \times 2$):} pick the \emph{other} agent's mixture so that \emph{you} are indifferent.
+  \bigskip
+
+  \textbf{Coordination game.} Let $y = \pi_2(A)$. Agent 1:
+  \[
+    U_1(A, y) = 10y, \qquad U_1(B, y) = 10(1 - y).
+  \]
+  Indifference: $10y = 10(1-y) \Rightarrow y = \tfrac12$. By symmetry $\pi_1(A) = \tfrac12$. Expected return:
+  \[
+    U_i = \tfrac14 \cdot 10 + \tfrac14 \cdot 10 = 5 < 10 .
+  \]
+  The probabilistic equilibrium is worse for both than either deterministic one.
+\end{frame}
+
+\begin{frame}{Stag Hunt: drawing the best-response graphs}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \centering
+      \footnotesize
+      \begin{tabular}{c|cc}
+          & S & H \\ \hline
+        S & $4,4$ & $0,3$ \\
+        H & $3,0$ & $3,3$
+      \end{tabular}
+      \raggedright
+      \medskip
+
+      \small
+      $p = \pi_1(S)$, $q = \pi_2(S)$. Agent 1:
+      \[
+        U_1(S, q) = 4q, \qquad U_1(H, q) = 3 .
+      \]
+      \[
+        \BR_1(q) =
+        \begin{cases}
+          H\ (p = 0) & q < \tfrac34 \\
+          \text{any } p & q = \tfrac34 \\
+          S\ (p = 1) & q > \tfrac34
+        \end{cases}
+      \]
+      Symmetric for agent 2. Equilibria are where the graphs cross:
+      \[
+        (p, q) \in \{(0,0),\ (\tfrac34, \tfrac34),\ (1,1)\}.
+      \]
+      Book \S5.4.2 uses this game for equilibrium selection (Lecture 4).
+    \end{column}
+    \begin{column}{0.46\textwidth}
+      \centering
+      \begin{tikzpicture}[scale=4.3]
+        \fill[cgray!6] (0,0) rectangle (1,1);
+        \draw[->] (0,0) -- (1.1,0) node[right,font=\small] {$q$};
+        \draw[->] (0,0) -- (0,1.1) node[above,font=\small] {$p$};
+        \foreach \t/\l in {0/0,0.75/\tfrac34,1/1}{
+          \draw (\t,0) -- (\t,-0.02) node[below,font=\scriptsize] {$\l$};
+          \draw (0,\t) -- (-0.02,\t) node[left,font=\scriptsize] {$\l$};}
+        \draw[cblue,line width=1.6pt] (0,0) -- (0.75,0) -- (0.75,1) -- (1,1);
+        \draw[corange,line width=1.6pt,dashed] (0,0) -- (0,0.75) -- (1,0.75) -- (1,1);
+        \foreach \x/\y in {0/0,0.75/0.75,1/1} \fill[cred] (\x,\y) circle (0.022);
+        \node[font=\scriptsize,cred,anchor=south west] at (1,1) {$(S,S)$: 4, 4};
+        \node[font=\scriptsize,cred,anchor=north east] at (0.73,0.73) {mixed: 3, 3};
+        \node[font=\scriptsize,cred,anchor=north west] at (0.02,0.0) {$(H,H)$: 3, 3};
+        \node[font=\scriptsize,cblue,anchor=west] at (0.77,0.4) {$\BR_1$};
+        \node[font=\scriptsize,corange,anchor=south] at (0.4,0.76) {$\BR_2$};
+      \end{tikzpicture}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Deterministic versus probabilistic equilibria}
+  \begin{itemize}
+    \item Some games have \textbf{only} probabilistic equilibria (Rock-Paper-Scissors, Matching Pennies).
+    \item Algorithms that represent only deterministic policies, such as greedy Q-learning, \textbf{cannot} represent these equilibria, let alone learn them (Lecture 5 onward).
+    \item With three or more agents, equilibrium probabilities can be \textbf{irrational} numbers (Nash, 1950): no finite-precision representation. This motivates $\epsilon$-Nash.
+  \end{itemize}
+  \bigskip
+  \begin{center}
+    \begin{tabular}{lcc}
+      \toprule
+      Game & deterministic NE & probabilistic NE \\
+      \midrule
+      Prisoner's Dilemma & $(D,D)$ & none \\
+      Coordination & $(A,A)$, $(B,B)$ & $(\tfrac12, \tfrac12)$ \\
+      Stag Hunt & $(S,S)$, $(H,H)$ & $(\tfrac34, \tfrac34)$ \\
+      Rock-Paper-Scissors & none & uniform \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Existence of Nash equilibria}
+  \small
+  \textbf{Theorem (Nash, 1950).} Every finite normal-form game has at least one Nash equilibrium. Stochastic games too (Fink, 1964).
+  \bigskip
+
+  \textbf{Proof sketch.} Gain from switching to deterministic $a$: \ $g_i^a(\pi) = \max\{0,\ U_i(a, \pi_{-i}) - U_i(\pi)\}$. Define
+  \[
+    f(\pi)_i(a) = \frac{\pi_i(a) + g_i^a(\pi)}{1 + \sum_{b \in A_i} g_i^b(\pi)} .
+  \]
+  \begin{enumerate}
+    \item $f$ maps the product of simplices to itself and is continuous; by Brouwer it has a fixed point $\pi$.
+    \item $U_i(\pi)$ is an average of $U_i(a, \pi_{-i})$ over $a \in \supp(\pi_i)$, so some $a$ in the support has $U_i(a, \pi_{-i}) \le U_i(\pi)$, hence $g_i^a(\pi) = 0$.
+    \item At that $a$ the fixed-point equation reads $\pi_i(a) = \pi_i(a) / (1 + \sum_b g_i^b)$ with $\pi_i(a) > 0$, so $\sum_b g_i^b(\pi) = 0$.
+    \item No deterministic deviation gains for any $i$: $\pi$ is a Nash equilibrium. \hfill $\square$
+  \end{enumerate}
+  \medskip
+  Existence is non-constructive. Computing an equilibrium is hard in general (PPAD, \S4.11, Lecture 3).
+\end{frame}
+
+\begin{frame}{Folk theorems: almost anything is an equilibrium}
+  \begin{columns}[c]
+    \begin{column}{0.54\textwidth}
+      \small
+      In repeated or stochastic games with $\gamma$ close to 1, any returns $\hat U = (\hat U_1, \dots, \hat U_n)$ that are
+      \begin{itemize}
+        \item \textbf{feasible}: $U_i(\pi) = \hat U_i$ for some joint policy $\pi$, and
+        \item \textbf{enforceable}: $\hat U_i \ge v_i$, agent $i$'s minmax value
+          \[
+            v_i = \min_{\pi_{-i}^{mm}} \max_{\pi_i^{mm}} U_i(\pi_i^{mm}, \pi_{-i}^{mm}),
+          \]
+      \end{itemize}
+      can be achieved by an equilibrium.
+      \medskip
+
+      \textbf{Construction:} play $\pi$; if agent $i$ ever deviates, the others play $\pi_{-i}^{mm}$ forever. Deviating then earns at most $v_i \le \hat U_i$.
+      \medskip
+
+      Repeated PD: $v_i = -3$ (the other defects). Mutual cooperation, $(-1,-1)$, is an equilibrium outcome when agents are patient enough.
+    \end{column}
+    \begin{column}{0.44\textwidth}
+      \centering
+      \begin{tikzpicture}[scale=0.82]
+        \fill[cblue!10] (-5,0) -- (-1,-1) -- (0,-5) -- (-3,-3) -- cycle;
+        \fill[cgreen!35] (-3,-3) -- (-3,-0.5) -- (-1,-1) -- (-0.5,-3) -- cycle;
+        \draw[->] (-5.6,0) -- (0.7,0) node[right,font=\scriptsize] {$U_1$};
+        \draw[->] (0,-5.6) -- (0,0.7) node[above,font=\scriptsize] {$U_2$};
+        \foreach \t in {-5,-3,-1} {
+          \draw (\t,0.08) -- (\t,-0.08) node[above=3pt,font=\tiny] {$\t$};
+          \draw (0.08,\t) -- (-0.08,\t) node[right=3pt,font=\tiny] {$\t$};}
+        \draw[dashed,cred] (-3,-5.3) -- (-3,0.3);
+        \draw[dashed,cred] (-5.3,-3) -- (0.3,-3);
+        \fill[cred] (-3,-3) circle (2.5pt) node[below left,font=\scriptsize,cred] {$(v_1, v_2)$};
+        \fill[cgreen!60!black] (-1,-1) circle (2.5pt) node[below left,font=\scriptsize] {$(C,C)$};
+        \fill (-5,0) circle (1.8pt) node[below=2pt,font=\scriptsize] {$(C,D)$};
+        \fill (0,-5) circle (1.8pt) node[left,font=\scriptsize] {$(D,C)$};
+        \node[note,text width=4.6cm] at (-2.5,-6.2) {\textcolor{cblue}{blue}: feasible returns; \textcolor{cgreen}{green}: feasible and enforceable};
+      \end{tikzpicture}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Checking whether $\pi$ is a Nash equilibrium}
+  The definition reduces one multi-agent check to $n$ single-agent problems:
+  \bigskip
+
+  \centering
+  \begin{tikzpicture}[font=\small]
+    \node[b,text width=2.0cm] (pi) at (0,0) {joint policy $\pi$};
+    \node[bb,text width=3.2cm] (br) at (3.3,0) {for each agent $i$:\\ fix $\pi_{-i}$, compute a best response $\pi_i'$};
+    \node[bo,text width=3.0cm] (cmp) at (6.85,0) {$U_i(\pi_i', \pi_{-i}) > U_i(\pi)$?};
+    \node[br,text width=2.3cm,font=\footnotesize] (no) at (11.1,0.9) {not a Nash equilibrium};
+    \node[bg,text width=2.3cm,font=\footnotesize] (yes) at (11.1,-0.9) {Nash equilibrium};
+    \draw[->,thick] (pi) -- (br);
+    \draw[->,thick] (br) -- (cmp);
+    \draw[->,thick,cred] (cmp.east) -- ++(0.3,0) |- node[pos=0.72,above,font=\tiny,text=cred] {yes, some $i$} (no.west);
+    \draw[->,thick,cgreen] (cmp.east) -- ++(0.3,0) |- node[pos=0.72,below,font=\tiny,text=cgreen] {no, every $i$} (yes.west);
+  \end{tikzpicture}
+  \bigskip
+
+  \raggedright
+  \begin{itemize}
+    \item Normal-form games: each best response is an $\arg\max$ over $|A_i|$ values, or an LP.
+    \item Sequential games: each best response is an MDP, solved by dynamic programming or single-agent RL.
+    \item The gap $\sum_i [\max_{\pi_i'} U_i(\pi_i', \pi_{-i}) - U_i(\pi)]$ (``NashConv'', exploitability in zero-sum games) measures distance from equilibrium. Used to evaluate PSRO (Lecture 16).
+  \end{itemize}
+\end{frame}
+
+% =====================================================================
+\section{$\epsilon$-Nash equilibrium}
+
+\begin{frame}{$\epsilon$-Nash equilibrium}
+  \textbf{Why relax Nash?}
+  \begin{itemize}
+    \item Equilibrium probabilities may be irrational; computers use finite precision.
+    \item Reaching an exact equilibrium can be too expensive. Small remaining gains may be acceptable.
+  \end{itemize}
+  \begin{block}{Definition 7 ($\epsilon$-Nash equilibrium)}
+    For $\epsilon > 0$, $\pi$ is an $\epsilon$-Nash equilibrium if
+    \[
+      \forall i,\ \forall \pi_i' : \quad U_i(\pi_i', \pi_{-i}) - \epsilon \le U_i(\pi).
+    \]
+  \end{block}
+  \begin{itemize}
+    \item Exact Nash is $\epsilon = 0$.
+    \item $U_i$ is continuous in $\pi$, so every Nash equilibrium is surrounded by a region of $\epsilon$-Nash equilibria, for every $\epsilon > 0$.
+    \item Checking it: the same best-response procedure, testing $U_i(\pi_i', \pi_{-i}) - \epsilon > U_i(\pi)$.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{An $\epsilon$-Nash equilibrium need not be near any Nash equilibrium}
+  \small
+  \vspace{3mm}
+  \begin{columns}[T]
+    \begin{column}{0.36\textwidth}
+      \centering
+      \begin{tabular}{c|cc}
+          & C & D \\ \hline
+        A & \cellcolor{cgreen!25}$100,100$ & $0,0$ \\
+        B & $1,2$ & \cellcolor{corange!25}$1,1$
+      \end{tabular}\\[4pt]
+      \small book Figure 4.2
+    \end{column}
+    \begin{column}{0.6\textwidth}
+      \textbf{$(A,C)$ is the unique Nash equilibrium.}
+      \begin{itemize}
+        \item For agent 2, C strictly dominates D: $100 > 0$ and $2 > 1$. So agent 2 plays C in every equilibrium.
+        \item Against C, agent 1 prefers A ($100 > 1$). Hence $(A,C)$ is the only one.
+      \end{itemize}
+      \textbf{$(B,D)$ is a $1$-Nash equilibrium.}
+      \begin{itemize}
+        \item Agent 1 against D: A gives 0, B gives 1. No gain.
+        \item Agent 2 against B: C gives 2, D gives 1. Gain $= 1 = \epsilon$.
+      \end{itemize}
+    \end{column}
+  \end{columns}
+  \bigskip
+  \begin{itemize}
+    \item Returns $(1,1)$ versus $(100,100)$: neither agent is within $\epsilon$ of its equilibrium return.
+    \item Raise the $(A,C)$ rewards to anything: $(B,D)$ stays a $1$-Nash equilibrium. The gap is unbounded.
+    \item Small $\epsilon$ means ``no agent gains much by deviating alone'', not ``close to an equilibrium''.
+  \end{itemize}
+\end{frame}
+
+% =====================================================================
+\section{Summary}
+
+\begin{frame}{Summary}
+  \begin{itemize}
+    \item $U_i(\pi)$ is defined for every game model, by enumerating histories or by recursion. In normal-form games it is linear in each $\pi_i$.
+    \item \textbf{Best response:} $\BR_i(\pi_{-i}) = \argmax_{\pi_i} U_i$. Always has a deterministic member; may be a large set. In stochastic games, it is an MDP.
+    \item \textbf{Minimax} (two-agent zero-sum): maxmin = minmax; unique value; interchangeable solutions; computed by LP.
+    \item \textbf{Nash:} mutual best response. Always exists; may be probabilistic; often not unique; not necessarily efficient. Folk theorems: many equilibria in repeated games.
+    \item \textbf{$\epsilon$-Nash:} bounded incentive to deviate; can be far from any Nash equilibrium.
+  \end{itemize}
+  \bigskip
+  \textbf{Next lecture} (\S4.6--4.11): correlated equilibria, Pareto optimality, welfare and fairness, no-regret, and the complexity of computing equilibria.
+\end{frame}
+
+\begin{frame}{Exercises}
+  \begin{enumerate}
+    \item Show that the history-based and recursive definitions of $U_i(\pi)$ agree for a two-step stochastic game with two states and two actions per agent.
+    \item Show that uniform play is the unique Nash equilibrium of Matching Pennies, using the indifference principle.
+    \item Find all Nash equilibria of Chicken: $(D,D) = (0,0)$, $(D,Y) = (7,2)$, $(Y,D) = (2,7)$, $(Y,Y) = (6,6)$.
+    \item Write the minimax LP for Rock-Paper-Scissors and verify the solution with an LP solver.
+    \item Prove interchangeability: if $(x, y)$ and $(x', y')$ are minimax solutions of a two-agent zero-sum game, so is $(x, y')$.
+    \item In the repeated Prisoner's Dilemma with continuation probability $\gamma$, for which $\gamma$ is ``cooperate until the other defects, then defect forever'' (grim trigger) a Nash equilibrium?
+    \item Construct a game where an $\epsilon$-Nash equilibrium with $\epsilon = 0.01$ gives every agent a return at least 1000 below its return in every Nash equilibrium.
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{References}
+  \footnotesize
+  \begin{itemize}
+    \item Albrecht, Christianos, Sch\"afer. \emph{Multi-Agent Reinforcement Learning: Foundations and Modern Approaches}. MIT Press, 2024. Sections 4.1--4.5.
+    \item Fink. Equilibrium in a stochastic $n$-person game. \emph{J.\ Sci.\ Hiroshima Univ.}, 1964.
+    \item Fudenberg, Levine. \emph{The Theory of Learning in Games}. MIT Press, 1998.
+    \item Nash. Equilibrium points in $n$-person games. \emph{PNAS}, 1950.
+    \item Owen. \emph{Game Theory}. 4th ed., Emerald, 2013.
+    \item Shapley. Stochastic games. \emph{PNAS}, 1953.
+    \item Shoham, Leyton-Brown. \emph{Multiagent Systems}. Cambridge University Press, 2008.
+    \item Sion, Wolfe. On a game without a value. \emph{Contributions to the Theory of Games III}, 1957.
+    \item von Neumann. Zur Theorie der Gesellschaftsspiele. \emph{Math.\ Annalen}, 1928.
+    \item von Neumann, Morgenstern. \emph{Theory of Games and Economic Behavior}. Princeton, 1944.
+  \end{itemize}
+\end{frame}
+
+\end{document}
