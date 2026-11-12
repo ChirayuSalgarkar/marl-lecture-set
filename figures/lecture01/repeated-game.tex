@@ -1,0 +1,20 @@
+% lecture01.tex: slide "Play the same game again"
+\begin{tikzpicture}[font=\small]
+  \foreach \t/\i/\j/\lab in {0/0/0/{(C,C)},1/0/1/{(C,D)},2/1/1/{(D,D)}}{
+    \begin{scope}[shift={(\t*2.6,0)}]
+      \draw[cgray!70] (0,0) grid[step=0.5] (1,1);
+      \fill[cpurple!45] (\j*0.5,{0.5-\i*0.5}) rectangle ++(0.5,0.5);
+      \node[below,font=\scriptsize] at (0.5,0) {$t=\t$};
+      \node[above,font=\scriptsize] at (0.5,1) {$a^{\t} = \lab$};
+    \end{scope}}
+  \node at (8.2,0.5) {$\cdots$};
+  % current step
+  \begin{scope}[shift={(9.4,0)}]
+    \draw[thick] (0,0) grid[step=0.5] (1,1);
+    \node at (0.5,0.5) {\Large ?};
+    \node[below,font=\scriptsize] at (0.5,0) {$t$};
+  \end{scope}
+  \draw[decorate,decoration={brace,amplitude=6pt,mirror},thick,cblue] (-0.1,-0.5) -- (6.3,-0.5)
+    node[midway,below=8pt,text=cblue] {history $h^t = (a^0, a^1, \dots, a^{t-1})$};
+  \draw[->,thick,cblue] (9.9,-0.15) -- (9.9,-1.0) node[below,text=cblue] {$a_i^t \sim \pi_i(\cdot \mid h^t)$};
+\end{tikzpicture}%

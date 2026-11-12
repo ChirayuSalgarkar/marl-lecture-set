@@ -1,0 +1,40 @@
+% lecture01.tex: slide "Three kinds of games" (book Figure 3.2)
+\begin{tikzpicture}[font=\footnotesize]
+  \tikzset{cl/.style={minimum width=#1,minimum height=0.6cm,draw=cgray!50,inner sep=0},
+           hd/.style={font=\scriptsize\bfseries}}
+  % (a) Rock-Paper-Scissors: colour = winner (yellow: agent 1, green: agent 2)
+  \begin{scope}[shift={(0,0)}]
+    \node[font=\small\bfseries] at (1.5,0.95) {Rock-Paper-Scissors};
+    \foreach \a [count=\k from 0] in {R,P,S}{
+      \node[hd] at (\k+0.5,0.35) {\a};
+      \node[hd] at (-0.3,-\k*0.6-0.3) {\a};}
+    \foreach \i/\j/\v/\f in {0/0/{0,0}/white,0/1/{-1,1}/cgreen!30,0/2/{1,-1}/cyellow!40,
+                             1/0/{1,-1}/cyellow!40,1/1/{0,0}/white,1/2/{-1,1}/cgreen!30,
+                             2/0/{-1,1}/cgreen!30,2/1/{1,-1}/cyellow!40,2/2/{0,0}/white}
+      \node[cl=1cm,fill=\f] at (\j+0.5,-\i*0.6-0.3) {$\v$};
+    \node[font=\small,text=cpurple] at (1.5,-2.25) {\textbf{zero-sum}};
+    \node[note] at (1.5,-2.7) {$r_1 = -r_2$: my win is your loss};
+  \end{scope}
+  % (b) Coordination: one number per cell
+  \begin{scope}[shift={(4.9,-0.3)}]
+    \node[font=\small\bfseries] at (1.2,1.25) {Coordination};
+    \foreach \a [count=\k from 0] in {A,B}{
+      \node[hd] at (\k*1.2+0.6,0.65) {\a};
+      \node[hd] at (-0.3,-\k*0.6) {\a};}
+    \foreach \i/\j/\v/\f in {0/0/10/cblue!25,0/1/0/white,1/0/0/white,1/1/10/cblue!25}
+      \node[cl=1.2cm,fill=\f] at (\j*1.2+0.6,-\i*0.6) {$\v$};
+    \node[font=\small,text=cpurple] at (1.2,-1.95) {\textbf{common reward}};
+    \node[note] at (1.2,-2.4) {$r_1 = r_2$: one number per cell};
+  \end{scope}
+  % (c) Prisoner's Dilemma
+  \begin{scope}[shift={(9.4,-0.3)}]
+    \node[font=\small\bfseries] at (1.4,1.25) {Prisoner's Dilemma};
+    \foreach \a [count=\k from 0] in {C,D}{
+      \node[hd] at (\k*1.4+0.7,0.65) {\a};
+      \node[hd] at (-0.3,-\k*0.6) {\a};}
+    \foreach \i/\j/\v in {0/0/{-1,-1},0/1/{-5,0},1/0/{0,-5},1/1/{-3,-3}}
+      \node[cl=1.4cm,fill=corange!10] at (\j*1.4+0.7,-\i*0.6) {$\v$};
+    \node[font=\small,text=cpurple] at (1.4,-1.95) {\textbf{general-sum}};
+    \node[note] at (1.4,-2.4) {no rule linking $r_1$ and $r_2$};
+  \end{scope}
+\end{tikzpicture}%

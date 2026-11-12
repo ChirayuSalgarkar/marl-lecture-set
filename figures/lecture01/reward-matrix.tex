@@ -1,0 +1,23 @@
+% lecture01.tex: slide "Two agents: a matrix game"
+\begin{tikzpicture}[font=\small]
+  \def\w{1.9} \def\h{1.0}
+  \foreach \i/\r in {0/C,1/D} \foreach \j/\c in {0/C,1/D}
+    \node[minimum width=\w cm,minimum height=\h cm,draw=cgray!60,fill=white] (m\i\j) at (\j*\w+\w/2,-\i*\h-\h/2) {};
+  \node at (m00) {$r_1, r_2$};
+  \node[text=cgray] at (m01) {$\cdot\,,\cdot$};
+  \node[text=cgray] at (m10) {$\cdot\,,\cdot$};
+  \node[text=cgray] at (m11) {$\cdot\,,\cdot$};
+  % row player
+  \node[font=\small\bfseries,text=cyellow!70!black] at (-0.35,-0.5) {C};
+  \node[font=\small\bfseries,text=cyellow!70!black] at (-0.35,-1.5) {D};
+  \pic[draw=cyellow!80!black,fill=cyellow!40,scale=1.3] at (-1.4,-1.0) {robot};
+  \node[font=\scriptsize,align=center] at (-1.4,-1.65) {agent 1\\ picks a row};
+  % column player
+  \node[font=\small\bfseries,text=cgreen!80!black] at (0.95,0.3) {C};
+  \node[font=\small\bfseries,text=cgreen!80!black] at (2.85,0.3) {D};
+  \pic[draw=cgreen!80!black,fill=cgreen!35,scale=1.3] at (1.9,1.25) {robot};
+  \node[font=\scriptsize,anchor=west] at (2.3,1.2) {agent 2 picks a column};
+  % cell callout
+  \draw[cpurple,thick] (m00.south west) rectangle (m00.north east);
+  \draw[->,cpurple,thick] (m00.south) to[out=-90,in=180] (1.6,-2.6) node[anchor=west,font=\scriptsize,text=cpurple,align=left] {one cell = one joint action:\\ reward of agent 1, reward of agent 2};
+\end{tikzpicture}%

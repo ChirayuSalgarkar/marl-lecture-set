@@ -1,0 +1,20 @@
+% lecture01.tex: slide "A ladder of game models" (after book Figure 3.1)
+\begin{tikzpicture}[font=\small]
+  \tikzset{lv/.style={b,text width=3.9cm,minimum height=1.05cm}}
+  \node[lv,draw=cpurple,fill=cpurple!10] (posg) at (0,4.4) {\textbf{Partially observable stochastic game}\\ \scriptsize many agents, many states, partial view};
+  \node[lv,draw=corange,fill=corange!12] (sg) at (0,2.55) {\textbf{Stochastic game}\\ \scriptsize many agents, many states};
+  \node[lv,draw=cgreen,fill=cgreen!10] (nfg) at (-2.6,0.6) {\textbf{(Repeated) normal-form game}\\ \scriptsize many agents, one state};
+  \node[lv,draw=cblue,fill=cblue!10] (mdp) at (2.6,0.6) {\textbf{MDP}\\ \scriptsize one agent, many states};
+  \draw[->,thick] (sg) -- (posg);
+  \draw[->,thick] (nfg) -- (sg);
+  \draw[->,thick] (mdp) -- (sg);
+  \node[note,anchor=west] at (2.25,3.45) {add partial observability};
+  \node[note,anchor=east] at (-1.45,1.75) {add states};
+  \node[note,anchor=west] at (1.45,1.75) {add agents};
+  % icons
+  \pic[draw=cyellow!80!black,fill=cyellow!40] at (-5.4,0.75) {robot};
+  \pic[draw=cgreen!80!black,fill=cgreen!35] at (-5.4,0.2) {robot};
+  \pic[draw=cblue!80!black,fill=cblue!35] at (5.35,0.55) {robot};
+  \onslide<2->{\draw[cred,very thick,rounded corners=3pt] ($(nfg.south west)+(-0.12,-0.12)$) rectangle ($(nfg.north east)+(0.12,0.12)$);
+    \node[font=\small\bfseries,text=cred] at (-2.6,-0.5) {start here};}
+\end{tikzpicture}%

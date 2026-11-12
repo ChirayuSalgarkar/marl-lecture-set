@@ -1,0 +1,23 @@
+% lecture01.tex: slide "A known last round"
+\begin{tikzpicture}[font=\small]
+  \tikzset{rd/.style={rounded corners=2pt,draw,minimum width=1.15cm,minimum height=0.75cm}}
+  \foreach \k/\lab in {0/0,1/1,2/2,4/T-3,5/T-2,6/T-1}{
+    \node[font=\scriptsize,text=cgray] at (\k*1.55,0.7) {$t=\lab$};}
+  \node at (3*1.55,0) {$\cdots$};
+  % default: unknown
+  \foreach \k in {0,1,2,4,5,6} \node[rd,draw=cgray!60] at (\k*1.55,0) {?};
+  % unravel from the back
+  \onslide<2->{\node[rd,draw=cred,fill=cred!18] at (6*1.55,0) {D};}
+  \onslide<3->{\node[rd,draw=cred,fill=cred!18] at (5*1.55,0) {D};}
+  \onslide<4->{\node[rd,draw=cred,fill=cred!18] at (4*1.55,0) {D};}
+  \onslide<5->{\foreach \k in {0,1,2} \node[rd,draw=cred,fill=cred!18] at (\k*1.55,0) {D};}
+  \onslide<2>{\node[note,font=\small,text=cred] at (6*1.55,-0.85) {no future: D is best};}
+  \onslide<3>{\node[note,font=\small,text=cred] at (5*1.55,-0.85) {nothing now changes $T-1$};}
+  \onslide<4>{\node[note,font=\small,text=cred] at (4*1.55,-0.85) {same argument};}
+  \onslide<5->{\node[note,font=\small,text=cred] at (3*1.55,-0.85) {known end: defect at every step};}
+  % contrast: no known end
+  \onslide<6->{
+    \foreach \k in {0,1,2,4,5,6} \node[rd,draw=cgreen,fill=cgreen!18] at (\k*1.55,-2.0) {C};
+    \node at (3*1.55,-2.0) {$\cdots$};
+    \node[note,font=\small,text=cgreen!70!black] at (3*1.55,-2.85) {no known end ($\gamma$ near 1): fear of punishment can keep cooperation};}
+\end{tikzpicture}%

@@ -1,0 +1,13 @@
+% lecture01.tex: slide "When does it end?"
+\begin{tikzpicture}[font=\small]
+  \foreach \k/\p in {0/1,1/\gamma,2/\gamma^2,3/\gamma^3}{
+    \node[circle,draw=cgreen,fill=cgreen!12,thick,minimum size=0.95cm] (s\k) at (\k*2.6,0) {$t=\k$};
+    \node[text=cblue] at (\k*2.6,1.0) {$\p$};
+    \node[b,draw=cgray,fill=cgray!10,font=\scriptsize,minimum height=0.5cm] (x\k) at (\k*2.6,-1.6) {stop};
+    \draw[->,thick,cgray] (s\k) -- node[right,font=\scriptsize] {$1-\gamma$} (x\k);}
+  \foreach \k [evaluate=\k as \n using int(\k+1)] in {0,1,2}
+    \draw[->,thick,cgreen] (s\k) -- node[above,font=\scriptsize] {$\gamma$} (s\n);
+  \draw[->,thick,cgreen] (s3) -- node[above,font=\scriptsize] {$\gamma$} (9.6,0);
+  \node at (10.0,0) {$\cdots$};
+  \node[anchor=west,font=\scriptsize,text=cblue] at (-1.0,1.5) {chance to reach step $t$};
+\end{tikzpicture}%

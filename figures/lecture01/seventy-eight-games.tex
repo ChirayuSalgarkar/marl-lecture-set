@@ -1,0 +1,18 @@
+% lecture01.tex: slide "How many 2 x 2 games are there?" (book Section 11.2)
+% Games 1-21 are no-conflict, 22-78 conflict; the Prisoner's Dilemma is game 27.
+\begin{tikzpicture}
+  \foreach \k in {1,...,78}{
+    \pgfmathtruncatemacro{\r}{(\k-1)/13}
+    \pgfmathtruncatemacro{\c}{mod(\k-1,13)}
+    \ifnum\k<22 \def\col{cgreen}\else\def\col{corange}\fi
+    \begin{scope}[shift={(\c*0.62,-\r*0.62)}]
+      \fill[\col!25] (0,0) rectangle (0.5,0.5);
+      \draw[\col!80!black,thin] (0,0) grid[step=0.25] (0.5,0.5);
+    \end{scope}}
+  \draw[cred,very thick] (-0.07,{-2*0.62-0.07}) rectangle ++(0.64,0.64);
+  \draw[->,cred,thick] (-0.5,-3.3) node[anchor=north west,font=\small,text=cred,xshift=-4pt] {Prisoner's Dilemma (game 27)} to[out=90,in=180] (-0.08,{-2*0.62+0.25});
+  \node[anchor=west,font=\small] at (8.4,0.3) {\textcolor{cgreen!80!black}{\textbf{21 no-conflict}}};
+  \node[anchor=west,note] at (8.4,-0.15) {agents agree on the best outcome};
+  \node[anchor=west,font=\small] at (8.4,-0.9) {\textcolor{corange!90!black}{\textbf{57 conflict}}};
+  \node[anchor=west,note] at (8.4,-1.35) {they disagree};
+\end{tikzpicture}%

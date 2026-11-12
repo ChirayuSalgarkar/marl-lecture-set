@@ -183,174 +183,92 @@
 % =====================================================================
 \section{Normal-form games}
 
-\begin{frame}{Recap: Markov decision processes}
-  An MDP has states $S$, actions $A$, reward $R : S \times A \times S \to \Real$, transitions $T(s' \mid s, a)$, initial distribution $\mu$, discount $\gamma \in [0,1]$.
-  \[
-    Q^\pi(s,a) = \sum_{s'} T(s' \mid s,a) \Big[ R(s,a,s') + \gamma \sum_{a'} \pi(a' \mid s')\, Q^\pi(s',a') \Big].
-  \]
-  \begin{itemize}
-    \item The MDP is the single-agent model at the corner of the game hierarchy.
-    \item Its basic kernel is the multi-armed bandit: one state, one decision. The multi-agent analogue is the \textbf{normal-form game}.
-  \end{itemize}
-  \bigskip
+\begin{frame}{A ladder of game models}
   \centering
-  \input{figures/lecture01/recap-markov-decision-processes.tex}
+  \vfill
+  \input{figures/lecture01/game-ladder.tex}
+  \vfill
+  \par\medskip{\scriptsize\color{cgray} Book Figure 3.1}
 \end{frame}
 
-\begin{frame}{Normal-form games}
-  \begin{block}{Definition 2 (Normal-form game)}
-    \begin{itemize}
-      \item A finite set of agents $I = \{1, \dots, n\}$.
-      \item For each agent $i \in I$: a finite action set $A_i$ and a reward function $R_i : A \to \Real$, where $A = A_1 \times \cdots \times A_n$.
-    \end{itemize}
-  \end{block}
-  The game proceeds in one step:
-  \begin{enumerate}
-    \item each agent selects a policy $\pi_i : A_i \to [0,1]$ with $\sum_{a_i} \pi_i(a_i) = 1$,
-    \item each agent samples $a_i \sim \pi_i$, giving the joint action $a = (a_1, \dots, a_n)$,
-    \item each agent receives $r_i = R_i(a)$.
-  \end{enumerate}
-  With two agents the rewards fit in a matrix: a \textbf{matrix game}. Agent 1 picks the row, agent 2 the column, and cells hold $(r_1, r_2)$.
-\end{frame}
-
-\begin{frame}{Classifying games by rewards}
-  \begin{itemize}
-    \item \textbf{Zero-sum:} $\sum_{i \in I} R_i(a) = 0$ for all $a$. With two agents, $R_i = -R_j$. (A special case of constant-sum.)
-    \item \textbf{Common-reward:} $R_i = R_j$ for all $i, j$. Fully cooperative.
-    \item \textbf{General-sum:} no restriction.
-  \end{itemize}
-  \bigskip
+\begin{frame}{One round, everyone at once}
   \centering
-  \begin{columns}[T]
-    \begin{column}{0.33\textwidth}
-      \centering \textbf{Rock-Paper-Scissors}\\[3pt]
-      \footnotesize
-      \begin{tabular}{c|ccc}
-          & R & P & S \\ \hline
-        R & $0,0$ & $-1,1$ & $1,-1$ \\
-        P & $1,-1$ & $0,0$ & $-1,1$ \\
-        S & $-1,1$ & $1,-1$ & $0,0$
-      \end{tabular}\\[4pt]
-      \small zero-sum
-    \end{column}
-    \begin{column}{0.28\textwidth}
-      \centering \textbf{Coordination}\\[3pt]
-      \footnotesize
-      \begin{tabular}{c|cc}
-          & A & B \\ \hline
-        A & $10$ & $0$ \\
-        B & $0$ & $10$
-      \end{tabular}\\[4pt]
-      \small common-reward\\ (one number per cell)
-    \end{column}
-    \begin{column}{0.33\textwidth}
-      \centering \textbf{Prisoner's Dilemma}\\[3pt]
-      \footnotesize
-      \begin{tabular}{c|cc}
-          & C & D \\ \hline
-        C & $-1,-1$ & $-5,0$ \\
-        D & $0,-5$ & $-3,-3$
-      \end{tabular}\\[4pt]
-      \small general-sum
-    \end{column}
-  \end{columns}
-  \bigskip
-
-  \small Book Figure 3.2. In the Prisoner's Dilemma, D gives a higher reward than C whatever the other agent does, yet $(C,C)$ is better for both than $(D,D)$.
+  \vfill
+  \input{figures/lecture01/one-shot-game.tex}
+  \vfill
+  {\small agents $I = \{1,\dots,n\}$, \ actions $A_i$, \ rewards $R_i : A \to \Real$, \ joint actions $A = A_1 \times \cdots \times A_n$}
+  \par\medskip{\scriptsize\color{cgray} Book Definition 2 (Normal-form game), \S3.1}
 \end{frame}
 
-\begin{frame}{How many different $2 \times 2$ games are there?}
-  \begin{columns}[c]
-    \begin{column}{0.5\textwidth}
-      \begin{itemize}
-        \item Restrict to \textbf{strictly ordinal} games: each agent ranks the four outcomes $1 < 2 < 3 < 4$.
-        \item Up to relabeling of actions and agents, there are exactly \textbf{78} structurally distinct $2 \times 2$ games (Rapoport \& Guyer, 1966).
-        \item They split into \textbf{no-conflict} games (one outcome is best for both) and \textbf{conflict} games.
-        \item Book \S11.2 lists all 78; they are cheap test beds for learning algorithms.
-      \end{itemize}
-    \end{column}
-    \begin{column}{0.46\textwidth}
-      \centering
-      \input{figures/lecture01/how-many-different-2-2-games-are-there.tex}
-    \end{column}
-  \end{columns}
+\begin{frame}{Two agents: a matrix game}
+  \centering
+  \vfill
+  \input{figures/lecture01/reward-matrix.tex}
+  \vfill
+  \par\medskip{\scriptsize\color{cgray} Book \S3.1}
+\end{frame}
+
+\begin{frame}{Three kinds of games}
+  \centering
+  \vfill
+  \input{figures/lecture01/three-kinds-of-games.tex}
+  \vfill
+  \par\medskip{\scriptsize\color{cgray} Book Figure 3.2. In RPS, yellow = agent 1 wins, green = agent 2 wins.}
+\end{frame}
+
+\begin{frame}{The Prisoner's Dilemma}
+  \centering
+  \vfill
+  \input{figures/lecture01/prisoners-dilemma.tex}
+  \vfill
+  \par\medskip{\scriptsize\color{cgray} Book \S3.1 and Figure 3.2(c)}
+\end{frame}
+
+\begin{frame}{How many $2 \times 2$ games are there?}
+  \centering
+  \vfill
+  \input{figures/lecture01/seventy-eight-games.tex}
+  \vfill
+  {\small Each agent ranks the four outcomes $1$ to $4$. Up to relabelling, there are \textbf{78} different games.}
+  \par\medskip{\scriptsize\color{cgray} Book \S11.2, after Rapoport \& Guyer (1966)}
 \end{frame}
 
 % =====================================================================
 \section{Repeated normal-form games}
 
-\begin{frame}{Repeated normal-form games}
-  Repeat a normal-form game $\Gamma = (I, \{A_i\}, \{R_i\})$ for $t = 0, 1, \dots, T-1$, with $T$ finite or infinite.
-  \begin{itemize}
-    \item At each step agent $i$ samples $a_i^t \sim \pi_i(\cdot \mid h^t)$ and receives $r_i^t = R_i(a^t)$.
-    \item The policy is conditioned on the \textbf{joint-action history}
-      \[
-        h^t = (a^0, a^1, \dots, a^{t-1}), \qquad h^0 = \emptyset .
-      \]
-    \item The space of policies is now huge. In practice policies condition on a summary $f(h^t)$, for example the last joint action $a^{t-1}$ or the other agents' action counts.
-  \end{itemize}
-  \bigskip
-  Terminology: \emph{non-repeated} means $T = 1$; \emph{repeated} means $T > 1$.
+\begin{frame}{Play the same game again}
+  \centering
+  \vfill
+  \input{figures/lecture01/repeated-game.tex}
+  \vfill
+  {\small The policy can now depend on everything that happened so far.}
+  \par\medskip{\scriptsize\color{cgray} Book \S3.2}
 \end{frame}
 
-\begin{frame}{Example: Tit-for-Tat in the repeated Prisoner's Dilemma}
-  \begin{columns}[c]
-    \begin{column}{0.5\textwidth}
-      Tit-for-Tat (Axelrod \& Hamilton, 1981) conditions only on the other agent's last action:
-      \[
-        \pi_i(a_i^t \mid h^t) =
-        \begin{cases}
-          \mathbb{1}[a_i^t = C] & t = 0, \\
-          \mathbb{1}[a_i^t = a_j^{t-1}] & t > 0.
-        \end{cases}
-      \]
-      \begin{itemize}
-        \item A policy with internal state $f(h^t) = a_j^{t-1}$: a two-state machine.
-        \item Never the first to defect; punishes defection once; forgives immediately.
-        \item Won Axelrod's 1980 tournaments of repeated-PD strategies.
-      \end{itemize}
-    \end{column}
-    \begin{column}{0.46\textwidth}
-      \centering
-      \input{figures/lecture01/example-tit-for-tat-in-the-repeated-pris.tex}\\[6pt]
-      {\scriptsize transitions on the other agent's previous action $a_j^{t-1}$}
-    \end{column}
-  \end{columns}
+\begin{frame}{Tit-for-Tat}
+  \centering
+  \vfill
+  \input{figures/lecture01/tit-for-tat.tex}
+  \vfill
+  {\small Copy what the other agent did last time.}
+  \par\medskip{\scriptsize\color{cgray} Axelrod \& Hamilton (1981); book \S3.2}
 \end{frame}
 
-\begin{frame}{Infinite repetition and the discount factor}
-  Suppose that after each step the game continues with probability $\gamma$ and stops with probability $1 - \gamma$, independently of play. Let $T$ be the (random) number of steps played.
-  \bigskip
-
-  \textbf{Claim.} The expected total reward equals the discounted return:
-  \[
-    \E\Big[ \sum_{t=0}^{T-1} r_i^t \Big] = \sum_{t=0}^{\infty} \gamma^t\, \E[r_i^t].
-  \]
-  \textbf{Derivation.} Write the sum with indicators and use independence of $T$ from play:
-  \[
-    \E\Big[ \sum_{t=0}^{\infty} \mathbb{1}[T > t]\, r_i^t \Big]
-    = \sum_{t=0}^{\infty} \Pr(T > t)\, \E[r_i^t]
-    = \sum_{t=0}^{\infty} \gamma^t\, \E[r_i^t],
-  \]
-  since reaching step $t$ requires $t$ independent continuations. \hfill $\square$
-  \bigskip
-
-  With $\gamma < 1$ the game is still ``infinite'': every finite length has positive probability.
+\begin{frame}{When does it end?}
+  \centering
+  \vfill
+  \input{figures/lecture01/continue-or-stop.tex}
+  \vfill
+  {\small Expected total reward $= \sum_{t} \gamma^t\, \E[r_i^t]$: \ the discount factor from RL.}
+  \par\medskip{\scriptsize\color{cgray} Book \S3.2 (and \S2.3)}
 \end{frame}
 
-\begin{frame}{Finite repetition: end-game effects}
-  Finitely and infinitely repeated games are \textbf{not} equivalent. Consider the Prisoner's Dilemma repeated a known number of times $T$.
-  \bigskip
-
-  \textbf{Backward induction.}
-  \begin{enumerate}
-    \item At $t = T-1$ nothing follows, so the last step is a one-shot game and D dominates C.
-    \item So the last step is $(D,D)$ regardless of history. At $t = T-2$, the current choice cannot affect what happens next, so this step is also one-shot: D.
-    \item Induct backwards: in the unique subgame-perfect equilibrium both agents defect at every step.
-  \end{enumerate}
-  \bigskip
-  With infinite repetition (or an unknown end, $\gamma$ close to 1), the threat of future punishment can sustain cooperation, e.g.\ Tit-for-Tat. Folk theorems make this precise (book \S4.4).
-  \par\vfill{\scriptsize\color{cgray} Book \S3.2; end-game example in \S6.3.3}
+\begin{frame}{A known last round}
+  \centering
+  \vfill
+  \input{figures/lecture01/end-game.tex}
+  \vfill
+  \par\medskip{\scriptsize\color{cgray} Repeated Prisoner's Dilemma. Book \S3.2; folk theorems: book \S4.4}
 \end{frame}
 
 % =====================================================================
