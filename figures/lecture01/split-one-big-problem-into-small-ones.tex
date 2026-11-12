@@ -1,0 +1,20 @@
+% lecture01.tex: slide "Split one big problem into small ones"
+\begin{tikzpicture}
+  \node[font=\small\bfseries] at (3,5.7) {One central agent};
+  \pic[draw=cpurple!80!black,fill=cpurple!35,scale=2.2] at (3,4.4) {robot};
+  \foreach \x in {1.8,3,4.2}{
+    \draw[thick,cgray] (3,3.95) -- (\x,3.25);
+    \pic[draw=cgray,fill=cgray!25,scale=1.3] at (\x,2.95) {robot};}
+  \foreach \i in {0,...,17}{\foreach \j in {0,...,11}{
+    \fill[cpurple!45] (1.65+\i*0.15,0.35+\j*0.15) rectangle ++(0.12,0.12);}}
+  \node[font=\small] at (3,-0.05) {$6 \times 6 \times 6 = 216$ actions};
+  \draw[cgray,dashed] (6.6,-0.3) -- (6.6,6.0);
+  \node[font=\small\bfseries] at (10.4,5.7) {One agent per robot};
+  \foreach \x/\c in {8.4/cyellow,10.4/cgreen,12.4/cblue}{
+    \pic[draw=\c!80!black,fill=\c!45,scale=1.8] at (\x,4.2) {robot};
+    \foreach \k in {0,...,5} \fill[\c!55] (\x-0.87+\k*0.3,3.2) rectangle ++(0.24,0.24);}
+  \draw[<->,thick,cred,dashed] (8.9,4.2) -- (9.9,4.2);
+  \draw[<->,thick,cred,dashed] (10.9,4.2) -- (11.9,4.2);
+  \node[font=\small] at (10.4,2.6) {6 actions each};
+  \node[font=\small,text=cred] at (10.4,1.6) {but now they must coordinate};
+\end{tikzpicture}%

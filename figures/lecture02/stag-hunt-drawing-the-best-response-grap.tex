@@ -1,0 +1,17 @@
+% lecture02.tex: slide "Stag Hunt: drawing the best-response graphs"
+\begin{tikzpicture}[scale=4.3]
+  \fill[cgray!6] (0,0) rectangle (1,1);
+  \draw[->] (0,0) -- (1.1,0) node[right,font=\small] {$q$};
+  \draw[->] (0,0) -- (0,1.1) node[above,font=\small] {$p$};
+  \foreach \t/\l in {0/0,0.75/\tfrac34,1/1}{
+    \draw (\t,0) -- (\t,-0.02) node[below,font=\scriptsize] {$\l$};
+    \draw (0,\t) -- (-0.02,\t) node[left,font=\scriptsize] {$\l$};}
+  \draw[cblue,line width=1.6pt] (0,0) -- (0.75,0) -- (0.75,1) -- (1,1);
+  \draw[corange,line width=1.6pt,dashed] (0,0) -- (0,0.75) -- (1,0.75) -- (1,1);
+  \foreach \x/\y in {0/0,0.75/0.75,1/1} \fill[cred] (\x,\y) circle (0.022);
+  \node[font=\scriptsize,cred,anchor=south west] at (1,1) {$(S,S)$: 4, 4};
+  \node[font=\scriptsize,cred,anchor=north east] at (0.73,0.73) {mixed: 3, 3};
+  \node[font=\scriptsize,cred,anchor=north west] at (0.02,0.0) {$(H,H)$: 3, 3};
+  \node[font=\scriptsize,cblue,anchor=west] at (0.77,0.4) {$\BR_1$};
+  \node[font=\scriptsize,corange,anchor=south] at (0.4,0.76) {$\BR_2$};
+\end{tikzpicture}%

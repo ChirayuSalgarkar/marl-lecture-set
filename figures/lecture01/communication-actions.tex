@@ -1,0 +1,10 @@
+% lecture01.tex: slide "Communication actions"
+\begin{tikzpicture}
+  \node[b,fill=cgray!8,minimum width=4.6cm,minimum height=1cm] (env) at (0,0) {Environment state $s$};
+  \node[bb,minimum width=1.7cm] (ai) at (-1.5,2.4) {Agent $i$};
+  \node[bo,minimum width=1.7cm] (aj) at (1.5,2.4) {Agent $j$};
+  \draw[->,thick,cblue] (ai) -- node[left,font=\scriptsize] {$x_i \in X_i$} (ai |- env.north);
+  \draw[->,thick,cpurple,dashed] (ai.east) to[bend left=20] node[above,font=\scriptsize] {$m_i \in M_i$} (aj.west);
+  \draw[->,thick] ([xshift=6mm]env.north) -- node[right,font=\scriptsize] {$o_j$} ([xshift=6mm]env.north |- aj.south);
+  \node[note,text width=4.4cm] at (0,-1) {$x_i$ changes the state; $m_i$ only reaches $j$'s observation};
+\end{tikzpicture}%

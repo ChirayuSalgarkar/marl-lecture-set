@@ -1,0 +1,14 @@
+% lecture01.tex: slide "Six questions about any MARL problem"
+\begin{tikzpicture}
+  \node[draw,circle,fill=cgray!10,minimum size=1.7cm,align=center,font=\small\bfseries] (c) {MARL\\ problem};
+  \foreach \ang/\t/\d/\col in {
+    90/Size/{number of agents, states, actions}/cblue,
+    30/Rewards/{common, zero-sum, general-sum}/corange,
+    -30/Observability/{full, partial}/cgreen,
+    -90/Knowledge/{what agents know about the game}/cpurple,
+    -150/Objective/{solution concept (Ch.\ 4--5)}/cred,
+    150/{Centralization \& communication}/{central controller? messages? (Ch.\ 3, 5, 6, 9)}/cgray}{
+    \node[b,draw=\col,fill=\col!10,text width=3.0cm,font=\scriptsize,inner sep=3pt] (n\ang) at (\ang:4.6cm and 2.2cm) {\textbf{\t}\\ \d};
+    \draw[thick,\col] (c) -- (n\ang);
+  }
+\end{tikzpicture}%

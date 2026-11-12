@@ -1,0 +1,18 @@
+% lecture01.tex: slide "Board and video games"
+\begin{tikzpicture}
+  \picGames
+  \draw[cgreen,very thick,dashed,rounded corners] (1.7,0.2) rectangle (6.3,4.8);
+  \fill[white] (4.5,2.0) circle (0.2); \draw[black!70] (4.5,2.0) circle (0.2);
+  \draw[corange,very thick] (4.5,2.0) circle (0.3);
+  \draw[->,corange,very thick,dashed] (6.75,1.8) to[bend left=25] (4.85,1.95);
+  \node[font=\large\bfseries,text=cpurple] (wp) at (7.15,4.3) {$+1$};
+  \node[font=\large\bfseries,text=cpurple] at (0.85,4.3) {$-1$};
+  \node[anchor=west,align=left,font=\small] (lA) at (8.8,4.4) {\textbf{Agent}\\ one player};
+  \node[anchor=west,align=left,font=\small] (lO) at (8.8,3.2) {\textbf{\color{cgreen}Observes}\\ the board};
+  \node[anchor=west,align=left,font=\small] (lD) at (8.8,2.0) {\textbf{\color{corange}Acts}\\ place a stone};
+  \node[anchor=west,align=left,font=\small] (lR) at (8.8,0.6) {\textbf{\color{cpurple}Reward}\\ win $+1$, lose $-1$\\ {\footnotesize\color{cgray}(zero-sum)}};
+  \draw[->,thick,black!60] (lA.west) -- (7.55,3.1);
+  \draw[->,thick,cgreen] (lO.west) -- (6.3,3.2);
+  \draw[->,thick,corange] (lD.west) -- (7.0,1.9);
+  \draw[->,thick,cpurple] (lR.west) to[out=180,in=-30] (wp.south east);
+\end{tikzpicture}%

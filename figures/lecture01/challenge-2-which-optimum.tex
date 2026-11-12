@@ -1,0 +1,16 @@
+% lecture01.tex: slide "Challenge 2: which optimum?"
+\begin{tikzpicture}
+  \node[font=\small] at (3.5,4.7) {Two robots meet in a corridor.};
+  \fill[cgray!20] (0,2.2) rectangle (7,3.6);
+  \pic[draw=cyellow!80!black,fill=cyellow!45,scale=1.6] at (0.6,2.9) {robot};
+  \pic[draw=cgreen!80!black,fill=cgreen!45,scale=1.6] at (6.4,2.9) {robot};
+  \draw[->,thick] (1.2,2.9) -- (5.8,2.9);
+  \draw[->,thick] (5.8,2.75) -- (1.2,2.75);
+  % options
+  \node[b,draw=cgreen,fill=cgreen!12,font=\small,text width=2.7cm] (k1) at (1.6,0.7) {both keep \textbf{left}};
+  \node[b,draw=cgreen,fill=cgreen!12,font=\small,text width=2.7cm] (k2) at (5.4,0.7) {both keep \textbf{right}};
+  \node[font=\Large,text=cgreen] at (1.6,-0.3) {\checkmark};
+  \node[font=\Large,text=cgreen] at (5.4,-0.3) {\checkmark};
+  \node[b,draw=cred,fill=cred!10,font=\small,text width=3.2cm] (k3) at (10.4,2.9) {one left, one right};
+  \node[font=\Large\bfseries,text=cred] at (10.4,1.9) {crash};
+\end{tikzpicture}%

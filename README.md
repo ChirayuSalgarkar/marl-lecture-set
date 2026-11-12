@@ -10,6 +10,10 @@ Albrecht, Christianos & Schäfer, *Multi-Agent Reinforcement Learning: Foundatio
 
 All lectures load the shared preamble `marl-style.sty` (colours, TikZ styles, notation), so keep it in the same folder.
 
+## Editing diagrams
+
+Every diagram is its own file in `figures/lectureNN/`, named after its slide (for example `figures/lecture01/many-agents.tex`). Each holds one `tikzpicture` and is pulled into the deck with `\input{...}`. Edit the file and recompile the lecture. The four application pictures (`app-warehouse.tex`, `app-games.tex`, `app-driving.tex`, `app-trading.tex`) appear on two slides each, so they hold only drawing commands without the `tikzpicture` wrapper. The robot, person, car and apple icons are defined once in `marl-style.sty`.
+
 ## Build
 
 ```

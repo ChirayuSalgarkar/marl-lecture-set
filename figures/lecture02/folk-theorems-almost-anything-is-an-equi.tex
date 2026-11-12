@@ -1,0 +1,17 @@
+% lecture02.tex: slide "Folk theorems: almost anything is an equilibrium"
+\begin{tikzpicture}[scale=0.82]
+  \fill[cblue!10] (-5,0) -- (-1,-1) -- (0,-5) -- (-3,-3) -- cycle;
+  \fill[cgreen!35] (-3,-3) -- (-3,-0.5) -- (-1,-1) -- (-0.5,-3) -- cycle;
+  \draw[->] (-5.6,0) -- (0.7,0) node[right,font=\scriptsize] {$U_1$};
+  \draw[->] (0,-5.6) -- (0,0.7) node[above,font=\scriptsize] {$U_2$};
+  \foreach \t in {-5,-3,-1} {
+    \draw (\t,0.08) -- (\t,-0.08) node[above=3pt,font=\tiny] {$\t$};
+    \draw (0.08,\t) -- (-0.08,\t) node[right=3pt,font=\tiny] {$\t$};}
+  \draw[dashed,cred] (-3,-5.3) -- (-3,0.3);
+  \draw[dashed,cred] (-5.3,-3) -- (0.3,-3);
+  \fill[cred] (-3,-3) circle (2.5pt) node[below left,font=\scriptsize,cred] {$(v_1, v_2)$};
+  \fill[cgreen!60!black] (-1,-1) circle (2.5pt) node[below left,font=\scriptsize] {$(C,C)$};
+  \fill (-5,0) circle (1.8pt) node[below=2pt,font=\scriptsize] {$(C,D)$};
+  \fill (0,-5) circle (1.8pt) node[left,font=\scriptsize] {$(D,C)$};
+  \node[note,text width=4.6cm] at (-2.5,-6.2) {\textcolor{cblue}{blue}: feasible returns; \textcolor{cgreen}{green}: feasible and enforceable};
+\end{tikzpicture}%

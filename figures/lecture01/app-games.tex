@@ -1,0 +1,16 @@
+% Application picture (Games), drawn in an 8 x 5 box.
+% Used inside a tikzpicture via \picGames.
+  \fill[cgray!6] (0,0) rectangle (8,5);
+  \draw[cgray!60] (0,0) rectangle (8,5);
+  \fill[corange!30] (1.8,0.3) rectangle (6.2,4.7);
+  \foreach \i in {0,...,8}{
+    \draw[black!55] (2.0+0.5*\i,0.5) -- (2.0+0.5*\i,4.5);
+    \draw[black!55] (2.0,0.5+0.5*\i) -- (6.0,0.5+0.5*\i);}
+  \foreach \i/\j in {2/2,3/3,4/4,2/6,5/2,6/5} \fill[black] (2.0+0.5*\i,0.5+0.5*\j) circle (0.2);
+  \foreach \i/\j in {6/6,5/5,6/3,3/6,4/6}{
+    \fill[white] (2.0+0.5*\i,0.5+0.5*\j) circle (0.2);
+    \draw[black!70] (2.0+0.5*\i,0.5+0.5*\j) circle (0.2);}
+  \pic[fill=cblue!70,scale=2.2] at (0.85,2.2) {person};
+  \fill[black] (0.85,1.4) circle (0.18);
+  \pic[fill=cred!70,scale=2.2] at (7.15,2.2) {person};
+  \fill[white] (7.15,1.4) circle (0.18); \draw[black!70] (7.15,1.4) circle (0.18);%

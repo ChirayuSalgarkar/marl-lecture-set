@@ -1,0 +1,10 @@
+% lecture01.tex: slide "Beliefs with more than one agent"
+\begin{tikzpicture}[node distance=6mm]
+  \node[bb,text width=3.6cm] (b0) {$b_i \in \Delta(S \times H_j)$\\ \scriptsize state and $j$'s history};
+  \node[bo,text width=3.6cm,below=of b0] (b1) {needs $\pi_j(\cdot \mid h_j)$\\ \scriptsize $j$'s policy};
+  \node[bp,text width=3.6cm,below=of b1] (b2) {$\pi_j$ depends on $b_j \in \Delta(S \times H_i)$\\ \scriptsize $j$'s belief about $i$};
+  \node[note,below=3mm of b2] {$\cdots$ nested beliefs};
+  \draw[->,thick] (b0) -- (b1);
+  \draw[->,thick] (b1) -- (b2);
+  \draw[->,thick,cred,dashed] (b2.east) to[bend right=50] node[right,font=\scriptsize,text=cred] {recursion} (b0.east);
+\end{tikzpicture}%

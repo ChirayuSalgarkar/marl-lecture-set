@@ -1,0 +1,10 @@
+% lecture01.tex: slide "What do agents know about the game?"
+\begin{tikzpicture}
+  \shade[left color=cblue!35,right color=corange!35] (0,0) rectangle (12,0.5);
+  \draw (0,0) rectangle (12,0.5);
+  \node[font=\small\bfseries,cblue,anchor=south west] at (0,0.6) {more knowledge};
+  \node[font=\small\bfseries,corange,anchor=south east] at (12,0.6) {less knowledge};
+  \node[bb,text width=3.4cm,font=\scriptsize,anchor=north] at (1.8,-0.3) {\textbf{Complete knowledge}\\ (game theory default)\\ all $A_i$, $R_i$, $S$, $T$, $\mathcal{O}_i$ known to all};
+  \node[bg,text width=3.4cm,font=\scriptsize,anchor=north] at (6,-0.3) {\textbf{Simulator}\\ sample $(r, s') \sim \hat T(s, a)$\\ without explicit $T$, $R_i$};
+  \node[bo,text width=3.4cm,font=\scriptsize,anchor=north] at (10.2,-0.3) {\textbf{MARL default}\\ agent $i$ sees only its own $r_i$, $o_i$ (or $s$, $a$);\\ knows no $T$, $\mathcal{O}$, or $R$};
+\end{tikzpicture}%

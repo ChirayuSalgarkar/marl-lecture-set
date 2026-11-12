@@ -1,0 +1,12 @@
+% lecture02.tex: slide "Checking whether $\pi$ is a Nash equilibrium"
+\begin{tikzpicture}[font=\small]
+  \node[b,text width=2.0cm] (pi) at (0,0) {joint policy $\pi$};
+  \node[bb,text width=3.2cm] (br) at (3.3,0) {for each agent $i$:\\ fix $\pi_{-i}$, compute a best response $\pi_i'$};
+  \node[bo,text width=3.0cm] (cmp) at (6.85,0) {$U_i(\pi_i', \pi_{-i}) > U_i(\pi)$?};
+  \node[br,text width=2.3cm,font=\footnotesize] (no) at (11.1,0.9) {not a Nash equilibrium};
+  \node[bg,text width=2.3cm,font=\footnotesize] (yes) at (11.1,-0.9) {Nash equilibrium};
+  \draw[->,thick] (pi) -- (br);
+  \draw[->,thick] (br) -- (cmp);
+  \draw[->,thick,cred] (cmp.east) -- ++(0.3,0) |- node[pos=0.72,above,font=\tiny,text=cred] {yes, some $i$} (no.west);
+  \draw[->,thick,cgreen] (cmp.east) -- ++(0.3,0) |- node[pos=0.72,below,font=\tiny,text=cgreen] {no, every $i$} (yes.west);
+\end{tikzpicture}%

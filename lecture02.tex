@@ -29,13 +29,7 @@
   \end{enumerate}
   \bigskip
   \centering
-  \begin{tikzpicture}[node distance=5mm]
-    \node[bb] (gm) {Game model\\ \scriptsize Lecture 1};
-    \node[right=of gm] (plus) {$+$};
-    \node[bo,right=of plus] (sc) {Solution concept\\ \scriptsize today and Lecture 3};
-    \node[right=of sc] (eq) {$=$};
-    \node[bg,right=of eq] (p) {MARL problem};
-  \end{tikzpicture}
+  \input{figures/lecture02/today.tex}
   \reading{Sections 4.1--4.5. Next lecture: 4.6--4.11.}
 \end{frame}
 
@@ -110,26 +104,7 @@
 
 \begin{frame}{The two definitions are the same tree}
   \centering
-  \begin{tikzpicture}[x=1cm,y=1cm,
-      dec/.style={circle,draw=cblue,fill=cblue!15,minimum size=6mm,inner sep=0,font=\scriptsize},
-      chn/.style={diamond,draw=corange,fill=corange!15,minimum size=5mm,inner sep=0},
-      leaf/.style={font=\scriptsize}]
-    \node[dec] (r) at (0,0) {$\hh^0$};
-    \node[chn] (c1) at (-3.2,-1.4) {};
-    \node[chn] (c2) at (3.2,-1.4) {};
-    \draw[->,thick,cblue] (r) -- node[above left,font=\scriptsize] {$a$, prob.\ $\pi(a \mid h^0)$} (c1);
-    \draw[->,thick,cblue] (r) -- node[above right,font=\scriptsize] {$a'$} (c2);
-    \foreach \p/\x [count=\k] in {c1/-4.6,c1/-1.8,c2/1.8,c2/4.6}{
-      \node[dec] (n\k) at (\x,-2.9) {$\hh^1$};
-      \draw[->,thick,corange] (\p) -- (n\k);
-      \draw[->,cgray] (n\k) -- ++(-0.5,-0.9);
-      \draw[->,cgray] (n\k) -- ++(0.5,-0.9);
-      \node[leaf,cgray] at (\x,-4.1) {$\cdots$};
-    }
-    \node[font=\scriptsize,corange,anchor=east] at (-3.9,-2.0) {$s', o'$ w.p.\ $T \cdot \mathcal{O}$};
-    \node[note,text width=3.4cm,anchor=west] at (5.4,0) {\textcolor{cblue}{circles}: agents choose (policy)\\ \textcolor{corange}{diamonds}: nature chooses (dynamics)};
-    \node[note,text width=3.4cm,anchor=west] at (5.4,-3.3) {each root-to-leaf path is one full history $\hh^t$};
-  \end{tikzpicture}
+  \input{figures/lecture02/the-two-definitions-are-the-same-tree.tex}
   \medskip
 
   \small History-based: sum over all paths, weighting each path's return $u_i$ by its probability. Recursive: compute $V_i^\pi$ bottom-up through the same tree. Both give $U_i(\pi)$.
@@ -218,28 +193,7 @@
     \end{column}
     \begin{column}{0.52\textwidth}
       \centering
-      \begin{tikzpicture}[scale=1.25]
-        \coordinate (R) at (0,0);
-        \coordinate (P) at (4,0);
-        \coordinate (S) at (2,3.464);
-        \begin{scope}
-          \clip (R) -- (P) -- (S) -- cycle;
-          % f(x,y) = 0.1 x - 0.0866 y - 0.1 ; level lines f = k
-          \foreach \k in {-0.18,-0.12,...,0.3}{
-            \pgfmathsetmacro{\mix}{max(0,min(100,(\k+0.2)*200))}
-            \pgfmathsetmacro{\xa}{(\k+0.1+0.0866*(-0.5))/0.1}
-            \pgfmathsetmacro{\xb}{(\k+0.1+0.0866*4)/0.1}
-            \draw[line width=1.1pt,color=corange!\mix!cblue] (\xa,-0.5) -- (\xb,4);
-          }
-        \end{scope}
-        \draw[thick] (R) -- (P) -- (S) -- cycle;
-        \node[below left,font=\small] at (R) {R \scriptsize($-0.1$)};
-        \node[below right,font=\small] at (P) {P \scriptsize($0.3$)};
-        \node[above,font=\small] at (S) {S \scriptsize($-0.2$)};
-        \fill[cred] (P) circle (2.5pt);
-        \node[font=\scriptsize,cred,anchor=west] at (4.1,0.35) {maximum};
-        \node[note,text width=5cm] at (2,-0.75) {level lines of $U_1(\pi_1, \pi_2)$ over $\pi_1 \in \Delta(\{R,P,S\})$; blue low, orange high};
-      \end{tikzpicture}
+      \input{figures/lecture02/picture-maximizing-a-linear-function-on.tex}
     \end{column}
   \end{columns}
 \end{frame}
@@ -350,19 +304,7 @@
     \end{column}
     \begin{column}{0.48\textwidth}
       \centering
-      \begin{tikzpicture}[x=4.6cm,y=0.85cm]
-        \draw[->] (0,0) -- (1.08,0) node[right,font=\small] {$x$};
-        \draw[->] (0,-2.3) -- (0,3.4) node[above,font=\small] {$U_1$};
-        \foreach \y in {-2,-1,1,2,3} \draw (-0.01,\y) -- (0.01,\y) node[left=2pt,font=\tiny] {$\y$};
-        \draw (1,-0.08) -- (1,0.08) node[below=4pt,font=\tiny] {1};
-        \draw[thick,cblue] (0,-2) -- (1,3) node[below right,font=\scriptsize] {vs.\ L};
-        \draw[thick,corange] (0,1) -- (1,-1) node[right,font=\scriptsize] {vs.\ R};
-        \draw[line width=2.6pt,cred,opacity=0.55] (0,-2) -- (3/7,1/7) -- (1,-1);
-        \draw[dashed,cgray] (3/7,0.143) -- (3/7,-2.3) node[below,font=\scriptsize,text=black] {$x^* = \tfrac37$};
-        \fill[cred] (3/7,1/7) circle (2.5pt);
-        \node[font=\scriptsize,cred,anchor=south east] at (0.41,0.3) {$v^* = \tfrac17$};
-        \node[note] at (0.5,-3.2) {red: lower envelope $\min_y U_1(x, y)$};
-      \end{tikzpicture}
+      \input{figures/lecture02/worked-example-a-2-2-zero-sum-game.tex}
     \end{column}
   \end{columns}
 \end{frame}
@@ -518,22 +460,7 @@
     \end{column}
     \begin{column}{0.46\textwidth}
       \centering
-      \begin{tikzpicture}[scale=4.3]
-        \fill[cgray!6] (0,0) rectangle (1,1);
-        \draw[->] (0,0) -- (1.1,0) node[right,font=\small] {$q$};
-        \draw[->] (0,0) -- (0,1.1) node[above,font=\small] {$p$};
-        \foreach \t/\l in {0/0,0.75/\tfrac34,1/1}{
-          \draw (\t,0) -- (\t,-0.02) node[below,font=\scriptsize] {$\l$};
-          \draw (0,\t) -- (-0.02,\t) node[left,font=\scriptsize] {$\l$};}
-        \draw[cblue,line width=1.6pt] (0,0) -- (0.75,0) -- (0.75,1) -- (1,1);
-        \draw[corange,line width=1.6pt,dashed] (0,0) -- (0,0.75) -- (1,0.75) -- (1,1);
-        \foreach \x/\y in {0/0,0.75/0.75,1/1} \fill[cred] (\x,\y) circle (0.022);
-        \node[font=\scriptsize,cred,anchor=south west] at (1,1) {$(S,S)$: 4, 4};
-        \node[font=\scriptsize,cred,anchor=north east] at (0.73,0.73) {mixed: 3, 3};
-        \node[font=\scriptsize,cred,anchor=north west] at (0.02,0.0) {$(H,H)$: 3, 3};
-        \node[font=\scriptsize,cblue,anchor=west] at (0.77,0.4) {$\BR_1$};
-        \node[font=\scriptsize,corange,anchor=south] at (0.4,0.76) {$\BR_2$};
-      \end{tikzpicture}
+      \input{figures/lecture02/stag-hunt-drawing-the-best-response-grap.tex}
     \end{column}
   \end{columns}
 \end{frame}
@@ -600,22 +527,7 @@
     \end{column}
     \begin{column}{0.44\textwidth}
       \centering
-      \begin{tikzpicture}[scale=0.82]
-        \fill[cblue!10] (-5,0) -- (-1,-1) -- (0,-5) -- (-3,-3) -- cycle;
-        \fill[cgreen!35] (-3,-3) -- (-3,-0.5) -- (-1,-1) -- (-0.5,-3) -- cycle;
-        \draw[->] (-5.6,0) -- (0.7,0) node[right,font=\scriptsize] {$U_1$};
-        \draw[->] (0,-5.6) -- (0,0.7) node[above,font=\scriptsize] {$U_2$};
-        \foreach \t in {-5,-3,-1} {
-          \draw (\t,0.08) -- (\t,-0.08) node[above=3pt,font=\tiny] {$\t$};
-          \draw (0.08,\t) -- (-0.08,\t) node[right=3pt,font=\tiny] {$\t$};}
-        \draw[dashed,cred] (-3,-5.3) -- (-3,0.3);
-        \draw[dashed,cred] (-5.3,-3) -- (0.3,-3);
-        \fill[cred] (-3,-3) circle (2.5pt) node[below left,font=\scriptsize,cred] {$(v_1, v_2)$};
-        \fill[cgreen!60!black] (-1,-1) circle (2.5pt) node[below left,font=\scriptsize] {$(C,C)$};
-        \fill (-5,0) circle (1.8pt) node[below=2pt,font=\scriptsize] {$(C,D)$};
-        \fill (0,-5) circle (1.8pt) node[left,font=\scriptsize] {$(D,C)$};
-        \node[note,text width=4.6cm] at (-2.5,-6.2) {\textcolor{cblue}{blue}: feasible returns; \textcolor{cgreen}{green}: feasible and enforceable};
-      \end{tikzpicture}
+      \input{figures/lecture02/folk-theorems-almost-anything-is-an-equi.tex}
     \end{column}
   \end{columns}
 \end{frame}
@@ -625,17 +537,7 @@
   \bigskip
 
   \centering
-  \begin{tikzpicture}[font=\small]
-    \node[b,text width=2.0cm] (pi) at (0,0) {joint policy $\pi$};
-    \node[bb,text width=3.2cm] (br) at (3.3,0) {for each agent $i$:\\ fix $\pi_{-i}$, compute a best response $\pi_i'$};
-    \node[bo,text width=3.0cm] (cmp) at (6.85,0) {$U_i(\pi_i', \pi_{-i}) > U_i(\pi)$?};
-    \node[br,text width=2.3cm,font=\footnotesize] (no) at (11.1,0.9) {not a Nash equilibrium};
-    \node[bg,text width=2.3cm,font=\footnotesize] (yes) at (11.1,-0.9) {Nash equilibrium};
-    \draw[->,thick] (pi) -- (br);
-    \draw[->,thick] (br) -- (cmp);
-    \draw[->,thick,cred] (cmp.east) -- ++(0.3,0) |- node[pos=0.72,above,font=\tiny,text=cred] {yes, some $i$} (no.west);
-    \draw[->,thick,cgreen] (cmp.east) -- ++(0.3,0) |- node[pos=0.72,below,font=\tiny,text=cgreen] {no, every $i$} (yes.west);
-  \end{tikzpicture}
+  \input{figures/lecture02/checking-whether-is-a-nash-equilibrium.tex}
   \bigskip
 
   \raggedright

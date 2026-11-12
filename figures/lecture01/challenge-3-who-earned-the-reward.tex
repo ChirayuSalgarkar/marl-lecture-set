@@ -1,0 +1,19 @@
+% lecture01.tex: slide "Challenge 3: who earned the reward?"
+\begin{tikzpicture}[x=0.6cm,y=0.6cm]
+  \fill[cgray!5] (0,0) rectangle (6,5);
+  \draw[cgray!40,step=1] (0,0) grid (6,5);
+  \draw[thick] (0,0) rectangle (6,5);
+  \pic[scale=2] at (3.5,2.45) {apple};
+  \node[circle,fill=white,draw=black!60,inner sep=0.6pt,font=\scriptsize\bfseries] at (3.85,2.85) {3};
+  \pic[scale=2] at (1.5,4.45) {apple};
+  \node[circle,fill=white,draw=black!60,inner sep=0.6pt,font=\scriptsize\bfseries] at (1.85,4.85) {2};
+  \foreach \x/\y/\l/\c in {2/2/2/cgreen,4/2/1/cyellow,0/4/1/cblue}{
+    \pic[draw=\c!80!black,fill=\c!45,scale=2] at (\x+0.5,\y+0.5) {robot};
+    \node[circle,fill=white,draw=black!60,inner sep=0.6pt,font=\scriptsize\bfseries] at (\x+0.85,\y+0.85) {\l};}
+  \node[font=\small] at (3,-0.8) {all three choose \emph{collect}};
+  \draw[->,very thick] (6.7,2.5) -- (9.3,2.5);
+  \node[font=\LARGE\bfseries,text=cpurple] at (11,2.5) {$+1$};
+  \node[font=\small] at (11,1.3) {to everyone};
+  \node[font=\Huge\bfseries,text=cred] at (15.8,2.5) {?};
+  \node[font=\small,align=center] at (15.8,0.9) {whose action\\ mattered?};
+\end{tikzpicture}%

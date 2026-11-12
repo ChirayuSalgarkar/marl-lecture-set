@@ -1,0 +1,29 @@
+% lecture01.tex: slide "Many agents"
+\begin{tikzpicture}
+  \tikzset{ag/.style={b,minimum width=2.3cm,minimum height=0.75cm,font=\bfseries}}
+  \node[b,draw=cgreen!70!black,fill=cgreen!8,minimum width=11cm,minimum height=1.1cm] (env) at (5.5,0)
+    {\textbf{Environment}\\[-1pt]{\small joint action changes the state}};
+  \node[ag,draw=cyellow!80!black,fill=cyellow!30] (A1) at (4.0,4.4) {Agent 1};
+  \node[ag,draw=cgreen,fill=cgreen!20] (A2) at (5.0,3.2) {Agent 2};
+  \node at (6.0,2.55) {$\vdots$};
+  \node[ag,draw=cblue,fill=cblue!20] (An) at (6.0,1.75) {Agent $n$};
+  % observations and rewards
+  \draw[->,thick] (0.8,0.55) |- (A1.west);
+  \draw[->,thick] (1.9,0.55) |- (A2.west);
+  \draw[->,thick] (3.0,0.55) |- (An.west);
+  \node[fill=white,font=\small,inner sep=1pt] at (0.8,2.6) {$o_1, r_1$};
+  \node[fill=white,font=\small,inner sep=1pt] at (1.9,1.9) {$o_2, r_2$};
+  \node[fill=white,font=\small,inner sep=1pt] at (3.0,1.15) {$o_n, r_n$};
+  % actions
+  \onslide<2->{
+    \node[circle,draw,thick,inner sep=0,minimum size=5mm] (x) at (9.0,3.2) {};
+    \draw[thick] (x.north west) -- (x.south east) (x.north east) -- (x.south west);
+    \draw[->,thick] (A1.east) -| node[pos=0.25,above,font=\small] {$a_1$} (x.north);
+    \draw[->,thick] (A2.east) -- node[pos=0.5,above,font=\small] {$a_2$} (x.west);
+    \draw[->,thick] (An.east) -| node[pos=0.25,above,font=\small] {$a_n$} (x.south);
+  }
+  \onslide<3->{
+    \draw[->,very thick] (x.east) -- (10.2,3.2) -- (10.2,0.55);
+    \node[anchor=west,font=\small,align=left] at (10.3,2.0) {joint action\\ $a = (a_1, \dots, a_n)$};
+  }
+\end{tikzpicture}%

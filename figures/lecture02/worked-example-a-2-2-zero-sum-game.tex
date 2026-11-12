@@ -1,0 +1,14 @@
+% lecture02.tex: slide "Worked example: a $2 \times 2$ zero-sum game"
+\begin{tikzpicture}[x=4.6cm,y=0.85cm]
+  \draw[->] (0,0) -- (1.08,0) node[right,font=\small] {$x$};
+  \draw[->] (0,-2.3) -- (0,3.4) node[above,font=\small] {$U_1$};
+  \foreach \y in {-2,-1,1,2,3} \draw (-0.01,\y) -- (0.01,\y) node[left=2pt,font=\tiny] {$\y$};
+  \draw (1,-0.08) -- (1,0.08) node[below=4pt,font=\tiny] {1};
+  \draw[thick,cblue] (0,-2) -- (1,3) node[below right,font=\scriptsize] {vs.\ L};
+  \draw[thick,corange] (0,1) -- (1,-1) node[right,font=\scriptsize] {vs.\ R};
+  \draw[line width=2.6pt,cred,opacity=0.55] (0,-2) -- (3/7,1/7) -- (1,-1);
+  \draw[dashed,cgray] (3/7,0.143) -- (3/7,-2.3) node[below,font=\scriptsize,text=black] {$x^* = \tfrac37$};
+  \fill[cred] (3/7,1/7) circle (2.5pt);
+  \node[font=\scriptsize,cred,anchor=south east] at (0.41,0.3) {$v^* = \tfrac17$};
+  \node[note] at (0.5,-3.2) {red: lower envelope $\min_y U_1(x, y)$};
+\end{tikzpicture}%

@@ -1,0 +1,15 @@
+% lecture01.tex: slide "A belief update by hand"
+\begin{tikzpicture}[x=1.0cm,y=3cm]
+  \draw[->] (-0.3,0) -- (3.4,0);
+  \draw[->] (-0.3,0) -- (-0.3,1.1) node[above,font=\scriptsize] {$b(L)$};
+  \foreach \y in {0,0.5,1} \draw (-0.35,\y) -- (-0.25,\y) node[left=2pt,font=\tiny] {\y};
+  \draw[dashed,cgray] (-0.3,0.5) -- (3.3,0.5);
+  \foreach \x/\v/\l in {0/0.5/{$b^0$},1.5/0.85/{$b^1$}}{
+    \fill[cblue!60] (\x-0.25,0) rectangle (\x+0.25,\v);
+    \node[font=\scriptsize,below] at (\x,0) {\l};}
+  \fill[cblue!60] (2.75,0) rectangle (3.05,0.97);
+  \fill[corange!70] (3.1,0) rectangle (3.4,0.5);
+  \node[font=\scriptsize,below] at (3.07,0) {$b^2$};
+  \node[font=\tiny,cblue,above] at (2.75,0.97) {L};
+  \node[font=\tiny,corange,above] at (3.4,0.5) {R};
+\end{tikzpicture}%

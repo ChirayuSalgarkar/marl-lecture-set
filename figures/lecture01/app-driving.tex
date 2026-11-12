@@ -1,0 +1,13 @@
+% Application picture (Driving), drawn in an 8 x 5 box.
+% Used inside a tikzpicture via \picDriving.
+  \fill[cgreen!10] (0,0) rectangle (8,5);
+  \draw[cgray!60] (0,0) rectangle (8,5);
+  \fill[cgray!35] (0,1.9) rectangle (8,3.1);
+  \fill[cgray!35] (3.4,0) rectangle (4.6,5);
+  \draw[white,thick,dashed] (0,2.5) -- (3.4,2.5) (4.6,2.5) -- (8,2.5) (4,0) -- (4,1.9) (4,3.1) -- (4,5);
+  \foreach \a/\b/\c/\d in {0.3/0.3/3.0/1.55, 5.0/0.3/7.7/1.55, 0.3/3.45/3.0/4.7, 5.0/3.45/7.7/4.7}
+    \fill[cgray!65] (\a,\b) rectangle (\c,\d);
+  \pic[draw=cblue,fill=cblue!40,scale=1.3] at (1.3,2.2) {car};
+  \pic[draw=cblue,fill=cblue!40,scale=1.3,rotate=-90] at (3.7,4.2) {car};
+  \pic[draw=cblue,fill=cblue!40,scale=1.3,rotate=180] at (6.6,2.8) {car};
+  \pic[draw=cred,fill=cred!40,scale=1.3,rotate=90] at (4.3,0.6) {car};%

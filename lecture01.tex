@@ -14,55 +14,10 @@
 
 
 % ---------------------------------------------------------------- application pictures (8 x 5 units)
-\newcommand{\picWarehouse}{%
-  \fill[cgray!6] (0,0) rectangle (8,5);
-  \draw[cgray!60] (0,0) rectangle (8,5);
-  \foreach \x in {1.0,3.0,5.0}{
-    \fill[cgray!45] (\x,1.3) rectangle ++(0.7,3.3);
-    \foreach \y in {1.5,2.3,3.1,3.9} \fill[cyellow!75] (\x+0.15,\y) rectangle ++(0.4,0.45);}
-  \fill[cgray!25] (6.5,0.15) rectangle (7.85,0.85);
-  \node[font=\scriptsize,text=cgray] at (7.175,0.5) {station};
-  \foreach \x/\y in {2.35/3.2, 4.35/2.0, 2.35/0.65, 6.9/3.6}
-    \pic[draw=cblue,fill=cblue!35,scale=1.4] at (\x,\y) {robot};
-}
-\newcommand{\picGames}{%
-  \fill[cgray!6] (0,0) rectangle (8,5);
-  \draw[cgray!60] (0,0) rectangle (8,5);
-  \fill[corange!30] (1.8,0.3) rectangle (6.2,4.7);
-  \foreach \i in {0,...,8}{
-    \draw[black!55] (2.0+0.5*\i,0.5) -- (2.0+0.5*\i,4.5);
-    \draw[black!55] (2.0,0.5+0.5*\i) -- (6.0,0.5+0.5*\i);}
-  \foreach \i/\j in {2/2,3/3,4/4,2/6,5/2,6/5} \fill[black] (2.0+0.5*\i,0.5+0.5*\j) circle (0.2);
-  \foreach \i/\j in {6/6,5/5,6/3,3/6,4/6}{
-    \fill[white] (2.0+0.5*\i,0.5+0.5*\j) circle (0.2);
-    \draw[black!70] (2.0+0.5*\i,0.5+0.5*\j) circle (0.2);}
-  \pic[fill=cblue!70,scale=2.2] at (0.85,2.2) {person};
-  \fill[black] (0.85,1.4) circle (0.18);
-  \pic[fill=cred!70,scale=2.2] at (7.15,2.2) {person};
-  \fill[white] (7.15,1.4) circle (0.18); \draw[black!70] (7.15,1.4) circle (0.18);
-}
-\newcommand{\picDriving}{%
-  \fill[cgreen!10] (0,0) rectangle (8,5);
-  \draw[cgray!60] (0,0) rectangle (8,5);
-  \fill[cgray!35] (0,1.9) rectangle (8,3.1);
-  \fill[cgray!35] (3.4,0) rectangle (4.6,5);
-  \draw[white,thick,dashed] (0,2.5) -- (3.4,2.5) (4.6,2.5) -- (8,2.5) (4,0) -- (4,1.9) (4,3.1) -- (4,5);
-  \foreach \a/\b/\c/\d in {0.3/0.3/3.0/1.55, 5.0/0.3/7.7/1.55, 0.3/3.45/3.0/4.7, 5.0/3.45/7.7/4.7}
-    \fill[cgray!65] (\a,\b) rectangle (\c,\d);
-  \pic[draw=cblue,fill=cblue!40,scale=1.3] at (1.3,2.2) {car};
-  \pic[draw=cblue,fill=cblue!40,scale=1.3,rotate=-90] at (3.7,4.2) {car};
-  \pic[draw=cblue,fill=cblue!40,scale=1.3,rotate=180] at (6.6,2.8) {car};
-  \pic[draw=cred,fill=cred!40,scale=1.3,rotate=90] at (4.3,0.6) {car};
-}
-\newcommand{\picTrading}{%
-  \fill[cgray!6] (0,0) rectangle (8,5);
-  \draw[cgray!60] (0,0) rectangle (8,5);
-  \draw[cgray!60,fill=white] (1.0,0.3) rectangle (7.6,3.3);
-  \draw[->,cgray] (1.3,0.6) -- (7.3,0.6);
-  \draw[->,cgray] (1.3,0.6) -- (1.3,3.1);
-  \draw[very thick,black] (1.4,1.2) -- (2.0,1.7) -- (2.6,1.4) -- (3.2,2.2) -- (3.8,1.9) -- (4.4,2.5) -- (5.0,2.0) -- (5.6,2.7) -- (6.2,2.3) -- (6.9,2.9);
-  \foreach \x in {2.0,4.3,6.6} \pic[fill=cblue!60,scale=1.6] at (\x,3.85) {person};
-}
+\newcommand{\picWarehouse}{\input{figures/lecture01/app-warehouse.tex}}
+\newcommand{\picGames}{\input{figures/lecture01/app-games.tex}}
+\newcommand{\picDriving}{\input{figures/lecture01/app-driving.tex}}
+\newcommand{\picTrading}{\input{figures/lecture01/app-trading.tex}}
 
 \begin{document}
 
@@ -73,13 +28,7 @@
 
 \begin{frame}{Today}
   \centering
-  \begin{tikzpicture}
-    \foreach \k/\x/\t/\s/\c in {1/0/Examples/\S1.3/cblue, 2/2.8/The MARL loop/\S1.2/cgreen, 3/5.6/Why many agents?/\S1.2/corange, 4/8.4/What makes it hard/\S1.4--1.5/cred, 5/11.2/Game models/Ch.\ 3/cpurple}{
-      \node[circle,draw=\c,fill=\c!15,very thick,minimum size=1cm,font=\large\bfseries] (s\k) at (\x,0) {\k};
-      \node[below=2mm of s\k,font=\small,align=center,text width=2.4cm] {\t\\[1pt]{\scriptsize\color{cgray}\s}};
-    }
-    \foreach \a/\b in {1/2,2/3,3/4,4/5} \draw[->,thick,cgray] (s\a) -- (s\b);
-  \end{tikzpicture}
+  \input{figures/lecture01/today.tex}
   \reading{Chapter 1 and Chapter 3.}
 \end{frame}
 
@@ -100,78 +49,25 @@
 
 \begin{frame}{Warehouse robots}
   \centering
-  \begin{tikzpicture}
-    \picWarehouse
-    \draw[cgreen,very thick,dashed] (6.9,3.6) circle (1.0);
-    \draw[->,corange,very thick,dashed] (6.9,3.15) -- (6.9,1.0);
-    \node[star,star points=5,fill=cpurple!75,minimum size=5mm,inner sep=0] (rw) at (7.6,1.2) {};
-    \node[anchor=west,align=left,font=\small] (lA) at (8.8,4.4) {\textbf{Agent}\\ one robot};
-    \node[anchor=west,align=left,font=\small] (lO) at (8.8,3.2) {\textbf{\color{cgreen}Observes}\\ nearby shelves, its order};
-    \node[anchor=west,align=left,font=\small] (lD) at (8.8,2.0) {\textbf{\color{corange}Acts}\\ move, pick up};
-    \node[anchor=west,align=left,font=\small] (lR) at (8.8,0.6) {\textbf{\color{cpurple}Reward}\\ $+1$ to all per order\\ {\footnotesize\color{cgray}(common reward)}};
-    \draw[->,thick,black!60] (lA.west) -- (7.25,3.85);
-    \draw[->,thick,cgreen] (lO.west) -- (7.9,3.45);
-    \draw[->,thick,corange] (lD.west) -- (6.95,1.9);
-    \draw[->,thick,cpurple] (lR.west) -- (rw.east);
-  \end{tikzpicture}
+  \input{figures/lecture01/warehouse-robots.tex}
   \par\smallskip{\scriptsize\color{cgray} Book \S1.3.1}
 \end{frame}
 
 \begin{frame}{Board and video games}
   \centering
-  \begin{tikzpicture}
-    \picGames
-    \draw[cgreen,very thick,dashed,rounded corners] (1.7,0.2) rectangle (6.3,4.8);
-    \fill[white] (4.5,2.0) circle (0.2); \draw[black!70] (4.5,2.0) circle (0.2);
-    \draw[corange,very thick] (4.5,2.0) circle (0.3);
-    \draw[->,corange,very thick,dashed] (6.75,1.8) to[bend left=25] (4.85,1.95);
-    \node[font=\large\bfseries,text=cpurple] (wp) at (7.15,4.3) {$+1$};
-    \node[font=\large\bfseries,text=cpurple] at (0.85,4.3) {$-1$};
-    \node[anchor=west,align=left,font=\small] (lA) at (8.8,4.4) {\textbf{Agent}\\ one player};
-    \node[anchor=west,align=left,font=\small] (lO) at (8.8,3.2) {\textbf{\color{cgreen}Observes}\\ the board};
-    \node[anchor=west,align=left,font=\small] (lD) at (8.8,2.0) {\textbf{\color{corange}Acts}\\ place a stone};
-    \node[anchor=west,align=left,font=\small] (lR) at (8.8,0.6) {\textbf{\color{cpurple}Reward}\\ win $+1$, lose $-1$\\ {\footnotesize\color{cgray}(zero-sum)}};
-    \draw[->,thick,black!60] (lA.west) -- (7.55,3.1);
-    \draw[->,thick,cgreen] (lO.west) -- (6.3,3.2);
-    \draw[->,thick,corange] (lD.west) -- (7.0,1.9);
-    \draw[->,thick,cpurple] (lR.west) to[out=180,in=-30] (wp.south east);
-  \end{tikzpicture}
+  \input{figures/lecture01/board-and-video-games.tex}
   \par\smallskip{\scriptsize\color{cgray} Book \S1.3.2}
 \end{frame}
 
 \begin{frame}{Autonomous driving}
   \centering
-  \begin{tikzpicture}
-    \picDriving
-    \fill[cgreen,opacity=0.18] (6.1,2.8) -- ++(160:2.8) arc[start angle=160,end angle=200,radius=2.8] -- cycle;
-    \draw[cgreen,very thick,dashed] (6.1,2.8) -- ++(160:2.8) arc[start angle=160,end angle=200,radius=2.8] -- cycle;
-    \node[circle,fill=cred,text=white,inner sep=1pt,font=\small\bfseries] at (4.95,0.75) {?};
-    \draw[->,corange,very thick] (6.6,3.35) to[bend right=40] (5.4,3.35);
-    \node[anchor=west,align=left,font=\small] (lA) at (8.8,4.4) {\textbf{Agent}\\ one car};
-    \node[anchor=west,align=left,font=\small] (lO) at (8.8,3.2) {\textbf{\color{cgreen}Observes}\\ what it can see};
-    \node[anchor=west,align=left,font=\small] (lD) at (8.8,2.0) {\textbf{\color{corange}Acts}\\ steer, speed up, brake};
-    \node[anchor=west,align=left,font=\small] (lR) at (8.8,0.6) {\textbf{\color{cpurple}Reward}\\ arrive fast, never crash\\ {\footnotesize\color{cgray}(mixed: general-sum)}};
-    \draw[->,thick,black!60] (lA.west) -- (7.0,2.95);
-    \draw[->,thick,cgreen] (lO.west) -- (5.2,3.0);
-    \draw[->,thick,corange] (lD.west) -- (6.1,3.55);
-  \end{tikzpicture}
+  \input{figures/lecture01/autonomous-driving.tex}
   \par\smallskip{\scriptsize\color{cgray} Book \S1.3.3. The red car is outside its view: partial observability.}
 \end{frame}
 
 \begin{frame}{Electronic trading}
   \centering
-  \begin{tikzpicture}
-    \picTrading
-    \draw[cgreen,very thick,dashed,rounded corners] (0.9,0.2) rectangle (7.7,3.4);
-    \node[draw=corange,fill=corange!15,rounded corners=2pt,font=\scriptsize\bfseries,inner sep=2pt] (bub) at (7.5,4.0) {buy};
-    \node[anchor=west,align=left,font=\small] (lA) at (8.8,4.4) {\textbf{Agent}\\ one trader};
-    \node[anchor=west,align=left,font=\small] (lO) at (8.8,3.2) {\textbf{\color{cgreen}Observes}\\ prices, order book};
-    \node[anchor=west,align=left,font=\small] (lD) at (8.8,2.0) {\textbf{\color{corange}Acts}\\ buy or sell};
-    \node[anchor=west,align=left,font=\small] (lR) at (8.8,0.6) {\textbf{\color{cpurple}Reward}\\ its own profit\\ {\footnotesize\color{cgray}(mixed: general-sum)}};
-    \draw[->,thick,black!60] (lA.west) -- (6.95,4.45);
-    \draw[->,thick,cgreen] (lO.west) -- (7.7,2.6);
-    \draw[->,thick,corange] (lD.west) -- (bub.south east);
-  \end{tikzpicture}
+  \input{figures/lecture01/electronic-trading.tex}
   \par\smallskip{\scriptsize\color{cgray} Book \S1.3.4}
 \end{frame}
 
@@ -180,12 +76,7 @@
 
 \begin{frame}{You already know this: one agent}
   \centering
-  \begin{tikzpicture}
-    \node[b,draw=cyellow!80!black,fill=cyellow!25,minimum width=2.8cm,minimum height=1cm,font=\bfseries] (ag) at (0,2.8) {Agent};
-    \node[b,draw=cgreen!70!black,fill=cgreen!8,minimum width=9cm,minimum height=1.2cm,font=\bfseries] (env) at (0,0) {Environment};
-    \draw[->,very thick] (ag.east) -- (3.5,2.8) node[midway,above,font=\small] {action} -- (3.5,0.6);
-    \draw[->,very thick] (-3.5,0.6) -- (-3.5,2.8) node[midway,left,font=\small,align=right] {observation\\ \& reward} -- (ag.west);
-  \end{tikzpicture}
+  \input{figures/lecture01/you-already-know-this-one-agent.tex}
   \par\bigskip
   Learn a policy that collects as much reward as possible.
   \par\medskip{\scriptsize\color{cgray} Single-agent RL: book Ch.\ 2, revisited in Lecture 9}
@@ -193,34 +84,7 @@
 
 \begin{frame}{Many agents}
   \centering
-  \begin{tikzpicture}
-    \tikzset{ag/.style={b,minimum width=2.3cm,minimum height=0.75cm,font=\bfseries}}
-    \node[b,draw=cgreen!70!black,fill=cgreen!8,minimum width=11cm,minimum height=1.1cm] (env) at (5.5,0)
-      {\textbf{Environment}\\[-1pt]{\small joint action changes the state}};
-    \node[ag,draw=cyellow!80!black,fill=cyellow!30] (A1) at (4.0,4.4) {Agent 1};
-    \node[ag,draw=cgreen,fill=cgreen!20] (A2) at (5.0,3.2) {Agent 2};
-    \node at (6.0,2.55) {$\vdots$};
-    \node[ag,draw=cblue,fill=cblue!20] (An) at (6.0,1.75) {Agent $n$};
-    % observations and rewards
-    \draw[->,thick] (0.8,0.55) |- (A1.west);
-    \draw[->,thick] (1.9,0.55) |- (A2.west);
-    \draw[->,thick] (3.0,0.55) |- (An.west);
-    \node[fill=white,font=\small,inner sep=1pt] at (0.8,2.6) {$o_1, r_1$};
-    \node[fill=white,font=\small,inner sep=1pt] at (1.9,1.9) {$o_2, r_2$};
-    \node[fill=white,font=\small,inner sep=1pt] at (3.0,1.15) {$o_n, r_n$};
-    % actions
-    \onslide<2->{
-      \node[circle,draw,thick,inner sep=0,minimum size=5mm] (x) at (9.0,3.2) {};
-      \draw[thick] (x.north west) -- (x.south east) (x.north east) -- (x.south west);
-      \draw[->,thick] (A1.east) -| node[pos=0.25,above,font=\small] {$a_1$} (x.north);
-      \draw[->,thick] (A2.east) -- node[pos=0.5,above,font=\small] {$a_2$} (x.west);
-      \draw[->,thick] (An.east) -| node[pos=0.25,above,font=\small] {$a_n$} (x.south);
-    }
-    \onslide<3->{
-      \draw[->,very thick] (x.east) -- (10.2,3.2) -- (10.2,0.55);
-      \node[anchor=west,font=\small,align=left] at (10.3,2.0) {joint action\\ $a = (a_1, \dots, a_n)$};
-    }
-  \end{tikzpicture}
+  \input{figures/lecture01/many-agents.tex}
   \par\medskip
   \parbox[t][0.9cm]{12cm}{\centering
     \only<1>{Each agent gets its \emph{own} observation and reward.}%
@@ -231,53 +95,13 @@
 
 \begin{frame}{Running example: level-based foraging}
   \centering
-  \begin{tikzpicture}[x=0.6cm,y=0.6cm]
-    \fill[cgray!5] (0,0) rectangle (8,8);
-    \draw[cgray!40,step=1] (0,0) grid (8,8);
-    \draw[thick] (0,0) rectangle (8,8);
-    \fill[cpurple!12,rounded corners=2pt] (2.05,3.05) rectangle (3.95,4.95);
-    \draw[cpurple,very thick,dashed,rounded corners=2pt] (2.05,3.05) rectangle (3.95,4.95);
-    \foreach \x/\y/\l in {3/3/3,1/6/1,6/1/2,5/5/1}{
-      \pic[scale=2] at (\x+0.5,\y+0.45) {apple};
-      \node[circle,fill=white,draw=black!60,inner sep=0.6pt,font=\scriptsize\bfseries] at (\x+0.85,\y+0.85) {\l};}
-    \foreach \x/\y/\l/\c in {3/4/1/cyellow,2/3/2/cgreen,6/6/1/cblue}{
-      \pic[draw=\c!80!black,fill=\c!45,scale=2] at (\x+0.5,\y+0.5) {robot};
-      \node[circle,fill=white,draw=black!60,inner sep=0.6pt,font=\scriptsize\bfseries] at (\x+0.85,\y+0.85) {\l};}
-    \node[anchor=west,font=\small] (l1) at (9.5,7.2) {robot = agent};
-    \node[anchor=west,font=\small] (l2) at (9.5,5.5) {apple = item};
-    \node[anchor=west,font=\small] (l3) at (9.5,3.8) {number = level};
-    \node[anchor=west,font=\small,align=left] (l4) at (9.5,1.8) {levels $2 + 1 \ge 3$:\\ \textbf{collect together}};
-    \draw[->,thick,black!60] (l1.west) -- (6.95,6.6);
-    \draw[->,thick,black!60] (l2.west) -- (5.85,5.5);
-    \draw[->,thick,black!60] (l3.west) -- (4.05,3.85);
-    \draw[->,thick,cpurple] (l4.west) -- (3.95,3.6);
-    \node[font=\small] at (4,-0.8) {actions: $\uparrow\ \downarrow\ \leftarrow\ \rightarrow$, collect, noop};
-  \end{tikzpicture}
+  \input{figures/lecture01/running-example-level-based-foraging.tex}
   \par\smallskip{\scriptsize\color{cgray} Book Figure 1.2. It returns throughout the course.}
 \end{frame}
 
 \begin{frame}{One episode}
   \centering
-  \begin{tikzpicture}[x=0.62cm,y=0.62cm]
-    \foreach \s/\gx/\yx/\apple/\t in {0/0/4/1/0, 9/1/3/1/1, 18/1/3/0/2}{
-      \begin{scope}[xshift=\s*0.62cm]
-        \fill[cgray!5] (0,0) rectangle (5,5);
-        \draw[cgray!40,step=1] (0,0) grid (5,5);
-        \draw[thick] (0,0) rectangle (5,5);
-        \ifnum\apple=1
-          \pic[scale=2] at (2.5,2.45) {apple};
-        \else
-          \draw[cgray,dashed] (2.5,2.5) circle (0.35);
-          \node[font=\small\bfseries,text=cpurple] at (\gx+0.5,3.6) {$+1$};
-          \node[font=\small\bfseries,text=cpurple] at (\yx+0.5,3.6) {$+1$};
-        \fi
-        \pic[draw=cgreen!80!black,fill=cgreen!45,scale=2] at (\gx+0.5,2.5) {robot};
-        \pic[draw=cyellow!80!black,fill=cyellow!45,scale=2] at (\yx+0.5,2.5) {robot};
-        \node[font=\small] at (2.5,-0.8) {$t = \t$};
-      \end{scope}}
-    \draw[->,very thick] (5.4,2.5) -- node[above,font=\small] {$(\rightarrow, \leftarrow)$} (8.6,2.5);
-    \draw[->,very thick] (14.4,2.5) -- node[above,font=\small,align=center] {(collect,\\ collect)} (17.6,2.5);
-  \end{tikzpicture}
+  \input{figures/lecture01/one-episode.tex}
   \par\bigskip
   {\small random at first \enspace$\longrightarrow$\enspace many episodes \enspace$\longrightarrow$\enspace better policies}
   \par\medskip{\scriptsize\color{cgray} Book \S1.2}
@@ -288,47 +112,13 @@
 
 \begin{frame}{Split one big problem into small ones}
   \centering
-  \begin{tikzpicture}
-    \node[font=\small\bfseries] at (3,5.7) {One central agent};
-    \pic[draw=cpurple!80!black,fill=cpurple!35,scale=2.2] at (3,4.4) {robot};
-    \foreach \x in {1.8,3,4.2}{
-      \draw[thick,cgray] (3,3.95) -- (\x,3.25);
-      \pic[draw=cgray,fill=cgray!25,scale=1.3] at (\x,2.95) {robot};}
-    \foreach \i in {0,...,17}{\foreach \j in {0,...,11}{
-      \fill[cpurple!45] (1.65+\i*0.15,0.35+\j*0.15) rectangle ++(0.12,0.12);}}
-    \node[font=\small] at (3,-0.05) {$6 \times 6 \times 6 = 216$ actions};
-    \draw[cgray,dashed] (6.6,-0.3) -- (6.6,6.0);
-    \node[font=\small\bfseries] at (10.4,5.7) {One agent per robot};
-    \foreach \x/\c in {8.4/cyellow,10.4/cgreen,12.4/cblue}{
-      \pic[draw=\c!80!black,fill=\c!45,scale=1.8] at (\x,4.2) {robot};
-      \foreach \k in {0,...,5} \fill[\c!55] (\x-0.87+\k*0.3,3.2) rectangle ++(0.24,0.24);}
-    \draw[<->,thick,cred,dashed] (8.9,4.2) -- (9.9,4.2);
-    \draw[<->,thick,cred,dashed] (10.9,4.2) -- (11.9,4.2);
-    \node[font=\small] at (10.4,2.6) {6 actions each};
-    \node[font=\small,text=cred] at (10.4,1.6) {but now they must coordinate};
-  \end{tikzpicture}
+  \input{figures/lecture01/split-one-big-problem-into-small-ones.tex}
   \par{\scriptsize\color{cgray} Book \S1.2, level-based foraging with 3 robots}
 \end{frame}
 
 \begin{frame}{Sometimes there is no central controller}
   \centering
-  \begin{tikzpicture}
-    % centralized: tower linked to every car
-    \draw[very thick,cgray] (2.7,1.8) -- (3,3.4) -- (3.3,1.8) (2.82,2.4) -- (3.18,2.4);
-    \foreach \r in {0.35,0.6} \draw[cgray,thick] (3,3.4) ++(35:\r) arc[start angle=35,end angle=145,radius=\r];
-    \foreach \x/\y/\rot in {0.7/4.3/0, 0.7/0.9/0, 5.3/0.9/180, 5.3/4.3/180}{
-      \pic[draw=cblue,fill=cblue!40,scale=1.3,rotate=\rot] at (\x,\y) {car};
-      \draw[cgray,dashed,thick] (3,2.7) -- ($(3,2.7)!0.8!(\x,\y)$);
-      \node[text=cred,font=\Large\bfseries] at ($(3,2.7)!0.5!(\x,\y)$) {$\times$};}
-    \node[font=\small,align=center] at (3,-0.4) {one controller for all cars:\\ often impossible};
-    \draw[cgray,dashed] (6.8,-0.9) -- (6.8,5.2);
-    % decentralized: each car has its own policy and view
-    \foreach \x/\y/\k in {8.3/4.0/1, 11.8/3.2/2, 9.3/1.0/3}{
-      \fill[cgreen,opacity=0.18] (\x+0.45,\y) -- ++(-25:1.6) arc[start angle=-25,end angle=25,radius=1.6] -- cycle;
-      \pic[draw=cblue,fill=cblue!40,scale=1.3] at (\x,\y) {car};
-      \node[circle,draw=cblue,fill=white,inner sep=1pt,font=\small] at (\x,\y+0.65) {$\pi_\k$};}
-    \node[font=\small,align=center] at (10.5,-0.4) {each car acts on\\ its own observations};
-  \end{tikzpicture}
+  \input{figures/lecture01/sometimes-there-is-no-central-controller.tex}
   \par\smallskip{\scriptsize\color{cgray} Book \S1.2: driving, search and rescue. Decentralized policies.}
 \end{frame}
 
@@ -337,55 +127,19 @@
 
 \begin{frame}{Four challenges}
   \centering
-  \begin{tikzpicture}
-    \foreach \x/\c/\t/\s in {0/cred/Moving target/non-stationarity, 3.6/corange/Which optimum?/equilibrium selection, 7.2/cpurple/Who earned it?/credit assignment, 10.8/cblue/Too many combinations/scaling}{
-      \node[b,draw=\c,fill=\c!12,very thick,minimum width=3.1cm,minimum height=2.1cm,text width=2.8cm,font=\small] at (\x,0)
-        {\textbf{\t}\\[4pt]{\scriptsize\color{cgray}\s}};}
-  \end{tikzpicture}
+  \input{figures/lecture01/four-challenges.tex}
   \par\bigskip{\scriptsize\color{cgray} Book \S1.4. Lecture 4 (Chapter 5) treats each in depth.}
 \end{frame}
 
 \begin{frame}{Challenge 1: a moving target}
   \centering
-  \begin{tikzpicture}
-    % single agent: fixed target
-    \node[font=\small\bfseries] at (2.3,4.4) {One agent};
-    \pic[draw=cyellow!80!black,fill=cyellow!45,scale=2] at (0.6,2.2) {robot};
-    \foreach \r/\c in {0.75/cred!70,0.5/white,0.25/cred!70} \fill[\c] (4.0,2.2) circle (\r);
-    \draw[->,very thick] (1.2,2.2) -- (3.15,2.2);
-    \node[font=\small,align=center] at (2.3,0.6) {the world stays the same};
-    \draw[cgray,dashed] (5.4,0) -- (5.4,4.8);
-    % multi agent: target moves
-    \node[font=\small\bfseries] at (9.6,4.4) {Many learning agents};
-    \pic[draw=cyellow!80!black,fill=cyellow!45,scale=2] at (6.6,2.2) {robot};
-    \foreach \y/\o in {3.4/0.25,2.2/0.5} \foreach \r/\c in {0.55/cred!70,0.35/white,0.17/cred!70} \fill[\c,opacity=\o] (10.6,\y) circle (\r);
-    \foreach \r/\c in {0.55/cred!70,0.35/white,0.17/cred!70} \fill[\c] (10.6,1.0) circle (\r);
-    \draw[->,thick,cred,dashed] (11.3,3.4) to[bend left=30] (11.3,1.0);
-    \draw[->,very thick] (7.2,2.2) -- (9.9,1.15);
-    \pic[draw=cgreen!80!black,fill=cgreen!45,scale=1.6] at (12.6,2.2) {robot};
-    \node[font=\scriptsize,text=cgreen!70!black] at (12.6,1.4) {learns too};
-    \node[font=\small,align=center] at (9.6,0.0) {my best action changes\\ because the others change};
-  \end{tikzpicture}
+  \input{figures/lecture01/challenge-1-a-moving-target.tex}
   \par\smallskip{\scriptsize\color{cgray} Book \S1.4: non-stationarity}
 \end{frame}
 
 \begin{frame}{Challenge 2: which optimum?}
   \centering
-  \begin{tikzpicture}
-    \node[font=\small] at (3.5,4.7) {Two robots meet in a corridor.};
-    \fill[cgray!20] (0,2.2) rectangle (7,3.6);
-    \pic[draw=cyellow!80!black,fill=cyellow!45,scale=1.6] at (0.6,2.9) {robot};
-    \pic[draw=cgreen!80!black,fill=cgreen!45,scale=1.6] at (6.4,2.9) {robot};
-    \draw[->,thick] (1.2,2.9) -- (5.8,2.9);
-    \draw[->,thick] (5.8,2.75) -- (1.2,2.75);
-    % options
-    \node[b,draw=cgreen,fill=cgreen!12,font=\small,text width=2.7cm] (k1) at (1.6,0.7) {both keep \textbf{left}};
-    \node[b,draw=cgreen,fill=cgreen!12,font=\small,text width=2.7cm] (k2) at (5.4,0.7) {both keep \textbf{right}};
-    \node[font=\Large,text=cgreen] at (1.6,-0.3) {\checkmark};
-    \node[font=\Large,text=cgreen] at (5.4,-0.3) {\checkmark};
-    \node[b,draw=cred,fill=cred!10,font=\small,text width=3.2cm] (k3) at (10.4,2.9) {one left, one right};
-    \node[font=\Large\bfseries,text=cred] at (10.4,1.9) {crash};
-  \end{tikzpicture}
+  \input{figures/lecture01/challenge-2-which-optimum.tex}
   \par\bigskip
   Two equally good solutions. The agents must agree on \emph{one}.
   \par\smallskip{\scriptsize\color{cgray} Book \S1.4: optimality and equilibrium selection (Lecture 2)}
@@ -393,24 +147,7 @@
 
 \begin{frame}{Challenge 3: who earned the reward?}
   \centering
-  \begin{tikzpicture}[x=0.6cm,y=0.6cm]
-    \fill[cgray!5] (0,0) rectangle (6,5);
-    \draw[cgray!40,step=1] (0,0) grid (6,5);
-    \draw[thick] (0,0) rectangle (6,5);
-    \pic[scale=2] at (3.5,2.45) {apple};
-    \node[circle,fill=white,draw=black!60,inner sep=0.6pt,font=\scriptsize\bfseries] at (3.85,2.85) {3};
-    \pic[scale=2] at (1.5,4.45) {apple};
-    \node[circle,fill=white,draw=black!60,inner sep=0.6pt,font=\scriptsize\bfseries] at (1.85,4.85) {2};
-    \foreach \x/\y/\l/\c in {2/2/2/cgreen,4/2/1/cyellow,0/4/1/cblue}{
-      \pic[draw=\c!80!black,fill=\c!45,scale=2] at (\x+0.5,\y+0.5) {robot};
-      \node[circle,fill=white,draw=black!60,inner sep=0.6pt,font=\scriptsize\bfseries] at (\x+0.85,\y+0.85) {\l};}
-    \node[font=\small] at (3,-0.8) {all three choose \emph{collect}};
-    \draw[->,very thick] (6.7,2.5) -- (9.3,2.5);
-    \node[font=\LARGE\bfseries,text=cpurple] at (11,2.5) {$+1$};
-    \node[font=\small] at (11,1.3) {to everyone};
-    \node[font=\Huge\bfseries,text=cred] at (15.8,2.5) {?};
-    \node[font=\small,align=center] at (15.8,0.9) {whose action\\ mattered?};
-  \end{tikzpicture}
+  \input{figures/lecture01/challenge-3-who-earned-the-reward.tex}
   \par\bigskip
   {\small Green and yellow ($2 + 1 \ge 3$) collect the apple. Blue's level is too low for its apple ($1 < 2$): its \emph{collect} does nothing, yet it gets the same $+1$.}
   \par\smallskip{\scriptsize\color{cgray} Book \S1.4: multi-agent credit assignment, example in the text after Figure 1.2}
@@ -418,59 +155,19 @@
 
 \begin{frame}{Challenge 4: too many combinations}
   \centering
-  \begin{tikzpicture}
-    \foreach \n/\x in {1/0.6,2/3.0,3/5.8,4/9.6}{
-      \foreach \k in {1,...,\n} \pic[draw=cblue!80!black,fill=cblue!40,scale=1.1] at (\x-0.33*\n+0.66*\k-0.33,4.6) {robot};
-      \node[font=\small] at (\x,3.85) {$n = \n$};}
-    \fill[cblue!50] (0.533,1.0) rectangle ++(0.135,0.135);
-    \fill[cblue!50] (2.835,1.0) rectangle ++(0.330,0.330);
-    \fill[cblue!50] (5.396,1.0) rectangle ++(0.808,0.808);
-    \fill[cblue!50] (8.610,1.0) rectangle ++(1.980,1.980);
-    \node[font=\small] at (0.6,0.45) {$6$};
-    \node[font=\small] at (3.0,0.45) {$36$};
-    \node[font=\small] at (5.8,0.45) {$216$};
-    \node[font=\small] at (9.6,0.45) {$1296$};
-    \node[font=\small,anchor=west,align=left] at (11.4,2.0) {joint actions\\ $= 6^n$};
-  \end{tikzpicture}
+  \input{figures/lecture01/challenge-4-too-many-combinations.tex}
   \par\medskip{\scriptsize\color{cgray} Book \S1.4: scaling in the number of agents. Square area = number of joint actions.}
 \end{frame}
 
 \begin{frame}{What do we want from MARL?}
   \centering
-  \begin{tikzpicture}
-    \tikzset{ag/.style={b,font=\small,text width=3.4cm,minimum height=1.6cm}}
-    \node[circle,draw=cblue,fill=cblue!15,very thick,minimum size=1.6cm] at (0,2.4) {};
-    \node[circle,draw=corange,fill=corange!15,very thick,minimum size=1.6cm] at (4.6,2.4) {};
-    \node[circle,draw=cgray,fill=cgray!15,very thick,minimum size=1.6cm] at (9.2,2.4) {};
-    \node[ag,draw=cblue,fill=cblue!10] at (0,0.2) {\textbf{Computational}\\[2pt] compute a solution\\ of the game};
-    \node[ag,draw=corange,fill=corange!10] at (4.6,0.2) {\textbf{Prescriptive}\\[2pt] learn well, even\\ \emph{while} learning};
-    \node[ag,draw=cgray,fill=cgray!10] at (9.2,0.2) {\textbf{Descriptive}\\[2pt] model how people\\ and animals learn};
-    \node[font=\Large,text=cgreen] at (0,-1.3) {\checkmark};
-    \node[font=\Large,text=cgreen] at (4.6,-1.3) {\checkmark};
-    \node[font=\small,text=cgray] at (9.2,-1.3) {not in this course};
-    \fill[cblue!45] (0,2.4) rectangle (0.35,2.75);
-    \draw[cblue,thick] (-0.35,2.05) grid[step=0.35] (0.35,2.75);
-    \draw[corange,very thick,->] (4.15,2.0) .. controls (4.5,2.9) and (4.8,2.0) .. (5.05,2.75);
-    \pic[fill=cgray!70,scale=1.4] at (9.2,2.25) {person};
-  \end{tikzpicture}
+  \input{figures/lecture01/what-do-we-want-from-marl.tex}
   \par\medskip{\scriptsize\color{cgray} Book \S1.5 (after Shoham, Powers \& Grenager, 2007)}
 \end{frame}
 
 \begin{frame}{Six questions about any MARL problem}
   \centering
-  \begin{tikzpicture}
-    \node[draw,circle,fill=cgray!10,minimum size=1.7cm,align=center,font=\small\bfseries] (c) {MARL\\ problem};
-    \foreach \ang/\t/\d/\col in {
-      90/Size/{number of agents, states, actions}/cblue,
-      30/Rewards/{common, zero-sum, general-sum}/corange,
-      -30/Observability/{full, partial}/cgreen,
-      -90/Knowledge/{what agents know about the game}/cpurple,
-      -150/Objective/{solution concept (Ch.\ 4--5)}/cred,
-      150/{Centralization \& communication}/{central controller? messages? (Ch.\ 3, 5, 6, 9)}/cgray}{
-      \node[b,draw=\col,fill=\col!10,text width=3.0cm,font=\scriptsize,inner sep=3pt] (n\ang) at (\ang:4.6cm and 2.2cm) {\textbf{\t}\\ \d};
-      \draw[thick,\col] (c) -- (n\ang);
-    }
-  \end{tikzpicture}
+  \input{figures/lecture01/six-questions-about-any-marl-problem.tex}
   \medskip
 
   {\small Size, rewards, observability, knowledge: we write these down today as \textbf{game models}.}\par{\scriptsize\color{cgray} After book Figure 1.4}
@@ -478,32 +175,9 @@
 
 \begin{frame}{Where the course goes}
   \centering
-  \begin{tikzpicture}[x=0.85cm,y=1cm]
-    \tikzset{lec/.style={draw,rounded corners=1.5pt,minimum width=0.66cm,minimum height=0.62cm,inner sep=0,font=\scriptsize\bfseries}}
-    % Part I
-    \foreach \k/\c in {1/cblue,2/cblue,3/cblue,4/cblue,5/cpurple,6/cpurple,7/cpurple,8/cpurple}
-      \node[lec,draw=\c,fill=\c!15] (L\k) at (\k,0) {\k};
-    \node[lec,draw=cgray,fill=cgray!15] (L9) at (9,0) {9};
-    \foreach \k in {10,...,16} \node[lec,draw=cgreen,fill=cgreen!15] (L\k) at (\k,0) {\k};
-    \node[lec,draw=corange,fill=corange!15] (L17) at (17,0) {17};
-    \draw[decorate,decoration={brace,amplitude=5pt},thick,cblue] ($(L1.north west)+(0,0.1)$) -- ($(L4.north east)+(0,0.1)$)
-      node[midway,above=6pt,font=\scriptsize,align=center,text=cblue] {Ch.\ 1, 3--5\\ models and solutions};
-    \draw[decorate,decoration={brace,amplitude=5pt},thick,cpurple] ($(L5.north west)+(0,0.1)$) -- ($(L8.north east)+(0,0.1)$)
-      node[midway,above=6pt,font=\scriptsize,align=center,text=cpurple] {Ch.\ 6\\ foundational algorithms};
-    \draw[decorate,decoration={brace,amplitude=5pt},thick,cgray] ($(L9.north west)+(0,0.1)$) -- ($(L9.north east)+(0,0.1)$)
-      node[midway,above=24pt,font=\scriptsize,align=center,text=cgray] {Ch.\ 2, 7, 8\\ deep RL};
-    \draw[decorate,decoration={brace,amplitude=5pt},thick,cgreen] ($(L10.north west)+(0,0.1)$) -- ($(L16.north east)+(0,0.1)$)
-      node[midway,above=6pt,font=\scriptsize,align=center,text=cgreen] {Ch.\ 9\\ multi-agent deep RL};
-    \draw[decorate,decoration={brace,amplitude=5pt},thick,corange] ($(L17.north west)+(0,0.1)$) -- ($(L17.north east)+(0,0.1)$)
-      node[midway,above=24pt,font=\scriptsize,align=center,text=corange] {Ch.\ 10--11\\ practice};
-    \draw[decorate,decoration={brace,amplitude=6pt,mirror},thick] ($(L1.south west)+(0,-0.15)$) -- ($(L8.south east)+(0,-0.15)$)
-      node[midway,below=8pt,font=\small] {Part I: Foundations};
-    \draw[decorate,decoration={brace,amplitude=6pt,mirror},thick] ($(L10.south west)+(0,-0.15)$) -- ($(L17.south east)+(0,-0.15)$)
-      node[midway,below=8pt,font=\small] {Part II: Deep MARL};
-    \draw[red!70!black,very thick] (L1) circle (0.42);
-  \end{tikzpicture}
+  \input{figures/lecture01/where-the-course-goes.tex}
   \vfill
-  \small S.\ V.\ Albrecht, F.\ Christianos, L.\ Sch\"afer, \emph{Multi-Agent Reinforcement Learning: Foundations and Modern Approaches}, MIT Press, 2024. Free at \texttt{marl-book.com}.
+  {\centering\small S.\ V.\ Albrecht, F.\ Christianos, L.\ Sch\"afer,\\ \emph{Multi-Agent Reinforcement Learning: Foundations and Modern Approaches},\\ MIT Press, 2024. Free at \texttt{marl-book.com}.\par}
 \end{frame}
 
 
@@ -521,16 +195,7 @@
   \end{itemize}
   \bigskip
   \centering
-  \begin{tikzpicture}
-    \node[bb] (bandit) at (0,0) {bandit};
-    \node[bb] (mdp) at (5.5,0) {MDP};
-    \node[bo] (nfg) at (0,-1.6) {normal-form game};
-    \node[bo] (sg) at (5.5,-1.6) {stochastic game};
-    \draw[->,thick,cblue] (bandit) -- node[above,font=\scriptsize] {add states} (mdp);
-    \draw[->,thick,corange] (nfg) -- node[above,font=\scriptsize] {add states} (sg);
-    \draw[->,thick,cgray] (bandit) -- node[left,font=\scriptsize] {add agents} (nfg);
-    \draw[->,thick,cgray] (mdp) -- node[right,font=\scriptsize] {add agents} (sg);
-  \end{tikzpicture}
+  \input{figures/lecture01/recap-markov-decision-processes.tex}
 \end{frame}
 
 \begin{frame}{Normal-form games}
@@ -607,15 +272,7 @@
     \end{column}
     \begin{column}{0.46\textwidth}
       \centering
-      \begin{tikzpicture}[scale=1.1]
-        \foreach \i/\j/\r/\c/\col in {0/0/3/3/cgreen,1/0/1/4/cgray,0/1/4/1/cgray,1/1/2/2/cred}{
-          \fill[\col!18] (\i*1.8,-\j*1.3) rectangle ++(1.8,-1.3);
-          \node[font=\small] at (\i*1.8+0.9,-\j*1.3-0.65) {$(\r, \c)$};}
-        \draw (0,0) grid[xstep=1.8,ystep=1.3] (3.6,-2.6);
-        \node[font=\scriptsize] at (0.9,0.25) {C}; \node[font=\scriptsize] at (2.7,0.25) {D};
-        \node[font=\scriptsize] at (-0.25,-0.65) {C}; \node[font=\scriptsize] at (-0.25,-1.95) {D};
-        \node[note,text width=4cm] at (1.8,-3.15) {Prisoner's Dilemma as ranks:\\ $(D,C) \succ (C,C) \succ (D,D) \succ (C,D)$ for agent 1};
-      \end{tikzpicture}
+      \input{figures/lecture01/how-many-different-2-2-games-are-there.tex}
     \end{column}
   \end{columns}
 \end{frame}
@@ -656,16 +313,7 @@
     \end{column}
     \begin{column}{0.46\textwidth}
       \centering
-      \begin{tikzpicture}[shorten >=1pt,node distance=3.2cm,on grid,auto,
-          every state/.style={minimum size=1.3cm,font=\small}]
-        \node[state,initial,draw=cgreen,fill=cgreen!15,initial text={}] (C) {play C};
-        \node[state,draw=cred,fill=cred!15] (D) [right=of C] {play D};
-        \path[->,thick]
-          (C) edge [loop above,cgreen] node {\scriptsize $a_j = C$} ()
-              edge [bend left,cred] node {\scriptsize $a_j = D$} (D)
-          (D) edge [loop above,cred] node {\scriptsize $a_j = D$} ()
-              edge [bend left,cgreen] node {\scriptsize $a_j = C$} (C);
-      \end{tikzpicture}\\[6pt]
+      \input{figures/lecture01/example-tit-for-tat-in-the-repeated-pris.tex}\\[6pt]
       {\scriptsize transitions on the other agent's previous action $a_j^{t-1}$}
     \end{column}
   \end{columns}
@@ -757,17 +405,7 @@
 
 \begin{frame}{Every state is a normal-form game}
   \centering
-  \begin{tikzpicture}[x=1cm,y=1cm]
-    \tikzset{st/.style={draw,rounded corners=3pt,thick,inner sep=3pt,font=\scriptsize}}
-    \node[st,draw=cblue,fill=cblue!8] (s1) at (0,1.5) {\begin{tabular}{c|cc} $s_1$ & 1 & 2 \\ \hline 1 & $1,1$ & $0,1$ \\ 2 & $2,2$ & $1,1$ \end{tabular}};
-    \node[st,draw=corange,fill=corange!8] (s2) at (-4,-1.6) {\begin{tabular}{c|cc} $s_2$ & 1 & 2 \\ \hline 1 & $1,3$ & $0,4$ \\ 2 & $4,0$ & $3,1$ \end{tabular}};
-    \node[st,draw=cgreen,fill=cgreen!8] (s3) at (4,-1.6) {\begin{tabular}{c|cc} $s_3$ & 1 & 2 \\ \hline 1 & $1,1$ & $0,0$ \\ 2 & $4,1$ & $3,2$ \end{tabular}};
-    \draw[->,thick,cblue] (s1) to[bend right=15] node[above left,font=\scriptsize,align=right] {$a = (2,2)$, $r = (1,1)$\\ $p = 0.5$} (s2);
-    \draw[->,thick,cblue] (s1.east) to[out=20,in=-20,looseness=5] node[right,font=\scriptsize] {$p = 0.5$} ($(s1.east)+(0,-0.3)$);
-    \draw[->,thick,corange] (s2) -- node[below,font=\scriptsize,align=center] {$a = (1,2)$, $r = (0,4)$, $p = 0.8$} (s3);
-    \draw[->,thick,corange] (s2.west) to[out=200,in=160,looseness=5] node[left,font=\scriptsize] {$p = 0.2$} ($(s2.west)+(0,0.3)$);
-    \draw[->,thick,cgreen] (s3) to[bend right=15] node[above right,font=\scriptsize,align=left] {$a = (2,1)$, $r = (4,1)$\\ $p = 1.0$} (s1);
-  \end{tikzpicture}
+  \input{figures/lecture01/every-state-is-a-normal-form-game.tex}
   \medskip
 
   \small After book Figure 3.3(b). With $R_i(s,a)$, state $s$ is the normal-form game with rewards $R_i(s, \cdot)$. One joint action and its outcome is shown per state.
@@ -786,44 +424,14 @@
     \end{column}
     \begin{column}{0.55\textwidth}
       \centering
-      \begin{tikzpicture}[font=\footnotesize]
-        \node[bp,text width=5.2cm] (posg) at (0,4.2) {\textbf{POSG}: $n$ agents, $m$ states, partially observed};
-        \node[bo,text width=5.2cm] (sg) at (0,2.6) {\textbf{Stochastic game}: $n$ agents, $m$ states, fully observed};
-        \node[bg,text width=2.6cm] (rep) at (-1.55,0.9) {\textbf{Repeated NFG}: $n$ agents, 1 state};
-        \node[bb,text width=2.6cm] (mdp) at (1.55,0.9) {\textbf{MDP}: 1 agent, $m$ states};
-        \draw[->,thick] (sg) -- (posg);
-        \draw[->,thick] (rep) -- (sg);
-        \draw[->,thick] (mdp) -- (sg);
-        \node[note] at (0,0) {book Figure 3.1; arrows point to the more general model};
-      \end{tikzpicture}
+      \input{figures/lecture01/special-cases-of-stochastic-games.tex}
     \end{column}
   \end{columns}
 \end{frame}
 
 \begin{frame}{One agent's view of a stochastic game}
   \centering
-  \begin{tikzpicture}
-    \node[bb,minimum width=2.2cm] (ag) at (0,0) {Agent};
-    \node[b,minimum width=2.4cm,minimum height=1.6cm] (env) at (0,2.4) {Environment\\ $T, R$ fixed};
-    \draw[->,thick,cblue] ($(ag.north west)+(0.3,0)$) -- node[left,font=\scriptsize] {$a^t$} ($(env.south west)+(0.3,0)$);
-    \draw[->,thick] ($(env.south east)+(-0.3,0)$) -- node[right,font=\scriptsize] {$s^{t+1}, r^t$} ($(ag.north east)+(-0.3,0)$);
-    \node[note] at (0,-0.9) {MDP: stationary};
-    \begin{scope}[xshift=7.5cm]
-      \node[bb,minimum width=2.2cm] (a1) at (0,0) {Agent 1};
-      \node[b,minimum width=2.6cm,minimum height=1.0cm] (e) at (0,2.2) {Environment};
-      \node[bo,minimum width=1.6cm] (a2) at (-1.6,3.6) {Agent 2};
-      \node[bg,minimum width=1.6cm] (a3) at (1.6,3.6) {Agent 3};
-      \draw[->,corange,thick] (a2) -- (e);
-      \draw[->,cgreen,thick] (a3) -- (e);
-      \draw[->,thick,cblue] ($(a1.north west)+(0.3,0)$) -- node[left,font=\scriptsize] {$a^t_1$} ($(e.south west)+(0.5,0)$);
-      \draw[->,thick] ($(e.south east)+(-0.5,0)$) -- node[right,font=\scriptsize] {$s^{t+1}, r^t_1$} ($(a1.north east)+(-0.3,0)$);
-      \begin{scope}[on background layer]
-        \node[fit=(e)(a2)(a3),draw=cred,dashed,rounded corners=4pt,inner sep=6pt,fill=cred!4,
-              label={[font=\scriptsize,text=cred]above:what agent 1 experiences as ``the environment''}] {};
-      \end{scope}
-      \node[note] at (0,-0.9) {stochastic game: agents 2 and 3 are learning too};
-    \end{scope}
-  \end{tikzpicture}
+  \input{figures/lecture01/one-agent-s-view-of-a-stochastic-game.tex}
   \bigskip
 
   From agent 1's view, the effective transition and reward functions depend on $\pi_2, \pi_3$, which keep changing. This is the root of non-stationarity.
@@ -866,19 +474,7 @@
     \end{column}
     \begin{column}{0.4\textwidth}
       \centering
-      \begin{tikzpicture}[scale=0.5]
-        \fill[cgray!5] (0,0) rectangle (8,8);
-        \draw[cgray!40] (0,0) grid (8,8);
-        \draw[thick] (0,0) rectangle (8,8);
-        % vision fields (radius 1 around agents)
-        \fill[cblue,opacity=0.15] (2,5) rectangle (5,8);
-        \fill[corange,opacity=0.15] (4,3) rectangle (7,6);
-        \fill[cgreen,opacity=0.15] (0,2) rectangle (3,5);
-        \foreach \x/\y/\l in {1/6/1,5/6/2,2/2/3,6/1/1}{
-          \node[draw=cred,fill=cred!20,regular polygon,regular polygon sides=6,minimum size=0.42cm,inner sep=0,font=\tiny\bfseries] at (\x+0.5,\y+0.5) {\l};}
-        \foreach \x/\y/\l/\c in {3/6/1/cblue,5/4/1/corange,1/3/2/cgreen}{
-          \node[circle,draw=\c,fill=\c!35,minimum size=0.45cm,inner sep=0,font=\tiny\bfseries] at (\x+0.5,\y+0.5) {\l};}
-      \end{tikzpicture}\\[3pt]
+      \input{figures/lecture01/what-posgs-can-express.tex}\\[3pt]
       {\scriptsize partially observable foraging: each agent sees a $3 \times 3$ window (shaded). The blue agent cannot see the level-1 item two cells to its left.}
     \end{column}
   \end{columns}
@@ -926,34 +522,21 @@
   \begin{columns}[c]
     \begin{column}{0.54\textwidth}
       Two states $\{L, R\}$ (where a prize is). The state never changes, so $T(s' \mid s, a) = \mathbb{1}[s' = s]$. Listening returns the true side with probability $0.85$.
-      \medskip
 
       Start $b^0 = (0.5, 0.5)$. Hear ``$L$'':
       \[
         b^1(L) = \frac{0.85 \cdot 0.5}{0.85 \cdot 0.5 + 0.15 \cdot 0.5} = 0.85 .
       \]
       Hear ``$L$'' again:
-      \[
-        b^2(L) = \frac{0.85 \cdot 0.85}{0.85 \cdot 0.85 + 0.15 \cdot 0.15} = \frac{0.7225}{0.745} \approx 0.970 .
-      \]
+      \begin{align*}
+        b^2(L) &= \frac{0.85 \cdot 0.85}{0.85 \cdot 0.85 + 0.15 \cdot 0.15}\\
+               &= \frac{0.7225}{0.745} \approx 0.970 .
+      \end{align*}
       Hear ``$R$'' instead: $b^2(L) = \frac{0.15 \cdot 0.85}{0.15 \cdot 0.85 + 0.85 \cdot 0.15} = 0.5$.
     \end{column}
     \begin{column}{0.42\textwidth}
       \centering
-      \begin{tikzpicture}[x=1.15cm,y=3cm]
-        \draw[->] (-0.3,0) -- (3.4,0);
-        \draw[->] (-0.3,0) -- (-0.3,1.1) node[above,font=\scriptsize] {$b(L)$};
-        \foreach \y in {0,0.5,1} \draw (-0.35,\y) -- (-0.25,\y) node[left=2pt,font=\tiny] {\y};
-        \draw[dashed,cgray] (-0.3,0.5) -- (3.3,0.5);
-        \foreach \x/\v/\l in {0/0.5/{$b^0$},1.5/0.85/{$b^1$}}{
-          \fill[cblue!60] (\x-0.25,0) rectangle (\x+0.25,\v);
-          \node[font=\scriptsize,below] at (\x,0) {\l};}
-        \fill[cblue!60] (2.75,0) rectangle (3.05,0.97);
-        \fill[corange!70] (3.1,0) rectangle (3.4,0.5);
-        \node[font=\scriptsize,below] at (3.07,0) {$b^2$};
-        \node[font=\tiny,cblue,above] at (2.75,0.97) {L};
-        \node[font=\tiny,corange,above] at (3.4,0.5) {R};
-      \end{tikzpicture}
+      \input{figures/lecture01/a-belief-update-by-hand.tex}
     \end{column}
   \end{columns}
 \end{frame}
@@ -975,15 +558,7 @@
     \end{column}
     \begin{column}{0.46\textwidth}
       \centering
-      \begin{tikzpicture}[node distance=6mm]
-        \node[bb,text width=3.6cm] (b0) {$b_i \in \Delta(S \times H_j)$\\ \scriptsize state and $j$'s history};
-        \node[bo,text width=3.6cm,below=of b0] (b1) {needs $\pi_j(\cdot \mid h_j)$\\ \scriptsize $j$'s policy};
-        \node[bp,text width=3.6cm,below=of b1] (b2) {$\pi_j$ depends on $b_j \in \Delta(S \times H_i)$\\ \scriptsize $j$'s belief about $i$};
-        \node[note,below=3mm of b2] {$\cdots$ nested beliefs};
-        \draw[->,thick] (b0) -- (b1);
-        \draw[->,thick] (b1) -- (b2);
-        \draw[->,thick,cred,dashed] (b2.east) to[bend right=50] node[right,font=\scriptsize,text=cred] {recursion} (b0.east);
-      \end{tikzpicture}
+      \input{figures/lecture01/beliefs-with-more-than-one-agent.tex}
     \end{column}
   \end{columns}
 \end{frame}
@@ -1010,15 +585,7 @@
     \end{column}
     \begin{column}{0.44\textwidth}
       \centering
-      \begin{tikzpicture}
-        \node[b,fill=cgray!8,minimum width=4.6cm,minimum height=1cm] (env) at (0,0) {Environment state $s$};
-        \node[bb,minimum width=1.7cm] (ai) at (-1.5,2.4) {Agent $i$};
-        \node[bo,minimum width=1.7cm] (aj) at (1.5,2.4) {Agent $j$};
-        \draw[->,thick,cblue] (ai) -- node[left,font=\scriptsize] {$x_i \in X_i$} (ai |- env.north);
-        \draw[->,thick,cpurple,dashed] (ai.east) to[bend left=20] node[above,font=\scriptsize] {$m_i \in M_i$} (aj.west);
-        \draw[->,thick] ([xshift=6mm]env.north) -- node[right,font=\scriptsize] {$o_j$} ([xshift=6mm]env.north |- aj.south);
-        \node[note,text width=4.4cm] at (0,-1) {$x_i$ changes the state; $m_i$ only reaches $j$'s observation};
-      \end{tikzpicture}
+      \input{figures/lecture01/communication-actions.tex}
     \end{column}
   \end{columns}
 \end{frame}
@@ -1046,15 +613,7 @@
 
 \begin{frame}{What do agents know about the game?}
   \centering
-  \begin{tikzpicture}
-    \shade[left color=cblue!35,right color=corange!35] (0,0) rectangle (12,0.5);
-    \draw (0,0) rectangle (12,0.5);
-    \node[font=\small\bfseries,cblue,anchor=south west] at (0,0.6) {more knowledge};
-    \node[font=\small\bfseries,corange,anchor=south east] at (12,0.6) {less knowledge};
-    \node[bb,text width=3.4cm,font=\scriptsize,anchor=north] at (1.8,-0.3) {\textbf{Complete knowledge}\\ (game theory default)\\ all $A_i$, $R_i$, $S$, $T$, $\mathcal{O}_i$ known to all};
-    \node[bg,text width=3.4cm,font=\scriptsize,anchor=north] at (6,-0.3) {\textbf{Simulator}\\ sample $(r, s') \sim \hat T(s, a)$\\ without explicit $T$, $R_i$};
-    \node[bo,text width=3.4cm,font=\scriptsize,anchor=north] at (10.2,-0.3) {\textbf{MARL default}\\ agent $i$ sees only its own $r_i$, $o_i$ (or $s$, $a$);\\ knows no $T$, $\mathcal{O}$, or $R$};
-  \end{tikzpicture}
+  \input{figures/lecture01/what-do-agents-know-about-the-game.tex}
   \bigskip
 
   \begin{itemize}
@@ -1114,14 +673,7 @@
   \end{itemize}
   \bigskip
   \centering
-  \begin{tikzpicture}[node distance=5mm]
-    \node[bb] (gm) {Game model\\ \scriptsize NFG, SG, POSG};
-    \node[right=of gm] (plus) {$+$};
-    \node[bo,right=of plus] (sc) {Solution concept\\ \scriptsize Nash, minimax, \dots};
-    \node[right=of sc] (eq) {$=$};
-    \node[bg,right=of eq] (p) {MARL problem};
-    \node[note,below=1mm of sc] {Lecture 2};
-  \end{tikzpicture}
+  \input{figures/lecture01/summary.tex}
 \end{frame}
 
 \begin{frame}{Exercises}

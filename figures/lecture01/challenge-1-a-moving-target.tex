@@ -1,0 +1,20 @@
+% lecture01.tex: slide "Challenge 1: a moving target"
+\begin{tikzpicture}
+  % single agent: fixed target
+  \node[font=\small\bfseries] at (2.3,4.4) {One agent};
+  \pic[draw=cyellow!80!black,fill=cyellow!45,scale=2] at (0.6,2.2) {robot};
+  \foreach \r/\c in {0.75/cred!70,0.5/white,0.25/cred!70} \fill[\c] (4.0,2.2) circle (\r);
+  \draw[->,very thick] (1.2,2.2) -- (3.15,2.2);
+  \node[font=\small,align=center] at (2.3,0.6) {the world stays the same};
+  \draw[cgray,dashed] (5.4,0) -- (5.4,4.8);
+  % multi agent: target moves
+  \node[font=\small\bfseries] at (9.6,4.4) {Many learning agents};
+  \pic[draw=cyellow!80!black,fill=cyellow!45,scale=2] at (6.6,2.2) {robot};
+  \foreach \y/\o in {3.4/0.25,2.2/0.5} \foreach \r/\c in {0.55/cred!70,0.35/white,0.17/cred!70} \fill[\c,opacity=\o] (10.6,\y) circle (\r);
+  \foreach \r/\c in {0.55/cred!70,0.35/white,0.17/cred!70} \fill[\c] (10.6,1.0) circle (\r);
+  \draw[->,thick,cred,dashed] (11.3,3.4) to[bend left=30] (11.3,1.0);
+  \draw[->,very thick] (7.2,2.2) -- (9.9,1.15);
+  \pic[draw=cgreen!80!black,fill=cgreen!45,scale=1.6] at (12.6,2.2) {robot};
+  \node[font=\scriptsize,text=cgreen!70!black] at (12.6,1.4) {learns too};
+  \node[font=\small,align=center] at (9.6,0.0) {my best action changes\\ because the others change};
+\end{tikzpicture}%

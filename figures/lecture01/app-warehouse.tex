@@ -1,0 +1,11 @@
+% Application picture (Warehouse), drawn in an 8 x 5 box.
+% Used inside a tikzpicture via \picWarehouse.
+  \fill[cgray!6] (0,0) rectangle (8,5);
+  \draw[cgray!60] (0,0) rectangle (8,5);
+  \foreach \x in {1.0,3.0,5.0}{
+    \fill[cgray!45] (\x,1.3) rectangle ++(0.7,3.3);
+    \foreach \y in {1.5,2.3,3.1,3.9} \fill[cyellow!75] (\x+0.15,\y) rectangle ++(0.4,0.45);}
+  \fill[cgray!25] (6.5,0.15) rectangle (7.85,0.85);
+  \node[font=\scriptsize,text=cgray] at (7.175,0.5) {station};
+  \foreach \x/\y in {2.35/3.2, 4.35/2.0, 2.35/0.65, 6.9/3.6}
+    \pic[draw=cblue,fill=cblue!35,scale=1.4] at (\x,\y) {robot};%

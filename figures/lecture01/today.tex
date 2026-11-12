@@ -1,0 +1,8 @@
+% lecture01.tex: slide "Today"
+\begin{tikzpicture}
+  \foreach \k/\x/\t/\s/\c in {1/0/Examples/\S1.3/cblue, 2/2.8/The MARL loop/\S1.2/cgreen, 3/5.6/Why many agents?/\S1.2/corange, 4/8.4/What makes it hard/\S1.4--1.5/cred, 5/11.2/Game models/Ch.\ 3/cpurple}{
+    \node[circle,draw=\c,fill=\c!15,very thick,minimum size=1cm,font=\large\bfseries] (s\k) at (\x,0) {\k};
+    \node[below=2mm of s\k,font=\small,align=center,text width=2.4cm] {\t\\[1pt]{\scriptsize\color{cgray}\s}};
+  }
+  \foreach \a/\b in {1/2,2/3,3/4,4/5} \draw[->,thick,cgray] (s\a) -- (s\b);
+\end{tikzpicture}%

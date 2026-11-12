@@ -1,0 +1,23 @@
+% lecture01.tex: slide "One agent's view of a stochastic game"
+\begin{tikzpicture}
+  \node[bb,minimum width=2.2cm] (ag) at (0,0) {Agent};
+  \node[b,minimum width=2.4cm,minimum height=1.6cm] (env) at (0,2.4) {Environment\\ $T, R$ fixed};
+  \draw[->,thick,cblue] ($(ag.north west)+(0.3,0)$) -- node[left,font=\scriptsize] {$a^t$} ($(env.south west)+(0.3,0)$);
+  \draw[->,thick] ($(env.south east)+(-0.3,0)$) -- node[right,font=\scriptsize] {$s^{t+1}, r^t$} ($(ag.north east)+(-0.3,0)$);
+  \node[note] at (0,-0.9) {MDP: stationary};
+  \begin{scope}[xshift=7.5cm]
+    \node[bb,minimum width=2.2cm] (a1) at (0,0) {Agent 1};
+    \node[b,minimum width=2.6cm,minimum height=1.0cm] (e) at (0,2.2) {Environment};
+    \node[bo,minimum width=1.6cm] (a2) at (-1.6,3.6) {Agent 2};
+    \node[bg,minimum width=1.6cm] (a3) at (1.6,3.6) {Agent 3};
+    \draw[->,corange,thick] (a2) -- (e);
+    \draw[->,cgreen,thick] (a3) -- (e);
+    \draw[->,thick,cblue] ($(a1.north west)+(0.3,0)$) -- node[left,font=\scriptsize] {$a^t_1$} ($(e.south west)+(0.5,0)$);
+    \draw[->,thick] ($(e.south east)+(-0.5,0)$) -- node[right,font=\scriptsize] {$s^{t+1}, r^t_1$} ($(a1.north east)+(-0.3,0)$);
+    \begin{scope}[on background layer]
+      \node[fit=(e)(a2)(a3),draw=cred,dashed,rounded corners=4pt,inner sep=6pt,fill=cred!4,
+            label={[font=\scriptsize,text=cred]above:what agent 1 experiences as ``the environment''}] {};
+    \end{scope}
+    \node[note] at (0,-0.9) {stochastic game: agents 2 and 3 are learning too};
+  \end{scope}
+\end{tikzpicture}%

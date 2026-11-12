@@ -1,0 +1,23 @@
+% lecture01.tex: slide "Running example: level-based foraging"
+\begin{tikzpicture}[x=0.6cm,y=0.6cm]
+  \fill[cgray!5] (0,0) rectangle (8,8);
+  \draw[cgray!40,step=1] (0,0) grid (8,8);
+  \draw[thick] (0,0) rectangle (8,8);
+  \fill[cpurple!12,rounded corners=2pt] (2.05,3.05) rectangle (3.95,4.95);
+  \draw[cpurple,very thick,dashed,rounded corners=2pt] (2.05,3.05) rectangle (3.95,4.95);
+  \foreach \x/\y/\l in {3/3/3,1/6/1,6/1/2,5/5/1}{
+    \pic[scale=2] at (\x+0.5,\y+0.45) {apple};
+    \node[circle,fill=white,draw=black!60,inner sep=0.6pt,font=\scriptsize\bfseries] at (\x+0.85,\y+0.85) {\l};}
+  \foreach \x/\y/\l/\c in {3/4/1/cyellow,2/3/2/cgreen,6/6/1/cblue}{
+    \pic[draw=\c!80!black,fill=\c!45,scale=2] at (\x+0.5,\y+0.5) {robot};
+    \node[circle,fill=white,draw=black!60,inner sep=0.6pt,font=\scriptsize\bfseries] at (\x+0.85,\y+0.85) {\l};}
+  \node[anchor=west,font=\small] (l1) at (9.5,7.2) {robot = agent};
+  \node[anchor=west,font=\small] (l2) at (9.5,5.5) {apple = item};
+  \node[anchor=west,font=\small] (l3) at (9.5,3.8) {number = level};
+  \node[anchor=west,font=\small,align=left] (l4) at (9.5,1.8) {levels $2 + 1 \ge 3$:\\ \textbf{collect together}};
+  \draw[->,thick,black!60] (l1.west) -- (6.95,6.6);
+  \draw[->,thick,black!60] (l2.west) -- (5.85,5.5);
+  \draw[->,thick,black!60] (l3.west) -- (4.05,3.85);
+  \draw[->,thick,cpurple] (l4.west) -- (3.95,3.6);
+  \node[font=\small] at (4,-0.8) {actions: $\uparrow\ \downarrow\ \leftarrow\ \rightarrow$, collect, noop};
+\end{tikzpicture}%

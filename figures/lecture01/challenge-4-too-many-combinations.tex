@@ -1,0 +1,15 @@
+% lecture01.tex: slide "Challenge 4: too many combinations"
+\begin{tikzpicture}
+  \foreach \n/\x in {1/0.6,2/3.0,3/5.8,4/9.6}{
+    \foreach \k in {1,...,\n} \pic[draw=cblue!80!black,fill=cblue!40,scale=1.1] at (\x-0.33*\n+0.66*\k-0.33,4.6) {robot};
+    \node[font=\small] at (\x,3.85) {$n = \n$};}
+  \fill[cblue!50] (0.533,1.0) rectangle ++(0.135,0.135);
+  \fill[cblue!50] (2.835,1.0) rectangle ++(0.330,0.330);
+  \fill[cblue!50] (5.396,1.0) rectangle ++(0.808,0.808);
+  \fill[cblue!50] (8.610,1.0) rectangle ++(1.980,1.980);
+  \node[font=\small] at (0.6,0.45) {$6$};
+  \node[font=\small] at (3.0,0.45) {$36$};
+  \node[font=\small] at (5.8,0.45) {$216$};
+  \node[font=\small] at (9.6,0.45) {$1296$};
+  \node[font=\small,anchor=west,align=left] at (11.4,2.0) {joint actions\\ $= 6^n$};
+\end{tikzpicture}%

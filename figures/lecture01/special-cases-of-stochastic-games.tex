@@ -1,0 +1,11 @@
+% lecture01.tex: slide "Special cases of stochastic games"
+\begin{tikzpicture}[font=\footnotesize]
+  \node[bp,text width=5.2cm] (posg) at (0,4.2) {\textbf{POSG}: $n$ agents, $m$ states, partially observed};
+  \node[bo,text width=5.2cm] (sg) at (0,2.6) {\textbf{Stochastic game}: $n$ agents, $m$ states, fully observed};
+  \node[bg,text width=2.6cm] (rep) at (-1.55,0.9) {\textbf{Repeated NFG}: $n$ agents, 1 state};
+  \node[bb,text width=2.6cm] (mdp) at (1.55,0.9) {\textbf{MDP}: 1 agent, $m$ states};
+  \draw[->,thick] (sg) -- (posg);
+  \draw[->,thick] (rep) -- (sg);
+  \draw[->,thick] (mdp) -- (sg);
+  \node[note] at (0,0) {book Figure 3.1; arrows point to the more general model};
+\end{tikzpicture}%

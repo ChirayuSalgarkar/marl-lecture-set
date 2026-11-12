@@ -1,0 +1,7 @@
+% lecture01.tex: slide "You already know this: one agent"
+\begin{tikzpicture}
+  \node[b,draw=cyellow!80!black,fill=cyellow!25,minimum width=2.8cm,minimum height=1cm,font=\bfseries] (ag) at (0,2.8) {Agent};
+  \node[b,draw=cgreen!70!black,fill=cgreen!8,minimum width=9cm,minimum height=1.2cm,font=\bfseries] (env) at (0,0) {Environment};
+  \draw[->,very thick] (ag.east) -- (3.5,2.8) node[midway,above,font=\small] {action} -- (3.5,0.6);
+  \draw[->,very thick] (-3.5,0.6) -- (-3.5,2.8) node[midway,left,font=\small,align=right] {observation\\ \& reward} -- (ag.west);
+\end{tikzpicture}%

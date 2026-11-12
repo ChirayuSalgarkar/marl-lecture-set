@@ -1,0 +1,15 @@
+% lecture01.tex: slide "Warehouse robots"
+\begin{tikzpicture}
+  \picWarehouse
+  \draw[cgreen,very thick,dashed] (6.9,3.6) circle (1.0);
+  \draw[->,corange,very thick,dashed] (6.9,3.15) -- (6.9,1.0);
+  \node[star,star points=5,fill=cpurple!75,minimum size=5mm,inner sep=0] (rw) at (7.6,1.2) {};
+  \node[anchor=west,align=left,font=\small] (lA) at (8.8,4.4) {\textbf{Agent}\\ one robot};
+  \node[anchor=west,align=left,font=\small] (lO) at (8.8,3.2) {\textbf{\color{cgreen}Observes}\\ nearby shelves, its order};
+  \node[anchor=west,align=left,font=\small] (lD) at (8.8,2.0) {\textbf{\color{corange}Acts}\\ move, pick up};
+  \node[anchor=west,align=left,font=\small] (lR) at (8.8,0.6) {\textbf{\color{cpurple}Reward}\\ $+1$ to all per order\\ {\footnotesize\color{cgray}(common reward)}};
+  \draw[->,thick,black!60] (lA.west) -- (7.25,3.85);
+  \draw[->,thick,cgreen] (lO.west) -- (7.9,3.45);
+  \draw[->,thick,corange] (lD.west) -- (6.95,1.9);
+  \draw[->,thick,cpurple] (lR.west) -- (rw.east);
+\end{tikzpicture}%

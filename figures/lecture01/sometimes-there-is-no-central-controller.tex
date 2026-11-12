@@ -1,0 +1,18 @@
+% lecture01.tex: slide "Sometimes there is no central controller"
+\begin{tikzpicture}
+  % centralized: tower linked to every car
+  \draw[very thick,cgray] (2.7,1.8) -- (3,3.4) -- (3.3,1.8) (2.82,2.4) -- (3.18,2.4);
+  \foreach \r in {0.35,0.6} \draw[cgray,thick] (3,3.4) ++(35:\r) arc[start angle=35,end angle=145,radius=\r];
+  \foreach \x/\y/\rot in {0.7/4.3/0, 0.7/0.9/0, 5.3/0.9/180, 5.3/4.3/180}{
+    \pic[draw=cblue,fill=cblue!40,scale=1.3,rotate=\rot] at (\x,\y) {car};
+    \draw[cgray,dashed,thick] (3,2.7) -- ($(3,2.7)!0.8!(\x,\y)$);
+    \node[text=cred,font=\Large\bfseries] at ($(3,2.7)!0.5!(\x,\y)$) {$\times$};}
+  \node[font=\small,align=center] at (3,-0.4) {one controller for all cars:\\ often impossible};
+  \draw[cgray,dashed] (6.8,-0.9) -- (6.8,5.2);
+  % decentralized: each car has its own policy and view
+  \foreach \x/\y/\k in {8.3/4.0/1, 11.8/3.2/2, 9.3/1.0/3}{
+    \fill[cgreen,opacity=0.18] (\x+0.45,\y) -- ++(-25:1.6) arc[start angle=-25,end angle=25,radius=1.6] -- cycle;
+    \pic[draw=cblue,fill=cblue!40,scale=1.3] at (\x,\y) {car};
+    \node[circle,draw=cblue,fill=white,inner sep=1pt,font=\small] at (\x,\y+0.65) {$\pi_\k$};}
+  \node[font=\small,align=center] at (10.5,-0.4) {each car acts on\\ its own observations};
+\end{tikzpicture}%

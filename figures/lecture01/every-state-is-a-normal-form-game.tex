@@ -1,0 +1,12 @@
+% lecture01.tex: slide "Every state is a normal-form game"
+\begin{tikzpicture}[x=1cm,y=1cm]
+  \tikzset{st/.style={draw,rounded corners=3pt,thick,inner sep=3pt,font=\scriptsize}}
+  \node[st,draw=cblue,fill=cblue!8] (s1) at (0,1.5) {\begin{tabular}{c|cc} $s_1$ & 1 & 2 \\ \hline 1 & $1,1$ & $0,1$ \\ 2 & $2,2$ & $1,1$ \end{tabular}};
+  \node[st,draw=corange,fill=corange!8] (s2) at (-4,-1.6) {\begin{tabular}{c|cc} $s_2$ & 1 & 2 \\ \hline 1 & $1,3$ & $0,4$ \\ 2 & $4,0$ & $3,1$ \end{tabular}};
+  \node[st,draw=cgreen,fill=cgreen!8] (s3) at (4,-1.6) {\begin{tabular}{c|cc} $s_3$ & 1 & 2 \\ \hline 1 & $1,1$ & $0,0$ \\ 2 & $4,1$ & $3,2$ \end{tabular}};
+  \draw[->,thick,cblue] (s1) to[bend right=15] node[above left,font=\scriptsize,align=right] {$a = (2,2)$, $r = (1,1)$\\ $p = 0.5$} (s2);
+  \draw[->,thick,cblue] (s1.east) to[out=20,in=-20,looseness=5] node[right,font=\scriptsize] {$p = 0.5$} ($(s1.east)+(0,-0.3)$);
+  \draw[->,thick,corange] (s2) -- node[below,font=\scriptsize,align=center] {$a = (1,2)$, $r = (0,4)$, $p = 0.8$} (s3);
+  \draw[->,thick,corange] (s2.west) to[out=200,in=160,looseness=5] node[left,font=\scriptsize] {$p = 0.2$} ($(s2.west)+(0,0.3)$);
+  \draw[->,thick,cgreen] (s3) to[bend right=15] node[above right,font=\scriptsize,align=left] {$a = (2,1)$, $r = (4,1)$\\ $p = 1.0$} (s1);
+\end{tikzpicture}%

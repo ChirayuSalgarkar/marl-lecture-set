@@ -1,0 +1,23 @@
+% lecture02.tex: slide "Picture: maximizing a linear function on the simplex"
+\begin{tikzpicture}[scale=1.25]
+  \coordinate (R) at (0,0);
+  \coordinate (P) at (4,0);
+  \coordinate (S) at (2,3.464);
+  \begin{scope}
+    \clip (R) -- (P) -- (S) -- cycle;
+    % f(x,y) = 0.1 x - 0.0866 y - 0.1 ; level lines f = k
+    \foreach \k in {-0.18,-0.12,...,0.3}{
+      \pgfmathsetmacro{\mix}{max(0,min(100,(\k+0.2)*200))}
+      \pgfmathsetmacro{\xa}{(\k+0.1+0.0866*(-0.5))/0.1}
+      \pgfmathsetmacro{\xb}{(\k+0.1+0.0866*4)/0.1}
+      \draw[line width=1.1pt,color=corange!\mix!cblue] (\xa,-0.5) -- (\xb,4);
+    }
+  \end{scope}
+  \draw[thick] (R) -- (P) -- (S) -- cycle;
+  \node[below left,font=\small] at (R) {R \scriptsize($-0.1$)};
+  \node[below right,font=\small] at (P) {P \scriptsize($0.3$)};
+  \node[above,font=\small] at (S) {S \scriptsize($-0.2$)};
+  \fill[cred] (P) circle (2.5pt);
+  \node[font=\scriptsize,cred,anchor=west] at (4.1,0.35) {maximum};
+  \node[note,text width=5cm] at (2,-0.75) {level lines of $U_1(\pi_1, \pi_2)$ over $\pi_1 \in \Delta(\{R,P,S\})$; blue low, orange high};
+\end{tikzpicture}%

@@ -1,0 +1,21 @@
+% lecture02.tex: slide "The two definitions are the same tree"
+\begin{tikzpicture}[x=1cm,y=1cm,
+    dec/.style={circle,draw=cblue,fill=cblue!15,minimum size=6mm,inner sep=0,font=\scriptsize},
+    chn/.style={diamond,draw=corange,fill=corange!15,minimum size=5mm,inner sep=0},
+    leaf/.style={font=\scriptsize}]
+  \node[dec] (r) at (0,0) {$\hh^0$};
+  \node[chn] (c1) at (-3.2,-1.4) {};
+  \node[chn] (c2) at (3.2,-1.4) {};
+  \draw[->,thick,cblue] (r) -- node[above left,font=\scriptsize] {$a$, prob.\ $\pi(a \mid h^0)$} (c1);
+  \draw[->,thick,cblue] (r) -- node[above right,font=\scriptsize] {$a'$} (c2);
+  \foreach \p/\x [count=\k] in {c1/-4.6,c1/-1.8,c2/1.8,c2/4.6}{
+    \node[dec] (n\k) at (\x,-2.9) {$\hh^1$};
+    \draw[->,thick,corange] (\p) -- (n\k);
+    \draw[->,cgray] (n\k) -- ++(-0.5,-0.9);
+    \draw[->,cgray] (n\k) -- ++(0.5,-0.9);
+    \node[leaf,cgray] at (\x,-4.1) {$\cdots$};
+  }
+  \node[font=\scriptsize,corange,anchor=east] at (-3.9,-2.0) {$s', o'$ w.p.\ $T \cdot \mathcal{O}$};
+  \node[note,text width=3.4cm,anchor=west] at (5.4,0) {\textcolor{cblue}{circles}: agents choose (policy)\\ \textcolor{corange}{diamonds}: nature chooses (dynamics)};
+  \node[note,text width=3.4cm,anchor=west] at (5.4,-3.3) {each root-to-leaf path is one full history $\hh^t$};
+\end{tikzpicture}%

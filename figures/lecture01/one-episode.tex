@@ -1,0 +1,21 @@
+% lecture01.tex: slide "One episode"
+\begin{tikzpicture}[x=0.6cm,y=0.6cm]
+  \foreach \s/\gx/\yx/\apple/\t in {0/0/4/1/0, 9/1/3/1/1, 18/1/3/0/2}{
+    \begin{scope}[xshift=\s*0.6cm]
+      \fill[cgray!5] (0,0) rectangle (5,5);
+      \draw[cgray!40,step=1] (0,0) grid (5,5);
+      \draw[thick] (0,0) rectangle (5,5);
+      \ifnum\apple=1
+        \pic[scale=2] at (2.5,2.45) {apple};
+      \else
+        \draw[cgray,dashed] (2.5,2.5) circle (0.35);
+        \node[font=\small\bfseries,text=cpurple] at (\gx+0.5,3.6) {$+1$};
+        \node[font=\small\bfseries,text=cpurple] at (\yx+0.5,3.6) {$+1$};
+      \fi
+      \pic[draw=cgreen!80!black,fill=cgreen!45,scale=2] at (\gx+0.5,2.5) {robot};
+      \pic[draw=cyellow!80!black,fill=cyellow!45,scale=2] at (\yx+0.5,2.5) {robot};
+      \node[font=\small] at (2.5,-0.8) {$t = \t$};
+    \end{scope}}
+  \draw[->,very thick] (5.4,2.5) -- node[above,font=\small] {$(\rightarrow, \leftarrow)$} (8.6,2.5);
+  \draw[->,very thick] (14.4,2.5) -- node[above,font=\small,align=center] {(collect,\\ collect)} (17.6,2.5);
+\end{tikzpicture}%

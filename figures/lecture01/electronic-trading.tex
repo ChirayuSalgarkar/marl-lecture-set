@@ -1,0 +1,13 @@
+% lecture01.tex: slide "Electronic trading"
+\begin{tikzpicture}
+  \picTrading
+  \draw[cgreen,very thick,dashed,rounded corners] (0.9,0.2) rectangle (7.7,3.4);
+  \node[draw=corange,fill=corange!15,rounded corners=2pt,font=\scriptsize\bfseries,inner sep=2pt] (bub) at (7.5,4.0) {buy};
+  \node[anchor=west,align=left,font=\small] (lA) at (8.8,4.4) {\textbf{Agent}\\ one trader};
+  \node[anchor=west,align=left,font=\small] (lO) at (8.8,3.2) {\textbf{\color{cgreen}Observes}\\ prices, order book};
+  \node[anchor=west,align=left,font=\small] (lD) at (8.8,2.0) {\textbf{\color{corange}Acts}\\ buy or sell};
+  \node[anchor=west,align=left,font=\small] (lR) at (8.8,0.6) {\textbf{\color{cpurple}Reward}\\ its own profit\\ {\footnotesize\color{cgray}(mixed: general-sum)}};
+  \draw[->,thick,black!60] (lA.west) -- (6.95,4.45);
+  \draw[->,thick,cgreen] (lO.west) -- (7.7,2.6);
+  \draw[->,thick,corange] (lD.west) -- (bub.south east);
+\end{tikzpicture}%
