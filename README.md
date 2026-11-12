@@ -8,6 +8,8 @@ Albrecht, Christianos & Schäfer, *Multi-Agent Reinforcement Learning: Foundatio
 | `lecture01.tex` | Introduction and models of multi-agent interaction | Ch. 1, 3 |
 | `lecture02.tex` | Solution concepts I: best response, minimax, Nash | §4.1–4.5 |
 
+Speaker scripts: `lecture01-script.md` is a full word-for-word script for Lecture 1, one heading per slide, matching the slide counter.
+
 All lectures load the shared preamble `marl-style.sty` (colours, TikZ styles, notation), so keep it in the same folder.
 
 ## Editing diagrams
