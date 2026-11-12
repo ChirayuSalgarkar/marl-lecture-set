@@ -1,5 +1,5 @@
 % =====================================================================
-%  MARL Lecture 1: Introduction and Models of Multi-Agent Interaction
+%  MARL guest lecture (75 min, self-contained): introduction and models of multi-agent interaction
 %  Book: Albrecht, Christianos & Schaefer (2024), Chapters 1 and 3
 %  Compile with:  latexmk -pdf lecture01.tex
 % =====================================================================
@@ -77,7 +77,7 @@
   \input{figures/lecture01/you-already-know-this-one-agent.tex}
   \par\bigskip
   Learn a policy that collects as much reward as possible.
-  \par\medskip{\scriptsize\color{cgray} Single-agent RL: book Ch.\ 2, revisited in Lecture 9}
+  \par\medskip{\scriptsize\color{cgray} Single-agent RL: book Ch.\ 2}
 \end{frame}
 
 \begin{frame}{Many agents}
@@ -94,7 +94,7 @@
 \begin{frame}{Running example: level-based foraging}
   \centering
   \input{figures/lecture01/running-example-level-based-foraging.tex}
-  \par\smallskip{\scriptsize\color{cgray} Book Figure 1.2. It returns throughout the course.}
+  \par\smallskip{\scriptsize\color{cgray} Book Figure 1.2. We use it all through this talk.}
 \end{frame}
 
 \begin{frame}{One episode}
@@ -140,7 +140,7 @@
   \input{figures/lecture01/challenge-2-which-optimum.tex}
   \par\bigskip
   Two equally good solutions. The agents must agree on \emph{one}.
-  \par\smallskip{\scriptsize\color{cgray} Book \S1.4: optimality and equilibrium selection (Lecture 2)}
+  \par\smallskip{\scriptsize\color{cgray} Book \S1.4: optimality and equilibrium selection (solution concepts: book Ch.\ 4)}
 \end{frame}
 
 \begin{frame}{Challenge 3: who earned the reward?}
@@ -173,7 +173,7 @@
 
 \begin{frame}{Highly recommend this book}
   \centering
-  \input{figures/lecture01/where-the-course-goes.tex}
+  \input{figures/lecture01/book-map.tex}
   \vfill
   {\centering\small S.\ V.\ Albrecht, F.\ Christianos, L.\ Sch\"afer,\\ \emph{Multi-Agent Reinforcement Learning: Foundations and Modern Approaches},\\ MIT Press, 2024. Free at \texttt{marl-book.com}.\par}
 \end{frame}
@@ -348,8 +348,8 @@
     \item Induct backwards: in the unique subgame-perfect equilibrium both agents defect at every step.
   \end{enumerate}
   \bigskip
-  With infinite repetition (or an unknown end, $\gamma$ close to 1), the threat of future punishment can sustain cooperation, e.g.\ Tit-for-Tat. Folk theorems make this precise (Lecture 2).
-  \reading{\S3.2; end-game example in \S6.3.3.}
+  With infinite repetition (or an unknown end, $\gamma$ close to 1), the threat of future punishment can sustain cooperation, e.g.\ Tit-for-Tat. Folk theorems make this precise (book \S4.4).
+  \par\vfill{\scriptsize\color{cgray} Book \S3.2; end-game example in \S6.3.3}
 \end{frame}
 
 % =====================================================================
@@ -418,7 +418,7 @@
         \item \textbf{Non-repeated normal-form game:} one state, one step.
       \end{itemize}
       \bigskip
-      Normal-form games are the building block of all the models in this course.
+      Normal-form games are the building block of every model in this talk.
     \end{column}
     \begin{column}{0.55\textwidth}
       \centering
@@ -552,7 +552,7 @@
       In MARL agents usually do not know $S$, $T$ or $\mathcal{O}_i$, so exact filtering is impossible.
       \medskip
 
-      \textbf{Practice:} a recurrent network reads $o_i^0, o_i^1, \dots$; its hidden state learns a filter (Lecture 9 onward; book \S7.5.2, \S8.3).
+      \textbf{Practice:} a recurrent network reads $o_i^0, o_i^1, \dots$; its hidden state learns a filter (book \S7.5.2, \S8.3).
     \end{column}
     \begin{column}{0.46\textwidth}
       \centering
@@ -603,7 +603,7 @@
   \textbf{Learning to communicate.} In RL, agents do not know what any action \emph{means}, messages included. They must learn both what to send and how to interpret what they receive, possibly evolving a shared protocol (Foerster et al., 2016; Sukhbaatar et al., 2016).
   \medskip
 
-  The algorithms in this course treat $A_i$ generically, with or without message components.
+  To a learning algorithm, a message is just part of the action: $A_i$ may or may not contain message components.
 \end{frame}
 
 % =====================================================================
@@ -617,7 +617,7 @@
   \begin{itemize}
     \item A simulator satisfies $\Pr\{\hat T(s,a) = (r, s')\} \approx T(s' \mid s, a) \prod_i \mathbb{1}[R_i(s,a,s') = r_i]$.
     \item With complete knowledge, agent $i$ could compute $j$'s best response from $R_j$, or plan with $T$.
-    \item MARL agents learn from experience. They may still build models of $T$ or of other agents' policies (agent modeling, Lecture 6).
+    \item MARL agents learn from experience. They may still build models of $T$ or of other agents' policies (agent modeling, book \S6.3).
   \end{itemize}
 \end{frame}
 
@@ -626,12 +626,12 @@
     \item \textbf{Symmetric vs.\ asymmetric:} does every agent know the same things?
     \item \textbf{Common knowledge:} everyone knows $X$, everyone knows that everyone knows $X$, and so on without end.
     \item In MARL these questions matter less, because agents usually know almost nothing about the game.
-    \item Exceptions: algorithms that exploit a \emph{known} reward structure, e.g.\ zero-sum (minimax-Q, Lecture 5) or common reward (value decomposition, Lectures 12--13).
+    \item Exceptions: algorithms that exploit a \emph{known} reward structure, e.g.\ zero-sum (minimax-Q, book \S6.2.1) or common reward (value decomposition, book \S9.5).
   \end{itemize}
   \bigskip
   \begin{itemize}
     \item Standard assumption: the number of agents is fixed and known.
-    \item \textbf{Open} multi-agent systems, where agents join and leave, are an active research area (outside this course).
+    \item \textbf{Open} multi-agent systems, where agents join and leave, are an active research area (outside the book's scope, \S3.6).
   \end{itemize}
 \end{frame}
 
@@ -640,7 +640,7 @@
     \small
     \begin{tabular}{@{}lll@{}}
       \toprule
-      RL (this course) & Game theory & Meaning \\
+      RL & Game theory & Meaning \\
       \midrule
       environment & game & actions, observations, rewards, dynamics \\
       agent & player & decision maker (also a role: ``row player'') \\
@@ -674,16 +674,13 @@
   \input{figures/lecture01/summary.tex}
 \end{frame}
 
-\begin{frame}{Exercises}
-  \begin{enumerate}
-    \item Model partially observable level-based foraging with $n$ agents on a $k \times k$ grid with $m$ items as a POSG. Give $S$, $A_i$, $O_i$, $\mathcal{O}_i$, $T$ and a common-reward $R$. How large are $S$ and $A$?
-    \item Show that a stochastic game is a POSG with $o_i^t = (s^t, a^{t-1})$: write down $\mathcal{O}_i$.
-    \item In the repeated Prisoner's Dilemma with continuation probability $\gamma$, compute both agents' returns when Tit-for-Tat plays (a) Tit-for-Tat, (b) always-D. For which $\gamma$ is deviating from mutual Tit-for-Tat to always-D unprofitable?
-    \item Extend the belief example: the prize moves to the other side with probability $0.1$ each step. Recompute $b^1$ and $b^2$ after hearing ``$L$'' twice.
-    \item Add a one-bit message to two-agent foraging. Write $A_i = X_i \times M_i$, the observation $o_i$, and a lossy channel that drops messages with probability $0.2$.
-    \item Classify each example from \S1.3 by reward structure, observability, and knowledge assumption.
-  \end{enumerate}
+\begin{frame}
+  \centering
+  {\Large Questions?}
+  \par\bigskip\bigskip
+  {\small S.\ V.\ Albrecht, F.\ Christianos, L.\ Sch\"afer,\\ \emph{Multi-Agent Reinforcement Learning: Foundations and Modern Approaches},\\ MIT Press, 2024. Free at \texttt{marl-book.com}.\par}
 \end{frame}
+
 
 \begin{frame}{References}
   \footnotesize

@@ -1,4 +1,4 @@
-You are helping me build a graduate lecture set on multi-agent reinforcement learning (MARL). The lectures are LaTeX Beamer slides with TikZ diagrams, and they follow Albrecht, Christianos & Schäfer, *Multi-Agent Reinforcement Learning: Foundations and Modern Approaches* (MIT Press, 2024), chapter by chapter.
+You are helping me build guest lectures on multi-agent reinforcement learning (MARL). Each deck is a self-contained 75-minute guest lecture, not part of a course: no references to other lectures, a course, homework or readings. The lectures are LaTeX Beamer slides with TikZ diagrams, and they follow Albrecht, Christianos & Schäfer, *Multi-Agent Reinforcement Learning: Foundations and Modern Approaches* (MIT Press, 2024), chapter by chapter.
 
 Project folder: the `marl-lecture-set` folder I have granted (a git repository). It holds `syllabus.md`, `marl-style.sty`, and one `lectureNN.tex` per lecture. The book PDF is in that folder or another folder I have granted; ask me for its location if you can't find it.
 

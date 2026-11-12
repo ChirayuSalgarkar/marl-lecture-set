@@ -17,6 +17,7 @@ This skill builds lectures on multi-agent reinforcement learning as LaTeX Beamer
 
 ## Audience and level
 
+- Each deck is a **self-contained 75-minute guest lecture**, not part of a course. Never refer to other lectures, "this course", a syllabus, homework, or reading assignments. Point onward to book sections instead ("book \\S6.3"). End with a Summary, a "Questions?" slide with the book reference, and References. No exercises slide.
 - Teach it like an undergraduate lecture, even though the students are PhD students who know single-agent RL. Assume no game theory.
 - Keep it simple: one idea per slide.
 - **Explain with pictures.** Each slide is built around a diagram, with few or no words: short labels, a one-line takeaway, and a small grey book reference (`{\scriptsize\color{cgray} Book \S1.3}`). No paragraphs, and no bullet lists longer than about three short items.
@@ -36,11 +37,11 @@ This skill builds lectures on multi-agent reinforcement learning as LaTeX Beamer
 ## Deck structure
 
 1. Title frame, with "Book: Sections X–Y" under the title page.
-2. "Today": numbered topics with section numbers on the right (`\hfill \S4.6`), then `\reading{...}`.
+2. "Today": the talk's topics as a picture (numbered steps with book sections), no reading line.
 3. One `\section{}` per book section. `marl-style` inserts a divider page for each.
 4. Content: mostly picture slides. Definitions as short `block`s titled with the book's number ("Definition 8 (Correlated equilibrium)"), each after a picture that motivates it. Derivations only where needed, short, ending in `\hfill $\square$`. Worked numeric examples drawn as pictures where possible.
-5. "Summary": one bullet per concept, then "Next lecture" naming the next book sections.
-6. "Exercises": 5–7 problems. Mix proofs, by-hand computations, and one small coding task.
+5. "Summary": one picture or one bullet per concept, with pointers to the book chapters that go further.
+6. "Questions?" closing slide with the book reference.
 7. "References": the book first, then the primary sources cited on the slides.
 
 ## Style rules

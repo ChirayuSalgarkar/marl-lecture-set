@@ -1,6 +1,6 @@
 # MARL lecture set
 
-Beamer/TikZ slides for a graduate course on multi-agent reinforcement learning, following
+Beamer/TikZ slides for self-contained 75-minute guest lectures on multi-agent reinforcement learning, following
 Albrecht, Christianos & Schäfer, *Multi-Agent Reinforcement Learning: Foundations and Modern Approaches* (MIT Press, 2024).
 
 | File | Lecture | Book |

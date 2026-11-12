@@ -1,4 +1,6 @@
-# Syllabus: 17 lectures following the book
+# Plan: 17 lectures following the book
+
+Each deck is a self-contained 75-minute guest lecture. This table only orders the book material; the slides never refer to other lectures.
 
 Book: S. V. Albrecht, F. Christianos, L. Schäfer, *Multi-Agent Reinforcement Learning: Foundations and Modern Approaches*, MIT Press, 2024 (free at marl-book.com).
 
