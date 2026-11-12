@@ -47,6 +47,33 @@
   note/.style={font=\scriptsize,text=cgray,align=center},
 }
 
+% ---------------------------------------------------------------- pictograms
+% Usage: \pic[draw=cblue,fill=cblue!30,scale=1.2] at (x,y) {robot};
+\definecolor{cyellow}{HTML}{E3B505}
+\tikzset{
+  pics/robot/.style={code={
+    \draw[pic actions,rounded corners=1.5pt] (-0.22,-0.2) rectangle (0.22,0.16);
+    \draw[pic actions] (0,0.16) -- (0,0.27);
+    \fill[pic actions] (0,0.29) circle (0.04);
+    \fill[white] (-0.09,0.0) circle (0.05) (0.09,0.0) circle (0.05);
+    \fill[black] (-0.09,0.0) circle (0.022) (0.09,0.0) circle (0.022);
+  }},
+  pics/person/.style={code={
+    \fill[pic actions] (0,0.36) circle (0.12);
+    \fill[pic actions] (-0.2,-0.12) -- (-0.2,0.02) arc[start angle=180,end angle=0,radius=0.2] -- (0.2,-0.12) -- cycle;
+  }},
+  pics/car/.style={code={% points in +x direction
+    \draw[pic actions,rounded corners=2pt] (-0.36,-0.17) rectangle (0.36,0.17);
+    \fill[white,opacity=0.85,rounded corners=1pt] (0.08,-0.13) rectangle (0.2,0.13);
+    \fill[white,opacity=0.6,rounded corners=1pt] (-0.3,-0.12) rectangle (-0.22,0.12);
+  }},
+  pics/apple/.style={code={
+    \fill[cred!85] (0,0) circle (0.17);
+    \draw[brown!60!black,thick] (0,0.15) -- (0.03,0.26);
+    \fill[cgreen,rotate around={30:(0.09,0.23)}] (0.09,0.23) ellipse (0.07 and 0.035);
+  }},
+}
+
 % ---------------------------------------------------------------- notation
 \newcommand{\E}{\mathbb{E}}
 \newcommand{\Real}{\mathbb{R}}
