@@ -399,6 +399,8 @@
     \draw[thick] (0,0) rectangle (6,5);
     \pic[scale=2] at (3.5,2.45) {apple};
     \node[circle,fill=white,draw=black!60,inner sep=0.6pt,font=\scriptsize\bfseries] at (3.85,2.85) {3};
+    \pic[scale=2] at (1.5,4.45) {apple};
+    \node[circle,fill=white,draw=black!60,inner sep=0.6pt,font=\scriptsize\bfseries] at (1.85,4.85) {2};
     \foreach \x/\y/\l/\c in {2/2/2/cgreen,4/2/1/cyellow,0/4/1/cblue}{
       \pic[draw=\c!80!black,fill=\c!45,scale=2] at (\x+0.5,\y+0.5) {robot};
       \node[circle,fill=white,draw=black!60,inner sep=0.6pt,font=\scriptsize\bfseries] at (\x+0.85,\y+0.85) {\l};}
@@ -410,8 +412,8 @@
     \node[font=\small,align=center] at (15.8,0.9) {whose action\\ mattered?};
   \end{tikzpicture}
   \par\bigskip
-  {\small Green and yellow ($2 + 1 \ge 3$) did the work. Blue is too far away, but gets the same reward.}
-  \par\smallskip{\scriptsize\color{cgray} Book \S1.4: multi-agent credit assignment, after the example around Figure 1.2}
+  {\small Green and yellow ($2 + 1 \ge 3$) collect the apple. Blue's level is too low for its apple ($1 < 2$): its \emph{collect} does nothing, yet it gets the same $+1$.}
+  \par\smallskip{\scriptsize\color{cgray} Book \S1.4: multi-agent credit assignment, example in the text after Figure 1.2}
 \end{frame}
 
 \begin{frame}{Challenge 4: too many combinations}
