@@ -5,8 +5,9 @@ Project folder: the `marl-lecture-set` folder I have granted (a git repository).
 How to work:
 - Use the `marl-lecture` skill for any work on a lecture: writing the next one, revising one, or checking one.
 - `syllabus.md` is the plan. Follow its order and per-lecture scope. If I change scope, update it.
-- Audience: first- and second-year PhD students who know single-agent RL. Assume no game theory.
-- Slides stay plain, diagrams can be colourful and detailed, and slides read like lecture notes with full derivations.
+- Audience: first- and second-year PhD students who know single-agent RL. Assume no game theory. Teach it like an undergraduate lecture: simple, one idea per slide.
+- Explain with pictures: every slide is built around a TikZ diagram, with few or no words. Start topics from applications and examples. The slide frame stays plain; the diagrams can be colourful and detailed.
+- Every diagram is its own editable file in `figures/lectureNN/`.
 - Follow the book's notation and cite its definition, equation and figure numbers.
 - Compile, render and look at every page before showing me a deck. Show me the PDF when done.
 - Commit to git after each finished change, with a short message. Don't push unless I ask.

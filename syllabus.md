@@ -2,11 +2,13 @@
 
 Book: S. V. Albrecht, F. Christianos, L. Schäfer, *Multi-Agent Reinforcement Learning: Foundations and Modern Approaches*, MIT Press, 2024 (free at marl-book.com).
 
+Style: picture-first, few words per slide (see the `marl-lecture` skill). Lecture 2 predates this and is still in the old text-heavy style.
+
 Budget per 75-minute lecture: 30–40 content slides, which is about 10–15 book pages of dense theory (Ch. 4, 6, 9) or 25–35 pages of lighter material (Ch. 1, 3, 5, 10, 11).
 
 | # | Lecture | Book sections | Load | Derivations to do in class | Status |
 | --- | --- | --- | --- | --- | --- |
-| 1 | Introduction and models of interaction | Ch. 1; Ch. 3 | ~34 pp, light | Discount = continuation probability; backward induction in finite PD; belief filter (Eq. 3.5) | done |
+| 1 | Introduction and models of interaction | Ch. 1; Ch. 3 | ~34 pp, light | Discount = continuation probability; backward induction in finite PD; belief filter (Eq. 3.5) | in revision: Ch. 1 part redone picture-first; Ch. 3 part still old style |
 | 2 | Solution concepts I | 4.1–4.5 | ~10 pp, dense | U_i over histories; best-response vertex claim; maxmin ≤ minmax; minimax LP; indifference; Nash existence sketch; ε-Nash counterexample | done |
 | 3 | Solution concepts II | 4.6–4.11 | ~18 pp, dense | CE constraints and LP; Nash ⊆ CE ⊆ CCE; Chicken traffic-light CE; Pareto, welfare, fairness; regret definitions; PPAD | todo |
 | 4 | First steps and challenges | Ch. 5 | ~26 pp, medium | Induced MDP for agent i; non-stationary Q-learning target; Climbing game averages; self-play vs mixed-play | todo |
