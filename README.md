@@ -18,3 +18,16 @@ latexmk -pdf lecture02.tex
 ```
 
 On Overleaf: upload the zip as a new project, then pick the lecture to compile under Menu → Main document.
+
+## Iterating in Claude Science
+
+1. Unzip this folder somewhere permanent, for example `~/teaching/marl-lecture-set`. Put the book PDF in it, or in another folder you will grant. The PDF is not in git (see `.gitignore`).
+2. In Claude Science, create a project ("MARL lectures") and paste `claude-science/project-instructions.md` into its custom instructions.
+3. Add the skill: **Settings → Skills → Add skill → Upload a skill**, and choose `marl-lecture-skill.zip` or the `skills/marl-lecture` folder. If this repo is on GitHub, use **Import from GitHub** instead; **Check for updates** then picks up edits.
+4. Start a session in the project and grant the folder (type its path or use `@`). For example: "Build Lecture 3 from the syllabus."
+
+Files:
+
+- `syllabus.md`: the 17-lecture plan in book order, with a status column.
+- `skills/marl-lecture/SKILL.md`: the workflow and style rules Claude follows.
+- `claude-science/project-instructions.md`: text for the project's custom instructions.

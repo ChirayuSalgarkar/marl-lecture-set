@@ -9,3 +9,5 @@
 *.fdb_latexmk
 *.synctex.gz
 *.pdf
+# keep the book out of git
+*marl-book*.pdf
